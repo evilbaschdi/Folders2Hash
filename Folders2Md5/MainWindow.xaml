@@ -21,6 +21,7 @@
             </Button>
         </controls:WindowCommands>
     </controls:MetroWindow.RightWindowCommands>
+
     <!--Grid-->
     <Grid>
         <Label  Width="35"  Height="30" Margin="10,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Path" />
