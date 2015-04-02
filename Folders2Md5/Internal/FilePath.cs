@@ -11,7 +11,7 @@ namespace Folders2Md5.Internal
         {
             var fileName = Path.GetFileName(path);
             // ReSharper disable PossibleNullReferenceException
-            return fileName.Replace(".", "_");
+            return fileName.Replace(".", "_").Replace(" ", "_");
             // ReSharper restore PossibleNullReferenceException
         }
 

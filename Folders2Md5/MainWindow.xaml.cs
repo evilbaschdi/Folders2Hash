@@ -18,7 +18,7 @@ namespace Folders2Md5
     {
         private readonly ApplicationStyle _style;
         private readonly ApplicationBasics _basics;
-        private readonly string _initialDirectory;
+        private string _initialDirectory;
         private string _fileNameFormat;
 
         public MainWindow()
@@ -84,6 +84,7 @@ namespace Folders2Md5
         {
             _basics.BrowseFolder();
             InitialDirectory.Text = Properties.Settings.Default.InitialDirectory;
+            _initialDirectory = Properties.Settings.Default.InitialDirectory;
             ValidateForm();
         }
 

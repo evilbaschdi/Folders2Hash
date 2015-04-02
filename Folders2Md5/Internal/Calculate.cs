@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -8,17 +9,24 @@ namespace Folders2Md5.Internal
     {
         public string Md5Hash(string filename)
         {
-            var md5 = MD5.Create();
-            using(var fs = new FileStream(filename, FileMode.Open))
+            try
             {
-                var hash = md5.ComputeHash(fs);
-
-                var sb = new StringBuilder();
-                foreach(var t in hash)
+                var md5 = MD5.Create();
+                using(var fs = new FileStream(filename, FileMode.Open))
                 {
-                    sb.Append(t.ToString("X2"));
+                    var hash = md5.ComputeHash(fs);
+
+                    var sb = new StringBuilder();
+                    foreach(var t in hash)
+                    {
+                        sb.Append(t.ToString("X2"));
+                    }
+                    return sb.ToString();
                 }
-                return sb.ToString();
+            }
+            catch(Exception exception)
+            {
+                return exception.Message;
             }
         }
     }

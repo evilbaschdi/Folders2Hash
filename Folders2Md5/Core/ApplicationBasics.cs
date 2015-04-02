@@ -17,7 +17,7 @@ namespace Folders2Md5.Core
                 return;
             }
 
-            Properties.Settings.Default.InitialDirectory = GetInitialDirectory();
+            Properties.Settings.Default.InitialDirectory = folderDialog.SelectedPath;
             Properties.Settings.Default.Save();
         }
 
