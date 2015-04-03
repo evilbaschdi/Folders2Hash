@@ -16,6 +16,10 @@ namespace Folders2Md5
     public partial class MainWindow : MetroWindow
 // ReSharper restore RedundantExtendsListEntry
     {
+        public bool CloseHiddenInstancesOnFinish { get; set; }
+
+        public MainWindow CurrentHiddenInstance { get; set; }
+
         private readonly ApplicationStyle _style;
         private readonly ApplicationBasics _basics;
         private string _initialDirectory;
@@ -50,13 +54,23 @@ namespace Folders2Md5
 
         public void GenerateHashs()
         {
-            var filePath = new FilePath();
-            var fileList = Directory.GetFiles(_initialDirectory).ToList();
-            fileList.AddRange(
-                filePath.GetSubdirectoriesContainingOnlyFiles(_initialDirectory).SelectMany(Directory.GetFiles));
+            GenerateHashs(_initialDirectory);
+        }
 
+        public void GenerateHashs(string initialDirectory)
+        {
+            var filePath = new FilePath();
+            var fileList = Directory.GetFiles(initialDirectory).ToList();
+            fileList.AddRange(
+                filePath.GetSubdirectoriesContainingOnlyFiles(initialDirectory).SelectMany(Directory.GetFiles));
+            Output.Text = "";
             foreach(var file in fileList)
             {
+                var fileExtension = Path.GetExtension(file);
+                if(!string.IsNullOrWhiteSpace(fileExtension) && fileExtension.Contains("md5"))
+                {
+                    continue;
+                }
                 Output.Text += string.Format("file: '{1}'{0}", Environment.NewLine, file);
                 var calculate = new Calculate();
                 var md5Hash = calculate.Md5Hash(file);
@@ -75,6 +89,11 @@ namespace Folders2Md5
                     Output.Text += string.Format("already existing: {1}{0}", Environment.NewLine, md5FileName);
                 }
                 Output.Text += Environment.NewLine;
+            }
+
+            if(CloseHiddenInstancesOnFinish)
+            {
+                CurrentHiddenInstance.Close();
             }
         }
 
