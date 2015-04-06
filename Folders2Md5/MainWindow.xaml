@@ -15,7 +15,6 @@
                             <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_settings}" />
                         </Rectangle.OpacityMask>
                     </Rectangle>
-
                     <TextBlock Margin="5 0 0 0" VerticalAlignment="Center" Text="settings" />
                 </StackPanel>
             </Button>
@@ -25,7 +24,7 @@
     <!--Grid-->
     <Grid>
         <Label  Width="35"  Height="30" Margin="10,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Path" />
-        <TextBox x:Name="InitialDirectory" Height="30" Margin="50,10,220,0" VerticalAlignment="Top" IsReadOnly="True" />
+        <TextBox x:Name="InitialDirectory" Height="30" Margin="50,10,220,0" VerticalAlignment="Top" />
         <!--Browse-->
         <Button Name="Browse" Width="100" Margin="0,10,115,0" HorizontalAlignment="Right" VerticalAlignment="Top" Click="BrowseClick">
             <StackPanel Orientation="Horizontal">
@@ -34,7 +33,6 @@
                         <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_folder}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
-
                 <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" Text="browse" />
             </StackPanel>
         </Button>
