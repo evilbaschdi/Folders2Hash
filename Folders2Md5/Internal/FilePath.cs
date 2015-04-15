@@ -17,9 +17,7 @@ namespace Folders2Md5.Internal
 
         public IEnumerable<string> GetSubdirectoriesContainingOnlyFiles(string path)
         {
-            return from subdirectory in Directory.GetDirectories(path, "*", SearchOption.AllDirectories)
-                where Directory.GetDirectories(subdirectory).Length == 0
-                select subdirectory;
+            return Directory.GetDirectories(path, "*", SearchOption.AllDirectories).ToList();
         }
 
         public byte[] ReadFullFile(Stream stream)

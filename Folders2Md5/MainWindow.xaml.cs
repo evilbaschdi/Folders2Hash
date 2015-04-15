@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Folders2Md5.Core;
@@ -38,7 +40,8 @@ namespace Folders2Md5
 
         private void ValidateForm()
         {
-            Generate.IsEnabled = !string.IsNullOrWhiteSpace(Properties.Settings.Default.InitialDirectory);
+            Generate.IsEnabled = !string.IsNullOrWhiteSpace(Properties.Settings.Default.InitialDirectory) &&
+                                 Directory.Exists(Properties.Settings.Default.InitialDirectory);
             if(!string.IsNullOrWhiteSpace(Properties.Settings.Default.FileNameFormat))
             {
                 var format = Properties.Settings.Default.FileNameFormat;
@@ -64,32 +67,37 @@ namespace Folders2Md5
             fileList.AddRange(
                 filePath.GetSubdirectoriesContainingOnlyFiles(initialDirectory).SelectMany(Directory.GetFiles));
             Output.Text = "";
-            foreach(var file in fileList)
+            var outputList = new List<string>();
+
+            Parallel.ForEach(fileList, file =>
             {
+                var output = "";
                 var fileExtension = Path.GetExtension(file);
-                if(!string.IsNullOrWhiteSpace(fileExtension) && fileExtension.Contains("md5"))
+                if(string.IsNullOrWhiteSpace(fileExtension) || !fileExtension.Contains("md5"))
                 {
-                    continue;
-                }
-                Output.Text += string.Format("file: '{1}'{0}", Environment.NewLine, file);
-                var calculate = new Calculate();
-                var md5Hash = calculate.Md5Hash(file);
-                var keepOriginalFileName = _fileNameFormat == "OriginalFileName";
-                var md5FileName = filePath.Md5FileName(file, md5Hash, keepOriginalFileName);
+                    output += string.Format("file: '{1}'{0}", Environment.NewLine, file);
+                    var calculate = new Calculate();
+                    var md5Hash = calculate.Md5Hash(file);
+                    var keepOriginalFileName = _fileNameFormat == "OriginalFileName";
+                    var md5FileName = filePath.Md5FileName(file, md5Hash, keepOriginalFileName);
 
-                Output.Text += string.Format("MD5: {1}{0}", Environment.NewLine, md5Hash);
+                    output += string.Format("MD5: {1}{0}", Environment.NewLine, md5Hash);
 
-                if(!File.Exists(md5FileName))
-                {
-                    File.AppendAllText(md5FileName, md5Hash);
-                    Output.Text += string.Format("generated: {1}{0}", Environment.NewLine, md5FileName);
+                    if(!File.Exists(md5FileName))
+                    {
+                        File.AppendAllText(md5FileName, md5Hash);
+                        output += string.Format("generated: {1}{0}", Environment.NewLine, md5FileName);
+                    }
+                    else
+                    {
+                        output += string.Format("already existing: {1}{0}", Environment.NewLine, md5FileName);
+                    }
+
+                    output += Environment.NewLine;
                 }
-                else
-                {
-                    Output.Text += string.Format("already existing: {1}{0}", Environment.NewLine, md5FileName);
-                }
-                Output.Text += Environment.NewLine;
-            }
+                outputList.Add(output);
+            });
+            outputList.ForEach(o => Output.Text += o);
 
             if(CloseHiddenInstancesOnFinish)
             {
@@ -104,6 +112,17 @@ namespace Folders2Md5
             _basics.BrowseFolder();
             InitialDirectory.Text = Properties.Settings.Default.InitialDirectory;
             _initialDirectory = Properties.Settings.Default.InitialDirectory;
+            ValidateForm();
+        }
+
+        private void InitialDirectoryOnLostFocus(object sender, RoutedEventArgs e)
+        {
+            if(Directory.Exists(InitialDirectory.Text))
+            {
+                Properties.Settings.Default.InitialDirectory = InitialDirectory.Text;
+                Properties.Settings.Default.Save();
+                _initialDirectory = Properties.Settings.Default.InitialDirectory;
+            }
             ValidateForm();
         }
 

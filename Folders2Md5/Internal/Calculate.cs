@@ -12,7 +12,7 @@ namespace Folders2Md5.Internal
             try
             {
                 var md5 = MD5.Create();
-                using(var fs = new FileStream(filename, FileMode.Open))
+                using(var fs = new FileStream(filename, FileMode.Open, FileAccess.Read))
                 {
                     var hash = md5.ComputeHash(fs);
 
