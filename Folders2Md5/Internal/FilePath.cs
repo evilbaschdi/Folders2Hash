@@ -15,9 +15,17 @@ namespace Folders2Md5.Internal
             // ReSharper restore PossibleNullReferenceException
         }
 
-        public IEnumerable<string> GetSubdirectoriesContainingOnlyFiles(string path)
+        private IEnumerable<string> GetSubdirectoriesContainingOnlyFiles(string path)
         {
             return Directory.GetDirectories(path, "*", SearchOption.AllDirectories).ToList();
+        }
+
+        public List<string> GetFileList(string initialDirectory)
+        {
+            var fileList = Directory.GetFiles(initialDirectory).ToList();
+            fileList.AddRange(
+                GetSubdirectoriesContainingOnlyFiles(initialDirectory).SelectMany(Directory.GetFiles));
+            return fileList;
         }
 
         public byte[] ReadFullFile(Stream stream)
@@ -37,13 +45,10 @@ namespace Folders2Md5.Internal
             }
         }
 
-        public string Md5FileName(string file, string md5Hash, bool keepOriginalFileName)
+        public string HashFileName(string file, string type)
         {
-            return keepOriginalFileName
-                ? String.Format(@"{0}\{1}.md5", Path.GetDirectoryName(file),
-                    Path.GetFileNameWithoutExtension(file))
-                : String.Format(@"{0}\{1}.md5_{2}", Path.GetDirectoryName(file), md5Hash,
-                    CleanFileName(file));
+            return String.Format(@"{0}\{1}.{2}", Path.GetDirectoryName(file),
+                Path.GetFileNameWithoutExtension(file), type);
         }
     }
 }

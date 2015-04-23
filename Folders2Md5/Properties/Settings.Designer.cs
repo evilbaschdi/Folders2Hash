@@ -38,18 +38,6 @@ namespace Folders2Md5.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string FileNameFormat {
-            get {
-                return ((string)(this["FileNameFormat"]));
-            }
-            set {
-                this["FileNameFormat"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string Accent {
             get {
                 return ((string)(this["Accent"]));

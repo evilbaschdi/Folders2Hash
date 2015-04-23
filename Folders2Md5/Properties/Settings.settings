@@ -5,9 +5,6 @@
     <Setting Name="InitialDirectory" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="FileNameFormat" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="Accent" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>

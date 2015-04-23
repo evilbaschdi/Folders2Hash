@@ -25,7 +25,6 @@ namespace Folders2Md5
         private readonly ApplicationStyle _style;
         private readonly ApplicationBasics _basics;
         private string _initialDirectory;
-        private string _fileNameFormat;
 
         public MainWindow()
         {
@@ -42,12 +41,6 @@ namespace Folders2Md5
         {
             Generate.IsEnabled = !string.IsNullOrWhiteSpace(Properties.Settings.Default.InitialDirectory) &&
                                  Directory.Exists(Properties.Settings.Default.InitialDirectory);
-            if(!string.IsNullOrWhiteSpace(Properties.Settings.Default.FileNameFormat))
-            {
-                var format = Properties.Settings.Default.FileNameFormat;
-                OriginalFileName.IsChecked = format == OriginalFileName.Name;
-                HashInFileName.IsChecked = format == HashInFileName.Name;
-            }
         }
 
         private void GenerateHashsOnClick(object sender, RoutedEventArgs e)
@@ -60,43 +53,64 @@ namespace Folders2Md5
             GenerateHashs(_initialDirectory);
         }
 
+        public List<string> Types()
+        {
+            var list = new List<string>();
+
+            list.Add("md5");
+            //list.Add("sha1");
+
+            return list;
+        }
+
         public void GenerateHashs(string initialDirectory)
         {
-            var filePath = new FilePath();
-            var fileList = Directory.GetFiles(initialDirectory).ToList();
-            fileList.AddRange(
-                filePath.GetSubdirectoriesContainingOnlyFiles(initialDirectory).SelectMany(Directory.GetFiles));
-            Output.Text = "";
             var outputList = new List<string>();
+            Output.Text = "";
 
-            Parallel.ForEach(fileList, file =>
+            var filePath = new FilePath();
+            var fileList = filePath.GetFileList(initialDirectory);
+
+            Parallel.ForEach(Types(), type => Parallel.ForEach(fileList, file =>
             {
                 var output = "";
                 var fileExtension = Path.GetExtension(file);
-                if(string.IsNullOrWhiteSpace(fileExtension) || !fileExtension.Contains("md5"))
+                if(string.IsNullOrWhiteSpace(fileExtension) || !fileExtension.Contains(type))
                 {
-                    output += string.Format("file: '{1}'{0}", Environment.NewLine, file);
                     var calculate = new Calculate();
-                    var md5Hash = calculate.Md5Hash(file);
-                    var keepOriginalFileName = _fileNameFormat == "OriginalFileName";
-                    var md5FileName = filePath.Md5FileName(file, md5Hash, keepOriginalFileName);
+                    var fileName = filePath.HashFileName(file, type);
 
-                    output += string.Format("MD5: {1}{0}", Environment.NewLine, md5Hash);
-
-                    if(!File.Exists(md5FileName))
+                    if(!File.Exists(fileName))
                     {
-                        File.AppendAllText(md5FileName, md5Hash);
-                        output += string.Format("generated: {1}{0}", Environment.NewLine, md5FileName);
+                        var hashSum = "";
+                        switch(type)
+                        {
+                            case "md5":
+                                hashSum = calculate.Md5Hash(file);
+                                break;
+
+                            case "sha1":
+                                hashSum = calculate.Sha1Hash(file);
+                                break;
+                        }
+
+                        output += string.Format("file: '{1}'{0}", Environment.NewLine, file);
+
+                        output += string.Format("{0}: {1}{2}", type.ToUpper(), hashSum, Environment.NewLine);
+
+                        File.AppendAllText(fileName, hashSum);
+                        output += string.Format("generated: {1}{0}", Environment.NewLine, fileName);
                     }
                     else
                     {
-                        output += string.Format("already existing: {1}{0}", Environment.NewLine, md5FileName);
+                        output += string.Format("already existing: {1}{0}", Environment.NewLine, fileName);
                     }
 
                     output += Environment.NewLine;
                 }
                 outputList.Add(output);
-            });
+            }))
+                ;
             outputList.ForEach(o => Output.Text += o);
 
             if(CloseHiddenInstancesOnFinish)
@@ -159,18 +173,6 @@ namespace Folders2Md5
             {
                 activeFlyout.IsOpen = !activeFlyout.IsOpen;
             }
-        }
-
-        private void FileNameFormat(object sender, RoutedEventArgs e)
-        {
-            var radiobutton = (RadioButton) sender;
-            _fileNameFormat = radiobutton.Name;
-        }
-
-        private void SaveFileNameFormatClick(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.FileNameFormat = _fileNameFormat;
-            Properties.Settings.Default.Save();
         }
 
         private void SaveStyleClick(object sender, RoutedEventArgs e)
