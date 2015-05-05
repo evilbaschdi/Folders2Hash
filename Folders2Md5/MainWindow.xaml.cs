@@ -1,13 +1,13 @@
-﻿using Folders2Md5.Core;
-using Folders2Md5.Internal;
-using MahApps.Metro.Controls;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using Folders2Md5.Core;
+using Folders2Md5.Internal;
+using MahApps.Metro.Controls;
 
 namespace Folders2Md5
 {
@@ -16,7 +16,7 @@ namespace Folders2Md5
     /// </summary>
     // ReSharper disable RedundantExtendsListEntry
     public partial class MainWindow : MetroWindow
-    // ReSharper restore RedundantExtendsListEntry
+        // ReSharper restore RedundantExtendsListEntry
     {
         public bool CloseHiddenInstancesOnFinish { get; set; }
 
@@ -76,16 +76,16 @@ namespace Folders2Md5
                 var output = string.Empty;
 
                 var fileExtension = Path.GetExtension(file);
-                if (!string.IsNullOrWhiteSpace(fileExtension) && !file.Contains("Folders2Md5_log_") &&
+                if(!string.IsNullOrWhiteSpace(fileExtension) && !file.Contains("Folders2Md5_log_") &&
                    (!fileExtension.Contains(type) || !fileExtension.Equals(".ini") || !fileExtension.Equals(".db")))
                 {
                     var calculate = new Calculate();
                     var fileName = filePath.HashFileName(file, type);
 
-                    if (!File.Exists(fileName))
+                    if(!File.Exists(fileName))
                     {
                         var hashSum = "";
-                        switch (type)
+                        switch(type)
                         {
                             case "md5":
                                 hashSum = calculate.Md5Hash(file);
@@ -96,16 +96,16 @@ namespace Folders2Md5
                                 break;
                         }
 
-                        output += string.Format("file: '{0}'{1}", file, Environment.NewLine);
+                        output += $"file: '{file}'{Environment.NewLine}";
 
-                        output += string.Format("{0}: {1}{2}", type.ToUpper(), hashSum, Environment.NewLine);
+                        output += $"{type.ToUpper()}: {hashSum}{Environment.NewLine}";
 
                         File.AppendAllText(fileName, hashSum);
-                        output += string.Format("generated: {0}{1}", fileName, Environment.NewLine);
+                        output += $"generated: {fileName}{Environment.NewLine}";
                     }
                     else
                     {
-                        output += string.Format("already existing: {0}{1}", fileName, Environment.NewLine);
+                        output += $"already existing: {fileName}{Environment.NewLine}";
                     }
 
                     output += Environment.NewLine;
@@ -118,11 +118,10 @@ namespace Folders2Md5
             Output.Text = outputText;
 
             File.AppendAllText(
-                string.Format(@"{0}\Folders2Md5_log_{1}.txt", _initialDirectory,
-                    DateTime.Now.ToString("yyyy-MM-dd_HHmm")),
+                $@"{_initialDirectory}\Folders2Md5_log_{DateTime.Now.ToString("yyyy-MM-dd_HHmm")}.txt",
                 outputText);
 
-            if (CloseHiddenInstancesOnFinish)
+            if(CloseHiddenInstancesOnFinish)
             {
                 CurrentHiddenInstance.Close();
             }
@@ -140,7 +139,7 @@ namespace Folders2Md5
 
         private void InitialDirectoryOnLostFocus(object sender, RoutedEventArgs e)
         {
-            if (Directory.Exists(InitialDirectory.Text))
+            if(Directory.Exists(InitialDirectory.Text))
             {
                 Properties.Settings.Default.InitialDirectory = InitialDirectory.Text;
                 Properties.Settings.Default.Save();
@@ -160,13 +159,13 @@ namespace Folders2Md5
 
         private void ToggleFlyout(int index, bool stayOpen = false)
         {
-            var activeFlyout = (Flyout)Flyouts.Items[index];
-            if (activeFlyout == null)
+            var activeFlyout = (Flyout) Flyouts.Items[index];
+            if(activeFlyout == null)
             {
                 return;
             }
 
-            foreach (
+            foreach(
                 var nonactiveFlyout in
                     Flyouts.Items.Cast<Flyout>()
                         .Where(nonactiveFlyout => nonactiveFlyout.IsOpen && nonactiveFlyout.Name != activeFlyout.Name))
@@ -174,7 +173,7 @@ namespace Folders2Md5
                 nonactiveFlyout.IsOpen = false;
             }
 
-            if (activeFlyout.IsOpen && stayOpen)
+            if(activeFlyout.IsOpen && stayOpen)
             {
                 activeFlyout.IsOpen = true;
             }

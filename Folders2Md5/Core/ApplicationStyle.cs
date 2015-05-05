@@ -29,7 +29,7 @@ namespace Folders2Md5.Core
         {
             if(mainWindow == null)
             {
-                throw new ArgumentNullException("mainWindow");
+                throw new ArgumentNullException(nameof(mainWindow));
             }
             _mainWindow = mainWindow;
         }

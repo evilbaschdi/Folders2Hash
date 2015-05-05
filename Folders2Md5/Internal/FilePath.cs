@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -47,8 +46,7 @@ namespace Folders2Md5.Internal
 
         public string HashFileName(string file, string type)
         {
-            return String.Format(@"{0}\{1}.{2}", Path.GetDirectoryName(file),
-                Path.GetFileNameWithoutExtension(file), type);
+            return $@"{Path.GetDirectoryName(file)}\{Path.GetFileNameWithoutExtension(file)}.{type}";
         }
     }
 }
