@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Folders2Md5.Internal
 {
-    public class FilePath
+    public class FilePath : IFilePath
     {
         public string CleanFileName(string path)
         {
@@ -21,10 +21,39 @@ namespace Folders2Md5.Internal
 
         public List<string> GetFileList(string initialDirectory)
         {
-            var fileList = Directory.GetFiles(initialDirectory).ToList();
-            fileList.AddRange(
-                GetSubdirectoriesContainingOnlyFiles(initialDirectory).SelectMany(Directory.GetFiles));
+            var fileList = new List<string>();
+            var initialDirectoryFileList = Directory.GetFiles(initialDirectory).ToList();
+
+            foreach(var file in initialDirectoryFileList)
+            {
+                if(IsValidFileName(file, fileList))
+                {
+                    fileList.Add(file);
+                }
+            }
+
+            var initialDirectorySubdirectoriesFileList =
+                GetSubdirectoriesContainingOnlyFiles(initialDirectory).SelectMany(Directory.GetFiles);
+
+            foreach(var file in initialDirectorySubdirectoriesFileList)
+            {
+                if(IsValidFileName(file, fileList))
+                {
+                    fileList.Add(file);
+                }
+            }
+
             return fileList;
+        }
+
+        private bool IsValidFileName(string file, ICollection<string> fileList)
+        {
+            var type = "md5";
+            var fileExtension = Path.GetExtension(file);
+            return !fileList.Contains(file) && !file.ToLower().Contains("folders2md5_log_") &&
+                   !string.IsNullOrWhiteSpace(fileExtension) &&
+                   !fileExtension.ToLower().Contains(type) && !fileExtension.ToLower().Equals(".ini") &&
+                   !fileExtension.ToLower().Equals(".db");
         }
 
         public byte[] ReadFullFile(Stream stream)
@@ -46,7 +75,11 @@ namespace Folders2Md5.Internal
 
         public string HashFileName(string file, string type)
         {
-            return $@"{Path.GetDirectoryName(file)}\{Path.GetFileNameWithoutExtension(file)}.{type}";
+            var keepFileExtension = Properties.Settings.Default.KeepFileExtension;
+
+            return keepFileExtension
+                ? $@"{Path.GetDirectoryName(file)}\{Path.GetFileName(file)}.{type}"
+                : $@"{Path.GetDirectoryName(file)}\{Path.GetFileNameWithoutExtension(file)}.{type}";
         }
     }
 }

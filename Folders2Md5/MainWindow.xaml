@@ -15,7 +15,7 @@
                             <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_settings}" />
                         </Rectangle.OpacityMask>
                     </Rectangle>
-                    <TextBlock Margin="5 0 0 0" VerticalAlignment="Center" Text="settings" />
+                    <TextBlock Margin="5 0 0 0" VerticalAlignment="Center" Text="Settings" />
                 </StackPanel>
             </Button>
         </controls:WindowCommands>
@@ -53,56 +53,60 @@
     <controls:MetroWindow.Flyouts>
         <controls:FlyoutsControl>
             <!--  Settings Flyout  -->
-            <controls:Flyout Name="SettingsFlyout" Width="400" AnimateOnPositionChange="True" AnimateOpacity="True" Header="settings" Position="Right" Theme="Accent">
+            <controls:Flyout Name="SettingsFlyout" Width="600" AnimateOnPositionChange="True" AnimateOpacity="True" Header="Settings" Position="Right" Theme="Accent">
                 <StackPanel>
-                    <!--<StackPanel>
-                        -->
-                    <!-- FileNameFormat -->
-                    <!--
+                    <!-- Filename -->
+                    <StackPanel Margin="10,5,0,0" Orientation="Horizontal">
+                        <Label Width="60" Margin="0,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Filename" />
+                        <CheckBox Name="KeepFileExtension" Margin="10,0,5,0" Checked="KeepFileExtensionChecked" Unchecked="KeepFileExtensionUnchecked" Content="Keep file extension" />
+                    </StackPanel>
+                    <!-- Line -->
+                    <StackPanel Margin="0,10,0,0" Orientation="Vertical">
+                        <Rectangle Width="570" VerticalAlignment="Stretch" Stroke="{DynamicResource AccentColorBrush}" />
+                    </StackPanel>
+                    <StackPanel>
+                        <!-- Logging -->
                         <StackPanel Margin="10,5,0,0" Orientation="Horizontal">
-                            <Label Width="80" Margin="0,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="File naming:" />
-                            <RadioButton Name="OriginalFileName" Margin="10,0,5,0" Checked="HashFormat" Content="original filename" IsChecked="True" />
-                            <RadioButton Name="HashInFileName" Margin="10,0,5,0" Checked="HashFormat" Content="md5 hash in filename" />
-                        </StackPanel>
-                        -->
-                    <!-- Save FileNameFormat -->
-                    <!--
-                        <StackPanel Margin="10,5,0,0" Orientation="Horizontal">
-                            <Button Name="SaveFileNameFormat" Width="285" Margin="90,5,0,0" Click="SaveFileNameFormatClick">
+                            <!--Label-->
+                            <Label Width="60" Margin="0,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Logging" />
+
+                            <!--TextBox-->
+                            <TextBox Name="LoggingPath" Height="30" Width="400" Margin="10,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" IsReadOnly="True" LostFocus="LoggingPathOnLostFocus" />
+
+                            <!--Button-->
+                            <Button Name="BrowseLoggingPath" Width="95" Margin="10,5,0,0" HorizontalAlignment="Right" VerticalAlignment="Top" Click="BrowseLoggingPathClick">
                                 <StackPanel Orientation="Horizontal">
-                                    <Rectangle Width="16" Height="16" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                                    <Rectangle Width="20" Height="20" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
                                         <Rectangle.OpacityMask>
-                                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_save}" />
+                                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_folder}" />
                                         </Rectangle.OpacityMask>
                                     </Rectangle>
-                                    <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" Text="save file naming" />
+                                    <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" Text="browse" />
                                 </StackPanel>
                             </Button>
                         </StackPanel>
                     </StackPanel>
-                    -->
                     <!-- Line -->
-                    <!--
                     <StackPanel Margin="0,10,0,0" Orientation="Vertical">
-                        <Rectangle Width="370" VerticalAlignment="Stretch" Stroke="{DynamicResource AccentColorBrush}" />
-                    </StackPanel>-->
+                        <Rectangle Width="570" VerticalAlignment="Stretch" Stroke="{DynamicResource AccentColorBrush}" />
+                    </StackPanel>
                     <!--Application Style-->
                     <StackPanel>
                         <!-- Theme -->
                         <StackPanel Margin="10,5,0,0" Orientation="Horizontal">
-                            <Label Width="80" Margin="0,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Theme:" />
-                            <RadioButton Name="Dark" Margin="10,0,5,0" Checked="Theme" Content="Dark" />
-                            <RadioButton Name="Light" Margin="10,0,5,0" Checked="Theme" Content="Light" IsChecked="True" />
+                            <Label Width="60" Margin="0,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Theme" />
+                            <RadioButton Name="Dark" Margin="10,5,5,0" Checked="Theme" Content="Dark" />
+                            <RadioButton Name="Light" Margin="10,5,5,0" Checked="Theme" Content="Light" IsChecked="True" />
                         </StackPanel>
                         <!-- Accent -->
                         <StackPanel Margin="10,5,0,0" Orientation="Horizontal">
-                            <Label Width="80" Margin="0,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Accent:" />
-                            <ComboBox Name="Accent" Width="285" Margin="10,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                            <Label Width="60" Margin="0,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Accent" />
+                            <ComboBox Name="Accent" Width="505" Margin="10,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                                     SelectionChanged="AccentOnSelectionChanged" />
                         </StackPanel>
                         <!-- Save Style -->
                         <StackPanel Margin="10,5,0,0" Orientation="Horizontal">
-                            <Button Name="SaveStyle" Width="285" Margin="90,5,0,0" Click="SaveStyleClick">
+                            <Button Name="SaveStyle" Width="505" Margin="70,5,0,0" Click="SaveStyleClick">
                                 <StackPanel Orientation="Horizontal">
                                     <Rectangle Width="16" Height="16" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
                                         <Rectangle.OpacityMask>

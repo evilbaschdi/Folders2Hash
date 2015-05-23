@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Folders2Md5.Internal
 {
-    public class Calculate
+    public class Calculate : ICalculate
     {
         public string Md5Hash(string filename)
         {

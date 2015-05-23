@@ -76,10 +76,22 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Core\ApplicationBasics.cs" />
-    <Compile Include="Core\ApplicationStyle.cs" />
-    <Compile Include="Internal\Calculate.cs" />
-    <Compile Include="Internal\FilePath.cs" />
+    <Compile Include="Core\ApplicationBasics.cs">
+      <DependentUpon>IApplicationBasics.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Core\ApplicationStyle.cs">
+      <DependentUpon>IApplicationStyle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Core\IApplicationBasics.cs" />
+    <Compile Include="Core\IApplicationStyle.cs" />
+    <Compile Include="Internal\Calculate.cs">
+      <DependentUpon>ICalculate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Internal\FilePath.cs">
+      <DependentUpon>IFilePath.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Internal\ICalculate.cs" />
+    <Compile Include="Internal\IFilePath.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -119,9 +131,6 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="b.ico" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\WindowsIcons-license.txt" />
