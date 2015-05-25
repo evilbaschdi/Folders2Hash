@@ -87,9 +87,7 @@
 
                             <!--TextBox-->
                             <TextBox Name="LoggingPath" Height="30" Width="400" Margin="10,5,0,0"
-                                     HorizontalAlignment="Left" VerticalAlignment="Top" IsReadOnly="True"
-                                     LostFocus="LoggingPathOnLostFocus" />
-
+                                     HorizontalAlignment="Left" VerticalAlignment="Top" LostFocus="LoggingPathOnLostFocus" />
                             <!--Button-->
                             <Button Name="BrowseLoggingPath" Width="95" Margin="10,5,0,0" HorizontalAlignment="Right"
                                     VerticalAlignment="Top" Click="BrowseLoggingPathClick">

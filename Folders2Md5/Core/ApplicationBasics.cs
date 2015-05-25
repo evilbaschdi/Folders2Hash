@@ -12,7 +12,7 @@ namespace Folders2Md5.Core
             };
 
             var result = folderDialog.ShowDialog();
-            if(result.ToString() != "OK")
+            if (result.ToString() != "OK")
             {
                 return;
             }
@@ -21,28 +21,28 @@ namespace Folders2Md5.Core
             Properties.Settings.Default.Save();
         }
 
+        public string GetInitialDirectory()
+        {
+            return string.IsNullOrWhiteSpace(Properties.Settings.Default.InitialDirectory)
+                ? ""
+                : Properties.Settings.Default.InitialDirectory;
+        }
+
         public void BrowseLoggingFolder()
         {
             var folderDialog = new FolderBrowserDialog
             {
-                SelectedPath = GetInitialDirectory()
+                SelectedPath = GetLoggingPath()
             };
 
             var result = folderDialog.ShowDialog();
-            if(result.ToString() != "OK")
+            if (result.ToString() != "OK")
             {
                 return;
             }
 
             Properties.Settings.Default.LoggingPath = folderDialog.SelectedPath;
             Properties.Settings.Default.Save();
-        }
-
-        public string GetInitialDirectory()
-        {
-            return string.IsNullOrWhiteSpace(Properties.Settings.Default.InitialDirectory)
-                ? ""
-                : Properties.Settings.Default.InitialDirectory;
         }
 
         public string GetLoggingPath()
