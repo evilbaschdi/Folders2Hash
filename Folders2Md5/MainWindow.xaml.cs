@@ -1,14 +1,17 @@
 ﻿using Folders2Md5.Core;
 using Folders2Md5.Internal;
 using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Shell;
 
 namespace Folders2Md5
 {
@@ -23,6 +26,8 @@ namespace Folders2Md5
 
         public MainWindow CurrentHiddenInstance { get; set; }
 
+        private readonly BackgroundWorker _bw;
+        private string _result;
         private readonly IApplicationStyle _style;
         private readonly IApplicationBasics _basics;
         private readonly ICalculate _calculate;
@@ -34,6 +39,8 @@ namespace Folders2Md5
             _style = new ApplicationStyle(this);
             _basics = new ApplicationBasics();
             InitializeComponent();
+            _bw = new BackgroundWorker();
+            TaskbarItemInfo = new TaskbarItemInfo();
             _style.Load();
             ValidateForm();
             _calculate = new Calculate();
@@ -55,12 +62,16 @@ namespace Folders2Md5
 
         private void GenerateHashsOnClick(object sender, RoutedEventArgs e)
         {
+            TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
             GenerateHashs();
         }
 
         public void GenerateHashs()
         {
-            GenerateHashs(_initialDirectory);
+            _bw.DoWork += (o, args) => GenerateHashs(_initialDirectory);
+            _bw.WorkerReportsProgress = true;
+            _bw.RunWorkerCompleted += BackgroundWorkerRunWorkerCompleted;
+            _bw.RunWorkerAsync();
         }
 
         public void GenerateHashs(string initialDirectory)
@@ -110,7 +121,7 @@ namespace Folders2Md5
             });
             outputList.ForEach(o => outputText += o);
             outputText += string.Format("End: {0}{1}{1}", DateTime.Now, Environment.NewLine);
-            Output.Text = outputText;
+            _result = outputText;
 
             File.AppendAllText(
                 $@"{_loggingPath}\Folders2Md5_Log_{DateTime.Now.ToString("yyyy-MM-dd_HHmm")}.txt",
@@ -120,6 +131,24 @@ namespace Folders2Md5
             {
                 CurrentHiddenInstance.Close();
             }
+        }
+
+        private void BackgroundWorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            Output.Text = _result;
+            ShowMessage("Completed");
+            TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
+        }
+
+        public async void ShowMessage(string message)
+        {
+            var options = new MetroDialogSettings
+            {
+                ColorScheme = MetroDialogColorScheme.Theme
+            };
+
+            MetroDialogOptions = options;
+            await this.ShowMessageAsync("Info", message);
         }
 
         #region Initial Directory

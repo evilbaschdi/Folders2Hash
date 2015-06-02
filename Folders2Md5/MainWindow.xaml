@@ -23,7 +23,10 @@
             </Button>
         </controls:WindowCommands>
     </controls:MetroWindow.RightWindowCommands>
-
+    <!-- TaskbarItemInfo -->
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo />
+    </Window.TaskbarItemInfo>
     <!--Grid-->
     <Grid>
         <Label Width="35" Height="30" Margin="10,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
