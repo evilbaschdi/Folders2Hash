@@ -680,6 +680,26 @@
             <see cref="T:System.Windows.Controls.ComboBox"/>
             </summary>
         </member>
+        <member name="M:MahApps.Metro.Controls.ComboBoxHelper.GetMaxLength(System.Windows.UIElement)">
+            <summary>
+            Gets the Maximum number of characters the TextBox can accept.
+            </summary>
+        </member>
+        <member name="M:MahApps.Metro.Controls.ComboBoxHelper.SetMaxLength(System.Windows.UIElement,System.Int32)">
+            <summary>
+            Sets the Maximum number of characters the TextBox can accept.
+            </summary>
+        </member>
+        <member name="M:MahApps.Metro.Controls.ComboBoxHelper.GetCharacterCasing(System.Windows.UIElement)">
+            <summary>
+            Gets the Character casing of the TextBox.
+            </summary>
+        </member>
+        <member name="M:MahApps.Metro.Controls.ComboBoxHelper.SetCharacterCasing(System.Windows.UIElement,System.Windows.Controls.CharacterCasing)">
+            <summary>
+            Sets the Character casing of the TextBox.
+            </summary>
+        </member>
         <member name="T:MahApps.Metro.Controls.ControlsHelper">
             <summary>
             A helper class that provides various controls.

@@ -24,9 +24,9 @@ namespace Folders2Md5.Internal
             var fileList = new List<string>();
             var initialDirectoryFileList = Directory.GetFiles(initialDirectory).ToList();
 
-            foreach(var file in initialDirectoryFileList)
+            foreach (var file in initialDirectoryFileList)
             {
-                if(IsValidFileName(file, fileList))
+                if (IsValidFileName(file, fileList))
                 {
                     fileList.Add(file);
                 }
@@ -35,9 +35,9 @@ namespace Folders2Md5.Internal
             var initialDirectorySubdirectoriesFileList =
                 GetSubdirectoriesContainingOnlyFiles(initialDirectory).SelectMany(Directory.GetFiles);
 
-            foreach(var file in initialDirectorySubdirectoriesFileList)
+            foreach (var file in initialDirectorySubdirectoriesFileList)
             {
-                if(IsValidFileName(file, fileList))
+                if (IsValidFileName(file, fileList))
                 {
                     fileList.Add(file);
                 }
@@ -59,12 +59,12 @@ namespace Folders2Md5.Internal
         public byte[] ReadFullFile(Stream stream)
         {
             var buffer = new byte[32768];
-            using(var ms = new MemoryStream())
+            using (var ms = new MemoryStream())
             {
-                while(true)
+                while (true)
                 {
                     var read = stream.Read(buffer, 0, buffer.Length);
-                    if(read <= 0)
+                    if (read <= 0)
                     {
                         return ms.ToArray();
                     }
@@ -73,10 +73,8 @@ namespace Folders2Md5.Internal
             }
         }
 
-        public string HashFileName(string file, string type)
+        public string HashFileName(string file, string type, bool keepFileExtension)
         {
-            var keepFileExtension = Properties.Settings.Default.KeepFileExtension;
-
             return keepFileExtension
                 ? $@"{Path.GetDirectoryName(file)}\{Path.GetFileName(file)}.{type}"
                 : $@"{Path.GetDirectoryName(file)}\{Path.GetFileNameWithoutExtension(file)}.{type}";

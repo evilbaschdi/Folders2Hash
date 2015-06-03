@@ -1,0 +1,12 @@
+## Configuration command line arguments: ##
+
+- g '' to set the path the checksums should be created for.
+- l '' to set the path you logging file should be stored at.
+Folders2Md5.exe g 'F:\Setup\Images' l 'C:\Temp'
+Folders2Md5.exe generate 'F:\Setup\Images' logging 'C:\Temp'
+
+*(optional)*
+
+- k to keep the file extension of the file you created a checksum for. For example: backup.zip => backup.zip.md5 (alt.: keep '')
+Folders2Md5.exe g 'F:\Setup\Images' l 'C:\Temp' k
+Folders2Md5.exe generate 'F:\Setup\Images' logging 'C:\Temp' keep

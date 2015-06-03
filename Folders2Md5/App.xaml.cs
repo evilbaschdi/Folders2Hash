@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using Folders2Md5.Internal;
+using System.Linq;
 using System.Windows;
 
 namespace Folders2Md5
@@ -8,27 +9,64 @@ namespace Folders2Md5
     /// </summary>
 // ReSharper disable RedundantExtendsListEntry
     public partial class App : Application
-// ReSharper restore RedundantExtendsListEntry
+    // ReSharper restore RedundantExtendsListEntry
     {
         protected override void OnStartup(StartupEventArgs e)
         {
             var mainWindow = new MainWindow();
 
-            if(e.Args.Any())
+            if (e.Args.Any())
             {
-                if((e.Args.Contains("-generate") || e.Args.Contains("-g")) && e.Args.Count() == 1)
+                //Folders2Md5.exe g 'F:\Setup\Images' l 'C:\temp'
+                if (e.Args.Count() == 4 &&
+                   (e.Args.Contains("logging") || e.Args.Contains("l")) &&
+                   (e.Args.Contains("generate") || e.Args.Contains("g"))
+                    )
                 {
                     mainWindow.CurrentHiddenInstance = mainWindow;
-                    mainWindow.CloseHiddenInstancesOnFinish = true;
 
-                    mainWindow.GenerateHashs();
+                    var configuration = new Configuration
+                    {
+                        //HashType.
+                        HashType = "md5",
+                        //Application has to be closed if triggered through command line.
+                        CloseHiddenInstancesOnFinish = true,
+                        InitialDirectory = e.Args[1].Replace("'", ""),
+                        LoggingPath = e.Args[3].Replace("'", ""),
+                        KeepFileExtension = false
+                    };
+                    //HashType.
+                    //Application has to be closed if triggered through command line.
+
+                    mainWindow.GenerateHashs(configuration);
                 }
-                if((e.Args.Contains("-generate") || e.Args.Contains("-g")) &&
-                   (e.Args.Contains("-path") || e.Args.Contains("-p")) && e.Args.Count() == 3)
+                //Folders2Md5.exe g 'F:\Setup\Images' l 'C:\temp' k
+                if (e.Args.Count() == 5 &&
+                   (e.Args.Contains("logging") || e.Args.Contains("l")) &&
+                   (e.Args.Contains("generate") || e.Args.Contains("g")) &&
+                   (e.Args.Contains("keep") || e.Args.Contains("k"))
+                    )
                 {
                     mainWindow.CurrentHiddenInstance = mainWindow;
-                    mainWindow.CloseHiddenInstancesOnFinish = true;
-                    mainWindow.GenerateHashs(e.Args[2].Replace("'", ""));
+
+                    var configuration = new Configuration
+                    {
+                        //HashType.
+                        HashType = "md5",
+                        //Application has to be closed if triggered through command line.
+                        CloseHiddenInstancesOnFinish = true,
+                        InitialDirectory = e.Args[1].Replace("'", ""),
+                        LoggingPath = e.Args[3].Replace("'", ""),
+                        KeepFileExtension = true
+                    };
+                    //HashType.
+                    //Application has to be closed if triggered through command line.
+
+                    mainWindow.GenerateHashs(configuration);
+                }
+                else
+                {
+                    mainWindow.Close();
                 }
             }
             else

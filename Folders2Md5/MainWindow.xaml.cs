@@ -20,7 +20,7 @@ namespace Folders2Md5
     /// </summary>
     // ReSharper disable RedundantExtendsListEntry
     public partial class MainWindow : MetroWindow
-    // ReSharper restore RedundantExtendsListEntry
+        // ReSharper restore RedundantExtendsListEntry
     {
         public bool CloseHiddenInstancesOnFinish { get; set; }
 
@@ -56,8 +56,21 @@ namespace Folders2Md5
             _initialDirectory = _basics.GetInitialDirectory();
             InitialDirectory.Text = _initialDirectory;
 
-            _loggingPath = _basics.GetLoggingPath();
+            _loggingPath = !string.IsNullOrWhiteSpace(_basics.GetLoggingPath())
+                ? _basics.GetLoggingPath()
+                : _basics.GetInitialDirectory();
             LoggingPath.Text = _loggingPath;
+        }
+
+        private void BackgroundWorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            Output.Text = _result;
+            var message =
+                $"Checksums for path '{_initialDirectory}' generated." +
+                $"{Environment.NewLine}You can find a logging file at '{_loggingPath}'.";
+
+            ShowMessage("Completed", message);
+            TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
         }
 
         private void GenerateHashsOnClick(object sender, RoutedEventArgs e)
@@ -68,31 +81,39 @@ namespace Folders2Md5
 
         public void GenerateHashs()
         {
-            _bw.DoWork += (o, args) => GenerateHashs(_initialDirectory);
+            var configuration = new Configuration
+            {
+                InitialDirectory = _initialDirectory,
+                LoggingPath = _loggingPath,
+                HashType = "md5",
+                KeepFileExtension = Properties.Settings.Default.KeepFileExtension
+            };
+
+            _bw.DoWork += (o, args) => GenerateHashs(configuration);
             _bw.WorkerReportsProgress = true;
             _bw.RunWorkerCompleted += BackgroundWorkerRunWorkerCompleted;
             _bw.RunWorkerAsync();
         }
 
-        public void GenerateHashs(string initialDirectory)
+        public void GenerateHashs(Configuration configuration)
         {
-            var type = "md5";
+            var type = configuration.HashType;
             var outputList = new List<string>();
-            var outputText = string.Format("Start: {0}{1}{1}", DateTime.Now, Environment.NewLine);
+            var outputText = $"Start: {DateTime.Now}{Environment.NewLine}{Environment.NewLine}";
 
             var filePath = new FilePath();
-            var fileList = filePath.GetFileList(initialDirectory).Distinct();
+            var fileList = filePath.GetFileList(configuration.InitialDirectory).Distinct();
 
             Parallel.ForEach(fileList, file =>
             {
                 var output = string.Empty;
 
-                var fileName = filePath.HashFileName(file, type);
+                var fileName = filePath.HashFileName(file, type, configuration.KeepFileExtension);
 
-                if (!File.Exists(fileName))
+                if(!File.Exists(fileName))
                 {
                     var hashSum = "";
-                    switch (type)
+                    switch(type)
                     {
                         case "md5":
                             hashSum = _calculate.Md5Hash(file);
@@ -120,27 +141,20 @@ namespace Folders2Md5
                 outputList.Add(output);
             });
             outputList.ForEach(o => outputText += o);
-            outputText += string.Format("End: {0}{1}{1}", DateTime.Now, Environment.NewLine);
+            outputText += $"End: {DateTime.Now}{Environment.NewLine}{Environment.NewLine}";
             _result = outputText;
 
             File.AppendAllText(
-                $@"{_loggingPath}\Folders2Md5_Log_{DateTime.Now.ToString("yyyy-MM-dd_HHmm")}.txt",
+                $@"{configuration.LoggingPath}\Folders2Md5_Log_{DateTime.Now.ToString("yyyy-MM-dd_HHmm")}.txt",
                 outputText);
 
-            if (CloseHiddenInstancesOnFinish)
+            if(configuration.CloseHiddenInstancesOnFinish)
             {
                 CurrentHiddenInstance.Close();
             }
         }
 
-        private void BackgroundWorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            Output.Text = _result;
-            ShowMessage("Completed");
-            TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
-        }
-
-        public async void ShowMessage(string message)
+        public async void ShowMessage(string title, string message)
         {
             var options = new MetroDialogSettings
             {
@@ -148,7 +162,7 @@ namespace Folders2Md5
             };
 
             MetroDialogOptions = options;
-            await this.ShowMessageAsync("Info", message);
+            await this.ShowMessageAsync(title, message);
         }
 
         #region Initial Directory
@@ -163,7 +177,7 @@ namespace Folders2Md5
 
         private void InitialDirectoryOnLostFocus(object sender, RoutedEventArgs e)
         {
-            if (Directory.Exists(InitialDirectory.Text))
+            if(Directory.Exists(InitialDirectory.Text))
             {
                 Properties.Settings.Default.InitialDirectory = InitialDirectory.Text;
                 Properties.Settings.Default.Save();
@@ -183,13 +197,13 @@ namespace Folders2Md5
 
         private void ToggleFlyout(int index, bool stayOpen = false)
         {
-            var activeFlyout = (Flyout)Flyouts.Items[index];
-            if (activeFlyout == null)
+            var activeFlyout = (Flyout) Flyouts.Items[index];
+            if(activeFlyout == null)
             {
                 return;
             }
 
-            foreach (
+            foreach(
                 var nonactiveFlyout in
                     Flyouts.Items.Cast<Flyout>()
                         .Where(nonactiveFlyout => nonactiveFlyout.IsOpen && nonactiveFlyout.Name != activeFlyout.Name))
@@ -197,7 +211,7 @@ namespace Folders2Md5
                 nonactiveFlyout.IsOpen = false;
             }
 
-            if (activeFlyout.IsOpen && stayOpen)
+            if(activeFlyout.IsOpen && stayOpen)
             {
                 activeFlyout.IsOpen = true;
             }
@@ -242,7 +256,7 @@ namespace Folders2Md5
 
         private void Handle(ToggleButton checkBox)
         {
-            if (checkBox.IsChecked != null)
+            if(checkBox.IsChecked != null)
             {
                 Properties.Settings.Default.KeepFileExtension = checkBox.IsChecked.Value;
             }
@@ -259,7 +273,7 @@ namespace Folders2Md5
 
         private void LoggingPathOnLostFocus(object sender, RoutedEventArgs e)
         {
-            if (Directory.Exists(LoggingPath.Text))
+            if(Directory.Exists(LoggingPath.Text))
             {
                 Properties.Settings.Default.LoggingPath = LoggingPath.Text;
                 Properties.Settings.Default.Save();

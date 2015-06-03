@@ -12,19 +12,19 @@ namespace Folders2Md5.Internal
             try
             {
                 var md5 = MD5.Create();
-                using(var fs = new FileStream(filename, FileMode.Open, FileAccess.Read))
+                using (var fs = new FileStream(filename, FileMode.Open, FileAccess.Read))
                 {
                     var hash = md5.ComputeHash(fs);
 
                     var sb = new StringBuilder();
-                    foreach(var t in hash)
+                    foreach (var t in hash)
                     {
                         sb.Append(t.ToString("X2"));
                     }
                     return sb.ToString();
                 }
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 return exception.Message;
             }
@@ -35,19 +35,19 @@ namespace Folders2Md5.Internal
             try
             {
                 var sha1 = SHA1.Create();
-                using(var fs = new FileStream(filename, FileMode.Open, FileAccess.Read))
+                using (var fs = new FileStream(filename, FileMode.Open, FileAccess.Read))
                 {
                     var hash = sha1.ComputeHash(fs);
 
                     var sb = new StringBuilder();
-                    foreach(var t in hash)
+                    foreach (var t in hash)
                     {
                         sb.Append(t.ToString("X2"));
                     }
                     return sb.ToString();
                 }
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 return exception.Message;
             }
