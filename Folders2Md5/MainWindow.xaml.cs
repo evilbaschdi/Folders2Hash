@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Shell;
 
 namespace Folders2Md5
@@ -20,7 +21,7 @@ namespace Folders2Md5
     /// </summary>
     // ReSharper disable RedundantExtendsListEntry
     public partial class MainWindow : MetroWindow
-        // ReSharper restore RedundantExtendsListEntry
+    // ReSharper restore RedundantExtendsListEntry
     {
         public bool CloseHiddenInstancesOnFinish { get; set; }
 
@@ -66,11 +67,12 @@ namespace Folders2Md5
         {
             Output.Text = _result;
             var message =
-                $"Checksums for path '{_initialDirectory}' generated." +
-                $"{Environment.NewLine}You can find a logging file at '{_loggingPath}'.";
+                $"Checksums for path '{_initialDirectory}' were generated." +
+                $"{Environment.NewLine}You can find the logging file at '{_loggingPath}'.";
 
             ShowMessage("Completed", message);
             TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
+            Cursor = Cursors.Arrow;
         }
 
         private void GenerateHashsOnClick(object sender, RoutedEventArgs e)
@@ -88,7 +90,7 @@ namespace Folders2Md5
                 HashType = "md5",
                 KeepFileExtension = Properties.Settings.Default.KeepFileExtension
             };
-
+            Cursor = Cursors.Wait;
             _bw.DoWork += (o, args) => GenerateHashs(configuration);
             _bw.WorkerReportsProgress = true;
             _bw.RunWorkerCompleted += BackgroundWorkerRunWorkerCompleted;
@@ -110,10 +112,10 @@ namespace Folders2Md5
 
                 var fileName = filePath.HashFileName(file, type, configuration.KeepFileExtension);
 
-                if(!File.Exists(fileName))
+                if (!File.Exists(fileName))
                 {
                     var hashSum = "";
-                    switch(type)
+                    switch (type)
                     {
                         case "md5":
                             hashSum = _calculate.Md5Hash(file);
@@ -148,7 +150,7 @@ namespace Folders2Md5
                 $@"{configuration.LoggingPath}\Folders2Md5_Log_{DateTime.Now.ToString("yyyy-MM-dd_HHmm")}.txt",
                 outputText);
 
-            if(configuration.CloseHiddenInstancesOnFinish)
+            if (configuration.CloseHiddenInstancesOnFinish)
             {
                 CurrentHiddenInstance.Close();
             }
@@ -177,7 +179,7 @@ namespace Folders2Md5
 
         private void InitialDirectoryOnLostFocus(object sender, RoutedEventArgs e)
         {
-            if(Directory.Exists(InitialDirectory.Text))
+            if (Directory.Exists(InitialDirectory.Text))
             {
                 Properties.Settings.Default.InitialDirectory = InitialDirectory.Text;
                 Properties.Settings.Default.Save();
@@ -197,13 +199,13 @@ namespace Folders2Md5
 
         private void ToggleFlyout(int index, bool stayOpen = false)
         {
-            var activeFlyout = (Flyout) Flyouts.Items[index];
-            if(activeFlyout == null)
+            var activeFlyout = (Flyout)Flyouts.Items[index];
+            if (activeFlyout == null)
             {
                 return;
             }
 
-            foreach(
+            foreach (
                 var nonactiveFlyout in
                     Flyouts.Items.Cast<Flyout>()
                         .Where(nonactiveFlyout => nonactiveFlyout.IsOpen && nonactiveFlyout.Name != activeFlyout.Name))
@@ -211,7 +213,7 @@ namespace Folders2Md5
                 nonactiveFlyout.IsOpen = false;
             }
 
-            if(activeFlyout.IsOpen && stayOpen)
+            if (activeFlyout.IsOpen && stayOpen)
             {
                 activeFlyout.IsOpen = true;
             }
@@ -256,7 +258,7 @@ namespace Folders2Md5
 
         private void Handle(ToggleButton checkBox)
         {
-            if(checkBox.IsChecked != null)
+            if (checkBox.IsChecked != null)
             {
                 Properties.Settings.Default.KeepFileExtension = checkBox.IsChecked.Value;
             }
@@ -273,7 +275,7 @@ namespace Folders2Md5
 
         private void LoggingPathOnLostFocus(object sender, RoutedEventArgs e)
         {
-            if(Directory.Exists(LoggingPath.Text))
+            if (Directory.Exists(LoggingPath.Text))
             {
                 Properties.Settings.Default.LoggingPath = LoggingPath.Text;
                 Properties.Settings.Default.Save();

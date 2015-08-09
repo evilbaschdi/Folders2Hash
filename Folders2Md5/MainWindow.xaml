@@ -61,7 +61,7 @@
         </Button>
         <TextBox Name="Output" Margin="10,45,10,10" IsReadOnly="True" TextWrapping="Wrap"
                  VerticalScrollBarVisibility="Auto"
-                 Text="It will take a while until you see results. Window may be inactive." />
+                 Text="It probably will take a while until you see results. Window may be inactive." />
     </Grid>
     <!--  Flyouts  -->
     <controls:MetroWindow.Flyouts>
