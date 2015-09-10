@@ -60,6 +60,9 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="Windows">
+      <HintPath>C:\Program Files (x86)\Windows Kits\8.1\References\CommonConfiguration\Neutral\Windows.winmd</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -85,6 +88,7 @@
     </Compile>
     <Compile Include="Core\IApplicationBasics.cs" />
     <Compile Include="Core\IApplicationStyle.cs" />
+    <Compile Include="Core\IToast.cs" />
     <Compile Include="Internal\Calculate.cs">
       <DependentUpon>ICalculate.cs</DependentUpon>
     </Compile>
@@ -145,6 +149,11 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="md5.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="md5.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
