@@ -28,6 +28,7 @@ namespace Folders2Md5
         public MainWindow CurrentHiddenInstance { get; set; }
 
         private readonly BackgroundWorker _bw;
+        private Configuration _configuration;
         private string _result;
         private readonly IApplicationStyle _style;
         private readonly IApplicationBasics _basics;
@@ -35,6 +36,7 @@ namespace Folders2Md5
         private readonly IToast _toast;
         private string _initialDirectory;
         private string _loggingPath;
+        private int _executionCount;
 
         public MainWindow()
         {
@@ -46,7 +48,6 @@ namespace Folders2Md5
             _style.Load();
             ValidateForm();
             _calculate = new Calculate();
-
             _toast = new Toast();
         }
 
@@ -83,11 +84,12 @@ namespace Folders2Md5
         private void GenerateHashsOnClick(object sender, RoutedEventArgs e)
         {
             TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
-            GenerateHashs();
+            ConfigureGenerateHashs();
         }
 
-        public void GenerateHashs()
+        public void ConfigureGenerateHashs()
         {
+            _executionCount++;
             var configuration = new Configuration
             {
                 InitialDirectory = _initialDirectory,
@@ -96,14 +98,24 @@ namespace Folders2Md5
                 KeepFileExtension = Properties.Settings.Default.KeepFileExtension
             };
             Cursor = Cursors.Wait;
-            _bw.DoWork += (o, args) => GenerateHashs(configuration);
-            _bw.WorkerReportsProgress = true;
-            _bw.RunWorkerCompleted += BackgroundWorkerRunWorkerCompleted;
+            _configuration = configuration;
+            if (_executionCount == 1)
+            {
+                _bw.DoWork += (o, args) => RunHashCalculation();
+                _bw.WorkerReportsProgress = true;
+                _bw.RunWorkerCompleted += BackgroundWorkerRunWorkerCompleted;
+            }
             _bw.RunWorkerAsync();
         }
 
-        public void GenerateHashs(Configuration configuration)
+        public void RunPreconfiguredHashCalculation(Configuration configuration)
         {
+            _configuration = configuration;
+        }
+
+        private void RunHashCalculation()
+        {
+            var configuration = _configuration;
             var type = configuration.HashType;
             var outputList = new List<string>();
             var outputText = $"Start: {DateTime.Now}{Environment.NewLine}{Environment.NewLine}";
