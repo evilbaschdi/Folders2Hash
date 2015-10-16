@@ -9,9 +9,7 @@ namespace Folders2Md5.Internal
         public string CleanFileName(string path)
         {
             var fileName = Path.GetFileName(path);
-            // ReSharper disable PossibleNullReferenceException
-            return fileName.Replace(".", "_").Replace(" ", "_");
-            // ReSharper restore PossibleNullReferenceException
+            return fileName?.Replace(".", "_").Replace(" ", "_") ?? string.Empty;
         }
 
         private IEnumerable<string> GetSubdirectoriesContainingOnlyFiles(string path)
@@ -24,23 +22,17 @@ namespace Folders2Md5.Internal
             var fileList = new List<string>();
             var initialDirectoryFileList = Directory.GetFiles(initialDirectory).ToList();
 
-            foreach (var file in initialDirectoryFileList)
+            foreach(var file in initialDirectoryFileList.Where(file => IsValidFileName(file, fileList)))
             {
-                if (IsValidFileName(file, fileList))
-                {
-                    fileList.Add(file);
-                }
+                fileList.Add(file);
             }
 
             var initialDirectorySubdirectoriesFileList =
                 GetSubdirectoriesContainingOnlyFiles(initialDirectory).SelectMany(Directory.GetFiles);
 
-            foreach (var file in initialDirectorySubdirectoriesFileList)
+            foreach(var file in initialDirectorySubdirectoriesFileList.Where(file => IsValidFileName(file, fileList)))
             {
-                if (IsValidFileName(file, fileList))
-                {
-                    fileList.Add(file);
-                }
+                fileList.Add(file);
             }
 
             return fileList;
@@ -59,12 +51,12 @@ namespace Folders2Md5.Internal
         public byte[] ReadFullFile(Stream stream)
         {
             var buffer = new byte[32768];
-            using (var ms = new MemoryStream())
+            using(var ms = new MemoryStream())
             {
-                while (true)
+                while(true)
                 {
                     var read = stream.Read(buffer, 0, buffer.Length);
-                    if (read <= 0)
+                    if(read <= 0)
                     {
                         return ms.ToArray();
                     }

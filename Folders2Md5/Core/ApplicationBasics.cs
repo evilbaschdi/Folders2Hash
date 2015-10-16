@@ -12,7 +12,7 @@ namespace Folders2Md5.Core
             };
 
             var result = folderDialog.ShowDialog();
-            if (result.ToString() != "OK")
+            if(result.ToString() != "OK")
             {
                 return;
             }
@@ -36,7 +36,7 @@ namespace Folders2Md5.Core
             };
 
             var result = folderDialog.ShowDialog();
-            if (result.ToString() != "OK")
+            if(result.ToString() != "OK")
             {
                 return;
             }

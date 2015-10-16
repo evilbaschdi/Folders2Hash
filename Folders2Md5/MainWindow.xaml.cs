@@ -1,8 +1,4 @@
-﻿using Folders2Md5.Core;
-using Folders2Md5.Internal;
-using MahApps.Metro.Controls;
-using MahApps.Metro.Controls.Dialogs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -13,15 +9,17 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Shell;
+using Folders2Md5.Core;
+using Folders2Md5.Internal;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace Folders2Md5
 {
     /// <summary>
     ///     Interaction logic for MainWindow.xaml
     /// </summary>
-    // ReSharper disable RedundantExtendsListEntry
-    public partial class MainWindow : MetroWindow
-    // ReSharper restore RedundantExtendsListEntry
+    public partial class MainWindow
     {
         public bool CloseHiddenInstancesOnFinish { get; set; }
 
@@ -99,7 +97,7 @@ namespace Folders2Md5
             };
             Cursor = Cursors.Wait;
             _configuration = configuration;
-            if (_executionCount == 1)
+            if(_executionCount == 1)
             {
                 _bw.DoWork += (o, args) => RunHashCalculation();
                 _bw.WorkerReportsProgress = true;
@@ -129,10 +127,10 @@ namespace Folders2Md5
 
                 var fileName = filePath.HashFileName(file, type, configuration.KeepFileExtension);
 
-                if (!File.Exists(fileName))
+                if(!File.Exists(fileName))
                 {
                     var hashSum = "";
-                    switch (type)
+                    switch(type)
                     {
                         case "md5":
                             hashSum = _calculate.Md5Hash(file);
@@ -167,7 +165,7 @@ namespace Folders2Md5
                 $@"{configuration.LoggingPath}\Folders2Md5_Log_{DateTime.Now.ToString("yyyy-MM-dd_HHmm")}.txt",
                 outputText);
 
-            if (configuration.CloseHiddenInstancesOnFinish)
+            if(configuration.CloseHiddenInstancesOnFinish)
             {
                 CurrentHiddenInstance.Close();
             }
@@ -196,7 +194,7 @@ namespace Folders2Md5
 
         private void InitialDirectoryOnLostFocus(object sender, RoutedEventArgs e)
         {
-            if (Directory.Exists(InitialDirectory.Text))
+            if(Directory.Exists(InitialDirectory.Text))
             {
                 Properties.Settings.Default.InitialDirectory = InitialDirectory.Text;
                 Properties.Settings.Default.Save();
@@ -216,13 +214,13 @@ namespace Folders2Md5
 
         private void ToggleFlyout(int index, bool stayOpen = false)
         {
-            var activeFlyout = (Flyout)Flyouts.Items[index];
-            if (activeFlyout == null)
+            var activeFlyout = (Flyout) Flyouts.Items[index];
+            if(activeFlyout == null)
             {
                 return;
             }
 
-            foreach (
+            foreach(
                 var nonactiveFlyout in
                     Flyouts.Items.Cast<Flyout>()
                         .Where(nonactiveFlyout => nonactiveFlyout.IsOpen && nonactiveFlyout.Name != activeFlyout.Name))
@@ -230,14 +228,7 @@ namespace Folders2Md5
                 nonactiveFlyout.IsOpen = false;
             }
 
-            if (activeFlyout.IsOpen && stayOpen)
-            {
-                activeFlyout.IsOpen = true;
-            }
-            else
-            {
-                activeFlyout.IsOpen = !activeFlyout.IsOpen;
-            }
+            activeFlyout.IsOpen = activeFlyout.IsOpen && stayOpen || !activeFlyout.IsOpen;
         }
 
         #endregion Flyout
@@ -275,7 +266,7 @@ namespace Folders2Md5
 
         private void Handle(ToggleButton checkBox)
         {
-            if (checkBox.IsChecked != null)
+            if(checkBox.IsChecked != null)
             {
                 Properties.Settings.Default.KeepFileExtension = checkBox.IsChecked.Value;
             }
@@ -292,7 +283,7 @@ namespace Folders2Md5
 
         private void LoggingPathOnLostFocus(object sender, RoutedEventArgs e)
         {
-            if (Directory.Exists(LoggingPath.Text))
+            if(Directory.Exists(LoggingPath.Text))
             {
                 Properties.Settings.Default.LoggingPath = LoggingPath.Text;
                 Properties.Settings.Default.Save();
