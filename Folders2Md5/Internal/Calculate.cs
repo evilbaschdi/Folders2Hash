@@ -10,6 +10,8 @@ namespace Folders2Md5.Internal
         {
             using(var fs = new FileStream(filename, FileMode.Open, FileAccess.Read))
             {
+                //todo: SHA256 aufnehmen
+                //todo: checkboxlist für sämtliche möglichen hash algorithmen
                 var hash = ((HashAlgorithm) CryptoConfig.CreateFromName(type.ToUpper())).ComputeHash(fs);
                 var converted = BitConverter.ToString(hash).Replace("-", string.Empty);
 

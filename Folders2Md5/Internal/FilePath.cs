@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Folders2Md5.Internal
 {
@@ -20,20 +21,15 @@ namespace Folders2Md5.Internal
         public List<string> GetFileList(string initialDirectory)
         {
             var fileList = new List<string>();
+
             var initialDirectoryFileList = Directory.GetFiles(initialDirectory).ToList();
+            Parallel.ForEach(initialDirectoryFileList.Where(file => IsValidFileName(file, fileList)),
+                file => fileList.Add(file));
 
-            foreach(var file in initialDirectoryFileList.Where(file => IsValidFileName(file, fileList)))
-            {
-                fileList.Add(file);
-            }
+            var initialDirectorySubdirectoriesFileList = GetSubdirectoriesContainingOnlyFiles(initialDirectory).SelectMany(Directory.GetFiles);
 
-            var initialDirectorySubdirectoriesFileList =
-                GetSubdirectoriesContainingOnlyFiles(initialDirectory).SelectMany(Directory.GetFiles);
-
-            foreach(var file in initialDirectorySubdirectoriesFileList.Where(file => IsValidFileName(file, fileList)))
-            {
-                fileList.Add(file);
-            }
+            Parallel.ForEach(initialDirectorySubdirectoriesFileList.Where(file => IsValidFileName(file, fileList)),
+                file => fileList.Add(file));
 
             return fileList;
         }
