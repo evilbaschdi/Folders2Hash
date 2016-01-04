@@ -9,6 +9,8 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Shell;
+using EvilBaschdi.Core.Application;
+using EvilBaschdi.Core.Wpf;
 using Folders2Md5.Core;
 using Folders2Md5.Internal;
 using MahApps.Metro.Controls;
@@ -28,28 +30,32 @@ namespace Folders2Md5
         private readonly BackgroundWorker _bw;
         private Configuration _configuration;
         private string _result;
-        private readonly IApplicationStyle _style;
+        private readonly IMetroStyle _style;
         private readonly IApplicationBasics _basics;
         private readonly ICalculate _calculate;
         private readonly IToast _toast;
+        // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
+        private readonly ISettings _coreSettings;
         private string _initialDirectory;
         private string _loggingPath;
+        private int _overrideProtection;
         private int _executionCount;
 
         public MainWindow()
         {
-            _style = new ApplicationStyle(this);
+            _coreSettings = new CoreSettings();
             _basics = new ApplicationBasics();
             InitializeComponent();
             _bw = new BackgroundWorker();
             TaskbarItemInfo = new TaskbarItemInfo();
-            _style.Load();
-            ValidateForm();
+            _style = new MetroStyle(this, Accent, Dark, Light, _coreSettings);
+            _style.Load(true, false);
+            Load();
             _calculate = new Calculate();
             _toast = new Toast();
         }
 
-        private void ValidateForm()
+        private void Load()
         {
             Generate.IsEnabled = !string.IsNullOrWhiteSpace(Properties.Settings.Default.InitialDirectory) &&
                                  Directory.Exists(Properties.Settings.Default.InitialDirectory);
@@ -63,6 +69,8 @@ namespace Folders2Md5
                 ? _basics.GetLoggingPath()
                 : _basics.GetInitialDirectory();
             LoggingPath.Text = _loggingPath;
+
+            _overrideProtection = 1;
         }
 
         private void BackgroundWorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -179,7 +187,7 @@ namespace Folders2Md5
             _basics.BrowseFolder();
             InitialDirectory.Text = Properties.Settings.Default.InitialDirectory;
             _initialDirectory = Properties.Settings.Default.InitialDirectory;
-            ValidateForm();
+            Load();
         }
 
         private void InitialDirectoryOnLostFocus(object sender, RoutedEventArgs e)
@@ -190,7 +198,7 @@ namespace Folders2Md5
                 Properties.Settings.Default.Save();
                 _initialDirectory = Properties.Settings.Default.InitialDirectory;
             }
-            ValidateForm();
+            Load();
         }
 
         #endregion Initial Directory
@@ -223,24 +231,36 @@ namespace Folders2Md5
 
         #endregion Flyout
 
-        #region Style
+        #region MetroStyle
 
         private void SaveStyleClick(object sender, RoutedEventArgs e)
         {
+            if(_overrideProtection == 0)
+            {
+                return;
+            }
             _style.SaveStyle();
         }
 
         private void Theme(object sender, RoutedEventArgs e)
         {
+            if(_overrideProtection == 0)
+            {
+                return;
+            }
             _style.SetTheme(sender, e);
         }
 
         private void AccentOnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if(_overrideProtection == 0)
+            {
+                return;
+            }
             _style.SetAccent(sender, e);
         }
 
-        #endregion Style
+        #endregion MetroStyle
 
         #region GenerationSettings
 
@@ -268,7 +288,7 @@ namespace Folders2Md5
             _basics.BrowseLoggingFolder();
             LoggingPath.Text = Properties.Settings.Default.LoggingPath;
             _loggingPath = Properties.Settings.Default.LoggingPath;
-            ValidateForm();
+            Load();
         }
 
         private void LoggingPathOnLostFocus(object sender, RoutedEventArgs e)
@@ -279,7 +299,7 @@ namespace Folders2Md5
                 Properties.Settings.Default.Save();
                 _loggingPath = Properties.Settings.Default.LoggingPath;
             }
-            ValidateForm();
+            Load();
         }
 
         #endregion GenerationSettings
