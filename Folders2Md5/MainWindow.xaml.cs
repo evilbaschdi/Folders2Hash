@@ -10,6 +10,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Shell;
 using EvilBaschdi.Core.Application;
+using EvilBaschdi.Core.Browsers;
 using EvilBaschdi.Core.Wpf;
 using Folders2Md5.Core;
 using Folders2Md5.Internal;
@@ -23,51 +24,56 @@ namespace Folders2Md5
     /// </summary>
     public partial class MainWindow
     {
+        // ReSharper disable PrivateFieldCanBeConvertedToLocalVariable
         public bool CloseHiddenInstancesOnFinish { get; set; }
-
         public MainWindow CurrentHiddenInstance { get; set; }
 
         private readonly BackgroundWorker _bw;
         private Configuration _configuration;
         private string _result;
         private readonly IMetroStyle _style;
+        private readonly IFolderBrowser _folderBrowser;
+        private readonly IApplicationSettings _applicationSettings;
         private readonly IApplicationBasics _basics;
         private readonly ICalculate _calculate;
         private readonly IToast _toast;
-        // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         private readonly ISettings _coreSettings;
         private string _initialDirectory;
         private string _loggingPath;
         private int _overrideProtection;
         private int _executionCount;
 
+        // ReSharper restore PrivateFieldCanBeConvertedToLocalVariable
+
         public MainWindow()
         {
             _coreSettings = new CoreSettings();
-            _basics = new ApplicationBasics();
+            _folderBrowser = new ExplorerFolderBrower();
+            _applicationSettings = new ApplicationSettings();
+            _basics = new ApplicationBasics(_folderBrowser, _applicationSettings);
             InitializeComponent();
             _bw = new BackgroundWorker();
             TaskbarItemInfo = new TaskbarItemInfo();
             _style = new MetroStyle(this, Accent, Dark, Light, _coreSettings);
             _style.Load(true, false);
-            Load();
             _calculate = new Calculate();
-            _toast = new Toast();
+            _toast = new Toast("md5.png");
+            Load();
         }
 
         private void Load()
         {
-            Generate.IsEnabled = !string.IsNullOrWhiteSpace(Properties.Settings.Default.InitialDirectory) &&
-                                 Directory.Exists(Properties.Settings.Default.InitialDirectory);
+            Generate.IsEnabled = !string.IsNullOrWhiteSpace(_applicationSettings.InitialDirectory) &&
+                                 Directory.Exists(_applicationSettings.InitialDirectory);
 
-            KeepFileExtension.IsChecked = Properties.Settings.Default.KeepFileExtension;
+            KeepFileExtension.IsChecked = _applicationSettings.KeepFileExtension;
 
-            _initialDirectory = _basics.GetInitialDirectory();
+            _initialDirectory = _applicationSettings.InitialDirectory;
             InitialDirectory.Text = _initialDirectory;
 
-            _loggingPath = !string.IsNullOrWhiteSpace(_basics.GetLoggingPath())
-                ? _basics.GetLoggingPath()
-                : _basics.GetInitialDirectory();
+            _loggingPath = !string.IsNullOrWhiteSpace(_applicationSettings.LoggingPath)
+                ? _applicationSettings.LoggingPath
+                : _applicationSettings.InitialDirectory;
             LoggingPath.Text = _loggingPath;
 
             _overrideProtection = 1;
@@ -101,7 +107,7 @@ namespace Folders2Md5
                 InitialDirectory = _initialDirectory,
                 LoggingPath = _loggingPath,
                 HashType = "md5",
-                KeepFileExtension = Properties.Settings.Default.KeepFileExtension
+                KeepFileExtension = _applicationSettings.KeepFileExtension
             };
             Cursor = Cursors.Wait;
             _configuration = configuration;
@@ -185,8 +191,8 @@ namespace Folders2Md5
         private void BrowseClick(object sender, RoutedEventArgs e)
         {
             _basics.BrowseFolder();
-            InitialDirectory.Text = Properties.Settings.Default.InitialDirectory;
-            _initialDirectory = Properties.Settings.Default.InitialDirectory;
+            InitialDirectory.Text = _applicationSettings.InitialDirectory;
+            _initialDirectory = _applicationSettings.InitialDirectory;
             Load();
         }
 
@@ -194,9 +200,8 @@ namespace Folders2Md5
         {
             if(Directory.Exists(InitialDirectory.Text))
             {
-                Properties.Settings.Default.InitialDirectory = InitialDirectory.Text;
-                Properties.Settings.Default.Save();
-                _initialDirectory = Properties.Settings.Default.InitialDirectory;
+                _applicationSettings.InitialDirectory = InitialDirectory.Text;
+                _initialDirectory = _applicationSettings.InitialDirectory;
             }
             Load();
         }
@@ -278,16 +283,15 @@ namespace Folders2Md5
         {
             if(checkBox.IsChecked != null)
             {
-                Properties.Settings.Default.KeepFileExtension = checkBox.IsChecked.Value;
+                _applicationSettings.KeepFileExtension = checkBox.IsChecked.Value;
             }
-            Properties.Settings.Default.Save();
         }
 
         private void BrowseLoggingPathClick(object sender, RoutedEventArgs e)
         {
             _basics.BrowseLoggingFolder();
-            LoggingPath.Text = Properties.Settings.Default.LoggingPath;
-            _loggingPath = Properties.Settings.Default.LoggingPath;
+            LoggingPath.Text = _applicationSettings.LoggingPath;
+            _loggingPath = _applicationSettings.LoggingPath;
             Load();
         }
 
@@ -295,9 +299,8 @@ namespace Folders2Md5
         {
             if(Directory.Exists(LoggingPath.Text))
             {
-                Properties.Settings.Default.LoggingPath = LoggingPath.Text;
-                Properties.Settings.Default.Save();
-                _loggingPath = Properties.Settings.Default.LoggingPath;
+                _applicationSettings.LoggingPath = LoggingPath.Text;
+                _loggingPath = _applicationSettings.LoggingPath;
             }
             Load();
         }

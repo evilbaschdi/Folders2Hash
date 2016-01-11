@@ -86,12 +86,12 @@
     <Compile Include="Core\ApplicationBasics.cs">
       <DependentUpon>IApplicationBasics.cs</DependentUpon>
     </Compile>
-    <Compile Include="Core\IApplicationBasics.cs" />
-    <Compile Include="Core\IToast.cs" />
-    <Compile Include="Core\CoreSettings.cs" />
-    <Compile Include="Core\Toast.cs">
-      <DependentUpon>IToast.cs</DependentUpon>
+    <Compile Include="Core\ApplicationSettings.cs">
+      <DependentUpon>IApplicationSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Core\IApplicationBasics.cs" />
+    <Compile Include="Core\IApplicationSettings.cs" />
+    <Compile Include="Core\CoreSettings.cs" />
     <Compile Include="Internal\Calculate.cs">
       <DependentUpon>ICalculate.cs</DependentUpon>
     </Compile>

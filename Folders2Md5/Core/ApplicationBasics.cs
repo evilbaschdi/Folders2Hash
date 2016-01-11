@@ -1,55 +1,42 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using EvilBaschdi.Core.Browsers;
 
 namespace Folders2Md5.Core
 {
     public class ApplicationBasics : IApplicationBasics
     {
-        public void BrowseFolder()
+        private readonly IFolderBrowser _folderBrowser;
+        private readonly IApplicationSettings _applicationSettings;
+
+        /// <summary>
+        ///     Initialisiert eine neue Instanz der <see cref="T:System.Object" />-Klasse.
+        /// </summary>
+        public ApplicationBasics(IFolderBrowser folderBrowser, IApplicationSettings applicationSettings)
         {
-            var folderDialog = new FolderBrowserDialog
+            if(folderBrowser == null)
             {
-                SelectedPath = GetInitialDirectory()
-            };
-
-            var result = folderDialog.ShowDialog();
-            if(result.ToString() != "OK")
-            {
-                return;
+                throw new ArgumentNullException(nameof(folderBrowser));
             }
-
-            Properties.Settings.Default.InitialDirectory = folderDialog.SelectedPath;
-            Properties.Settings.Default.Save();
+            if(applicationSettings == null)
+            {
+                throw new ArgumentNullException(nameof(applicationSettings));
+            }
+            _folderBrowser = folderBrowser;
+            _applicationSettings = applicationSettings;
         }
 
-        public string GetInitialDirectory()
+        public void BrowseFolder()
         {
-            return string.IsNullOrWhiteSpace(Properties.Settings.Default.InitialDirectory)
-                ? ""
-                : Properties.Settings.Default.InitialDirectory;
+            _folderBrowser.SelectedPath = _applicationSettings.InitialDirectory;
+            _folderBrowser.ShowDialog();
+            _applicationSettings.InitialDirectory = _folderBrowser.SelectedPath;
         }
 
         public void BrowseLoggingFolder()
         {
-            var folderDialog = new FolderBrowserDialog
-            {
-                SelectedPath = GetLoggingPath()
-            };
-
-            var result = folderDialog.ShowDialog();
-            if(result.ToString() != "OK")
-            {
-                return;
-            }
-
-            Properties.Settings.Default.LoggingPath = folderDialog.SelectedPath;
-            Properties.Settings.Default.Save();
-        }
-
-        public string GetLoggingPath()
-        {
-            return string.IsNullOrWhiteSpace(Properties.Settings.Default.LoggingPath)
-                ? ""
-                : Properties.Settings.Default.LoggingPath;
+            _folderBrowser.SelectedPath = _applicationSettings.LoggingPath;
+            _folderBrowser.ShowDialog();
+            _applicationSettings.LoggingPath = _folderBrowser.SelectedPath;
         }
     }
 }

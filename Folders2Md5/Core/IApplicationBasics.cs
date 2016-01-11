@@ -5,9 +5,5 @@ namespace Folders2Md5.Core
         void BrowseFolder();
 
         void BrowseLoggingFolder();
-
-        string GetInitialDirectory();
-
-        string GetLoggingPath();
     }
 }
