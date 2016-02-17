@@ -2,7 +2,6 @@
 {
     public interface ICalculate
     {
-        string Md5Hash(string filename);
-        string Sha1Hash(string filename);
+        string Hash(string filename, string type);
     }
 }

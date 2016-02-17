@@ -9,6 +9,9 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Shell;
+using EvilBaschdi.Core.Application;
+using EvilBaschdi.Core.Browsers;
+using EvilBaschdi.Core.Wpf;
 using Folders2Md5.Core;
 using Folders2Md5.Internal;
 using MahApps.Metro.Controls;
@@ -21,48 +24,59 @@ namespace Folders2Md5
     /// </summary>
     public partial class MainWindow
     {
+        // ReSharper disable PrivateFieldCanBeConvertedToLocalVariable
         public bool CloseHiddenInstancesOnFinish { get; set; }
-
         public MainWindow CurrentHiddenInstance { get; set; }
 
         private readonly BackgroundWorker _bw;
         private Configuration _configuration;
         private string _result;
-        private readonly IApplicationStyle _style;
+        private readonly IMetroStyle _style;
+        private readonly IFolderBrowser _folderBrowser;
+        private readonly IApplicationSettings _applicationSettings;
         private readonly IApplicationBasics _basics;
         private readonly ICalculate _calculate;
         private readonly IToast _toast;
+        private readonly ISettings _coreSettings;
         private string _initialDirectory;
         private string _loggingPath;
+        private int _overrideProtection;
         private int _executionCount;
+
+        // ReSharper restore PrivateFieldCanBeConvertedToLocalVariable
 
         public MainWindow()
         {
-            _style = new ApplicationStyle(this);
-            _basics = new ApplicationBasics();
+            _coreSettings = new CoreSettings();
+            _folderBrowser = new ExplorerFolderBrower();
+            _applicationSettings = new ApplicationSettings();
+            _basics = new ApplicationBasics(_folderBrowser, _applicationSettings);
             InitializeComponent();
             _bw = new BackgroundWorker();
             TaskbarItemInfo = new TaskbarItemInfo();
-            _style.Load();
-            ValidateForm();
+            _style = new MetroStyle(this, Accent, Dark, Light, _coreSettings);
+            _style.Load(true, false);
             _calculate = new Calculate();
-            _toast = new Toast();
+            _toast = new Toast("md5.png");
+            Load();
         }
 
-        private void ValidateForm()
+        private void Load()
         {
-            Generate.IsEnabled = !string.IsNullOrWhiteSpace(Properties.Settings.Default.InitialDirectory) &&
-                                 Directory.Exists(Properties.Settings.Default.InitialDirectory);
+            Generate.IsEnabled = !string.IsNullOrWhiteSpace(_applicationSettings.InitialDirectory) &&
+                                 Directory.Exists(_applicationSettings.InitialDirectory);
 
-            KeepFileExtension.IsChecked = Properties.Settings.Default.KeepFileExtension;
+            KeepFileExtension.IsChecked = _applicationSettings.KeepFileExtension;
 
-            _initialDirectory = _basics.GetInitialDirectory();
+            _initialDirectory = _applicationSettings.InitialDirectory;
             InitialDirectory.Text = _initialDirectory;
 
-            _loggingPath = !string.IsNullOrWhiteSpace(_basics.GetLoggingPath())
-                ? _basics.GetLoggingPath()
-                : _basics.GetInitialDirectory();
+            _loggingPath = !string.IsNullOrWhiteSpace(_applicationSettings.LoggingPath)
+                ? _applicationSettings.LoggingPath
+                : _applicationSettings.InitialDirectory;
             LoggingPath.Text = _loggingPath;
+
+            _overrideProtection = 1;
         }
 
         private void BackgroundWorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -93,7 +107,7 @@ namespace Folders2Md5
                 InitialDirectory = _initialDirectory,
                 LoggingPath = _loggingPath,
                 HashType = "md5",
-                KeepFileExtension = Properties.Settings.Default.KeepFileExtension
+                KeepFileExtension = _applicationSettings.KeepFileExtension
             };
             Cursor = Cursors.Wait;
             _configuration = configuration;
@@ -129,17 +143,7 @@ namespace Folders2Md5
 
                 if(!File.Exists(fileName))
                 {
-                    var hashSum = "";
-                    switch(type)
-                    {
-                        case "md5":
-                            hashSum = _calculate.Md5Hash(file);
-                            break;
-
-                        case "sha1":
-                            hashSum = _calculate.Sha1Hash(file);
-                            break;
-                    }
+                    var hashSum = _calculate.Hash(file, type);
 
                     output += $"file: '{file}'{Environment.NewLine}";
 
@@ -187,20 +191,19 @@ namespace Folders2Md5
         private void BrowseClick(object sender, RoutedEventArgs e)
         {
             _basics.BrowseFolder();
-            InitialDirectory.Text = Properties.Settings.Default.InitialDirectory;
-            _initialDirectory = Properties.Settings.Default.InitialDirectory;
-            ValidateForm();
+            InitialDirectory.Text = _applicationSettings.InitialDirectory;
+            _initialDirectory = _applicationSettings.InitialDirectory;
+            Load();
         }
 
         private void InitialDirectoryOnLostFocus(object sender, RoutedEventArgs e)
         {
             if(Directory.Exists(InitialDirectory.Text))
             {
-                Properties.Settings.Default.InitialDirectory = InitialDirectory.Text;
-                Properties.Settings.Default.Save();
-                _initialDirectory = Properties.Settings.Default.InitialDirectory;
+                _applicationSettings.InitialDirectory = InitialDirectory.Text;
+                _initialDirectory = _applicationSettings.InitialDirectory;
             }
-            ValidateForm();
+            Load();
         }
 
         #endregion Initial Directory
@@ -233,24 +236,36 @@ namespace Folders2Md5
 
         #endregion Flyout
 
-        #region Style
+        #region MetroStyle
 
         private void SaveStyleClick(object sender, RoutedEventArgs e)
         {
+            if(_overrideProtection == 0)
+            {
+                return;
+            }
             _style.SaveStyle();
         }
 
         private void Theme(object sender, RoutedEventArgs e)
         {
+            if(_overrideProtection == 0)
+            {
+                return;
+            }
             _style.SetTheme(sender, e);
         }
 
         private void AccentOnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if(_overrideProtection == 0)
+            {
+                return;
+            }
             _style.SetAccent(sender, e);
         }
 
-        #endregion Style
+        #endregion MetroStyle
 
         #region GenerationSettings
 
@@ -268,28 +283,26 @@ namespace Folders2Md5
         {
             if(checkBox.IsChecked != null)
             {
-                Properties.Settings.Default.KeepFileExtension = checkBox.IsChecked.Value;
+                _applicationSettings.KeepFileExtension = checkBox.IsChecked.Value;
             }
-            Properties.Settings.Default.Save();
         }
 
         private void BrowseLoggingPathClick(object sender, RoutedEventArgs e)
         {
             _basics.BrowseLoggingFolder();
-            LoggingPath.Text = Properties.Settings.Default.LoggingPath;
-            _loggingPath = Properties.Settings.Default.LoggingPath;
-            ValidateForm();
+            LoggingPath.Text = _applicationSettings.LoggingPath;
+            _loggingPath = _applicationSettings.LoggingPath;
+            Load();
         }
 
         private void LoggingPathOnLostFocus(object sender, RoutedEventArgs e)
         {
             if(Directory.Exists(LoggingPath.Text))
             {
-                Properties.Settings.Default.LoggingPath = LoggingPath.Text;
-                Properties.Settings.Default.Save();
-                _loggingPath = Properties.Settings.Default.LoggingPath;
+                _applicationSettings.LoggingPath = LoggingPath.Text;
+                _loggingPath = _applicationSettings.LoggingPath;
             }
-            ValidateForm();
+            Load();
         }
 
         #endregion GenerationSettings

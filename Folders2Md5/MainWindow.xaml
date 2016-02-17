@@ -2,10 +2,9 @@
                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-                      ShowIconOnTitleBar="False"
+                      ShowIconOnTitleBar="False" TitleAlignment="Center"
                       Title="Folders 2 Md5" Width="800" Height="600" Icon="md5.ico" ShowInTaskbar="False"
-                      Visibility="Hidden"
-                      GlowBrush="{DynamicResource AccentColorBrush}">
+                      Visibility="Hidden" GlowBrush="{DynamicResource AccentColorBrush}">
     <!--  RightWindowCommands  -->
     <controls:MetroWindow.RightWindowCommands>
         <controls:WindowCommands>
@@ -32,7 +31,7 @@
         <Label Width="35" Height="30" Margin="10,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                Content="Path" />
         <TextBox x:Name="InitialDirectory" Height="30" Margin="50,10,220,0" VerticalAlignment="Top"
-                 LostFocus="InitialDirectoryOnLostFocus" />
+                 LostFocus="InitialDirectoryOnLostFocus" VerticalContentAlignment="Center" />
         <!--Browse-->
         <Button Name="Browse" Width="100" Margin="0,10,115,0" HorizontalAlignment="Right" VerticalAlignment="Top"
                 Click="BrowseClick">
@@ -90,7 +89,8 @@
 
                             <!--TextBox-->
                             <TextBox Name="LoggingPath" Height="30" Width="400" Margin="10,5,0,0"
-                                     HorizontalAlignment="Left" VerticalAlignment="Top" LostFocus="LoggingPathOnLostFocus" />
+                                     HorizontalAlignment="Left" VerticalAlignment="Top"
+                                     LostFocus="LoggingPathOnLostFocus" />
                             <!--Button-->
                             <Button Name="BrowseLoggingPath" Width="95" Margin="10,5,0,0" HorizontalAlignment="Right"
                                     VerticalAlignment="Top" Click="BrowseLoggingPathClick">
