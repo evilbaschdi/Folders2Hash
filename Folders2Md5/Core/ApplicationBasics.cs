@@ -13,11 +13,11 @@ namespace Folders2Md5.Core
         /// </summary>
         public ApplicationBasics(IFolderBrowser folderBrowser, IApplicationSettings applicationSettings)
         {
-            if(folderBrowser == null)
+            if (folderBrowser == null)
             {
                 throw new ArgumentNullException(nameof(folderBrowser));
             }
-            if(applicationSettings == null)
+            if (applicationSettings == null)
             {
                 throw new ArgumentNullException(nameof(applicationSettings));
             }

@@ -103,15 +103,15 @@ namespace Folders2Md5
         {
             _executionCount++;
             var configuration = new Configuration
-            {
-                InitialDirectory = _initialDirectory,
-                LoggingPath = _loggingPath,
-                HashType = "md5",
-                KeepFileExtension = _applicationSettings.KeepFileExtension
-            };
+                                {
+                                    InitialDirectory = _initialDirectory,
+                                    LoggingPath = _loggingPath,
+                                    HashType = "md5",
+                                    KeepFileExtension = _applicationSettings.KeepFileExtension
+                                };
             Cursor = Cursors.Wait;
             _configuration = configuration;
-            if(_executionCount == 1)
+            if (_executionCount == 1)
             {
                 _bw.DoWork += (o, args) => RunHashCalculation();
                 _bw.WorkerReportsProgress = true;
@@ -136,31 +136,31 @@ namespace Folders2Md5
             var fileList = filePath.GetFileList(configuration.InitialDirectory).Distinct();
 
             Parallel.ForEach(fileList, file =>
-            {
-                var output = string.Empty;
+                                       {
+                                           var output = string.Empty;
 
-                var fileName = filePath.HashFileName(file, type, configuration.KeepFileExtension);
+                                           var fileName = filePath.HashFileName(file, type, configuration.KeepFileExtension);
 
-                if(!File.Exists(fileName))
-                {
-                    var hashSum = _calculate.Hash(file, type);
+                                           if (!File.Exists(fileName))
+                                           {
+                                               var hashSum = _calculate.Hash(file, type);
 
-                    output += $"file: '{file}'{Environment.NewLine}";
+                                               output += $"file: '{file}'{Environment.NewLine}";
 
-                    output += $"{type.ToUpper()}: {hashSum}{Environment.NewLine}";
+                                               output += $"{type.ToUpper()}: {hashSum}{Environment.NewLine}";
 
-                    File.AppendAllText(fileName, hashSum);
-                    output += $"generated: '{fileName}'{Environment.NewLine}";
-                }
-                else
-                {
-                    output += $"already existing: '{fileName}'{Environment.NewLine}";
-                }
+                                               File.AppendAllText(fileName, hashSum);
+                                               output += $"generated: '{fileName}'{Environment.NewLine}";
+                                           }
+                                           else
+                                           {
+                                               output += $"already existing: '{fileName}'{Environment.NewLine}";
+                                           }
 
-                output += Environment.NewLine;
+                                           output += Environment.NewLine;
 
-                outputList.Add(output);
-            });
+                                           outputList.Add(output);
+                                       });
             outputList.ForEach(o => outputText += o);
             outputText += $"End: {DateTime.Now}{Environment.NewLine}{Environment.NewLine}";
             _result = outputText;
@@ -169,7 +169,7 @@ namespace Folders2Md5
                 $@"{configuration.LoggingPath}\Folders2Md5_Log_{DateTime.Now.ToString("yyyy-MM-dd_HHmm")}.txt",
                 outputText);
 
-            if(configuration.CloseHiddenInstancesOnFinish)
+            if (configuration.CloseHiddenInstancesOnFinish)
             {
                 CurrentHiddenInstance.Close();
             }
@@ -178,9 +178,9 @@ namespace Folders2Md5
         public async void ShowMessage(string title, string message)
         {
             var options = new MetroDialogSettings
-            {
-                ColorScheme = MetroDialogColorScheme.Theme
-            };
+                          {
+                              ColorScheme = MetroDialogColorScheme.Theme
+                          };
 
             MetroDialogOptions = options;
             await this.ShowMessageAsync(title, message);
@@ -198,7 +198,7 @@ namespace Folders2Md5
 
         private void InitialDirectoryOnLostFocus(object sender, RoutedEventArgs e)
         {
-            if(Directory.Exists(InitialDirectory.Text))
+            if (Directory.Exists(InitialDirectory.Text))
             {
                 _applicationSettings.InitialDirectory = InitialDirectory.Text;
                 _initialDirectory = _applicationSettings.InitialDirectory;
@@ -218,15 +218,15 @@ namespace Folders2Md5
         private void ToggleFlyout(int index, bool stayOpen = false)
         {
             var activeFlyout = (Flyout) Flyouts.Items[index];
-            if(activeFlyout == null)
+            if (activeFlyout == null)
             {
                 return;
             }
 
-            foreach(
+            foreach (
                 var nonactiveFlyout in
                     Flyouts.Items.Cast<Flyout>()
-                        .Where(nonactiveFlyout => nonactiveFlyout.IsOpen && nonactiveFlyout.Name != activeFlyout.Name))
+                           .Where(nonactiveFlyout => nonactiveFlyout.IsOpen && nonactiveFlyout.Name != activeFlyout.Name))
             {
                 nonactiveFlyout.IsOpen = false;
             }
@@ -240,7 +240,7 @@ namespace Folders2Md5
 
         private void SaveStyleClick(object sender, RoutedEventArgs e)
         {
-            if(_overrideProtection == 0)
+            if (_overrideProtection == 0)
             {
                 return;
             }
@@ -249,7 +249,7 @@ namespace Folders2Md5
 
         private void Theme(object sender, RoutedEventArgs e)
         {
-            if(_overrideProtection == 0)
+            if (_overrideProtection == 0)
             {
                 return;
             }
@@ -258,7 +258,7 @@ namespace Folders2Md5
 
         private void AccentOnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(_overrideProtection == 0)
+            if (_overrideProtection == 0)
             {
                 return;
             }
@@ -281,7 +281,7 @@ namespace Folders2Md5
 
         private void Handle(ToggleButton checkBox)
         {
-            if(checkBox.IsChecked != null)
+            if (checkBox.IsChecked != null)
             {
                 _applicationSettings.KeepFileExtension = checkBox.IsChecked.Value;
             }
@@ -297,7 +297,7 @@ namespace Folders2Md5
 
         private void LoggingPathOnLostFocus(object sender, RoutedEventArgs e)
         {
-            if(Directory.Exists(LoggingPath.Text))
+            if (Directory.Exists(LoggingPath.Text))
             {
                 _applicationSettings.LoggingPath = LoggingPath.Text;
                 _loggingPath = _applicationSettings.LoggingPath;

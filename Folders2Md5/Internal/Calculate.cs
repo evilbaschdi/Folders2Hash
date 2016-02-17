@@ -8,7 +8,7 @@ namespace Folders2Md5.Internal
     {
         public string Hash(string filename, string type)
         {
-            using(var fs = new FileStream(filename, FileMode.Open, FileAccess.Read))
+            using (var fs = new FileStream(filename, FileMode.Open, FileAccess.Read))
             {
                 //todo: SHA256 aufnehmen
                 //todo: checkboxlist für sämtliche möglichen hash algorithmen
