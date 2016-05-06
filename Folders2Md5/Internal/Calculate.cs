@@ -19,6 +19,13 @@ namespace Folders2Md5.Internal
             return "type not found";
         }
 
+        public string HashFileName(string file, string type, bool keepFileExtension)
+        {
+            return keepFileExtension
+                ? $@"{Path.GetDirectoryName(file)}\{Path.GetFileName(file)}.{type}"
+                : $@"{Path.GetDirectoryName(file)}\{Path.GetFileNameWithoutExtension(file)}.{type}";
+        }
+
         private string Md5Hash(string filename)
         {
             try

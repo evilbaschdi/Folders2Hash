@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,6 +12,8 @@ using System.Windows.Input;
 using System.Windows.Shell;
 using EvilBaschdi.Core.Application;
 using EvilBaschdi.Core.Browsers;
+using EvilBaschdi.Core.DirectoryExtensions;
+using EvilBaschdi.Core.MultiThreading;
 using EvilBaschdi.Core.Wpf;
 using Folders2Md5.Core;
 using Folders2Md5.Internal;
@@ -54,7 +57,7 @@ namespace Folders2Md5
             InitializeComponent();
             _bw = new BackgroundWorker();
             TaskbarItemInfo = new TaskbarItemInfo();
-            _style = new MetroStyle(this, Accent, Dark, Light, _coreSettings);
+            _style = new MetroStyleByToggleSwitch(this, Accent, ThemeSwitch, _coreSettings);
             _style.Load(true, false);
             _calculate = new Calculate();
             _toast = new Toast("md5.png");
@@ -130,44 +133,60 @@ namespace Folders2Md5
             var configuration = _configuration;
             var type = configuration.HashType;
             var outputList = new List<string>();
-            var outputText = $"Start: {DateTime.Now}{Environment.NewLine}{Environment.NewLine}";
+            var outputBuilder = new StringBuilder();
+            outputBuilder.Append($"Start: {DateTime.Now}{Environment.NewLine}{Environment.NewLine}");
 
-            var filePath = new FilePath();
-            var fileList = filePath.GetFileList(configuration.InitialDirectory).Distinct();
+            var includeExtensionList = new List<string>();
+            var excludeExtensionList = new List<string>
+                                       {
+                                           "md5",
+                                           "sha",
+                                           "ini",
+                                           "db"
+                                       };
+            var includeFileNameList = new List<string>();
+            var excludeFileNameList = new List<string>
+                                      {
+                                          "folders2md5_log_"
+                                      };
+
+
+            var multiThreadingHelper = new MultiThreadingHelper();
+            var filePath = new FilePath(multiThreadingHelper);
+            var fileList = filePath.GetFileList(configuration.InitialDirectory, includeExtensionList, excludeExtensionList, includeFileNameList, excludeFileNameList).Distinct();
 
             Parallel.ForEach(fileList, file =>
                                        {
-                                           var output = string.Empty;
+                                           var output = new StringBuilder();
 
-                                           var fileName = filePath.HashFileName(file, type, configuration.KeepFileExtension);
+                                           var fileName = _calculate.HashFileName(file, type, configuration.KeepFileExtension);
 
                                            if (!File.Exists(fileName))
                                            {
                                                var hashSum = _calculate.Hash(file, type);
 
-                                               output += $"file: '{file}'{Environment.NewLine}";
+                                               output.Append($"file: '{file}'{Environment.NewLine}");
 
-                                               output += $"{type.ToUpper()}: {hashSum}{Environment.NewLine}";
+                                               output.Append($"{type.ToUpper()}: {hashSum}{Environment.NewLine}");
 
                                                File.AppendAllText(fileName, hashSum);
-                                               output += $"generated: '{fileName}'{Environment.NewLine}";
+                                               output.Append($"generated: '{fileName}'{Environment.NewLine}");
+                                               output.Append(Environment.NewLine);
                                            }
-                                           else
-                                           {
-                                               output += $"already existing: '{fileName}'{Environment.NewLine}";
-                                           }
+                                           //else
+                                           //{
+                                           //    output.Append($"already existing: '{fileName}'{Environment.NewLine}");
+                                           //}
 
-                                           output += Environment.NewLine;
-
-                                           outputList.Add(output);
+                                           outputList.Add(output.ToString());
                                        });
-            outputList.ForEach(o => outputText += o);
-            outputText += $"End: {DateTime.Now}{Environment.NewLine}{Environment.NewLine}";
-            _result = outputText;
 
-            File.AppendAllText(
-                $@"{configuration.LoggingPath}\Folders2Md5_Log_{DateTime.Now.ToString("yyyy-MM-dd_HHmm")}.txt",
-                outputText);
+            outputList.ForEach(o => outputBuilder.Append(o));
+            outputBuilder.Append($"End: {DateTime.Now}{Environment.NewLine}{Environment.NewLine}");
+
+            _result = outputBuilder.ToString();
+
+            File.AppendAllText($@"{configuration.LoggingPath}\Folders2Md5_Log_{DateTime.Now.ToString("yyyy-MM-dd_HHmm")}.txt", _result);
 
             if (configuration.CloseHiddenInstancesOnFinish)
             {
@@ -247,13 +266,13 @@ namespace Folders2Md5
             _style.SaveStyle();
         }
 
-        private void Theme(object sender, RoutedEventArgs e)
+        private void Theme(object sender, EventArgs e)
         {
             if (_overrideProtection == 0)
             {
                 return;
             }
-            _style.SetTheme(sender, e);
+            _style.SetTheme(sender);
         }
 
         private void AccentOnSelectionChanged(object sender, SelectionChangedEventArgs e)
