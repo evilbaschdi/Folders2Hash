@@ -18,10 +18,10 @@ namespace Folders2Md5
             if (e.Args.Any())
             {
                 //Folders2Md5.exe g 'F:\Setup\Images' l 'C:\temp'
-                if (e.Args.Count() == 4 &&
+                if (e.Args.Length == 4 &&
                     (e.Args.Contains("logging") || e.Args.Contains("l")) &&
                     (e.Args.Contains("generate") || e.Args.Contains("g"))
-                    )
+                )
                 {
                     mainWindow.CurrentHiddenInstance = mainWindow;
 
@@ -41,11 +41,11 @@ namespace Folders2Md5
                     mainWindow.RunPreconfiguredHashCalculation(configuration);
                 }
                 //Folders2Md5.exe g 'F:\Setup\Images' l 'C:\temp' k
-                if (e.Args.Count() == 5 &&
+                if (e.Args.Length == 5 &&
                     (e.Args.Contains("logging") || e.Args.Contains("l")) &&
                     (e.Args.Contains("generate") || e.Args.Contains("g")) &&
                     (e.Args.Contains("keep") || e.Args.Contains("k"))
-                    )
+                )
                 {
                     mainWindow.CurrentHiddenInstance = mainWindow;
 

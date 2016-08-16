@@ -13,7 +13,7 @@ using System.Windows.Shell;
 using EvilBaschdi.Core.Application;
 using EvilBaschdi.Core.Browsers;
 using EvilBaschdi.Core.DirectoryExtensions;
-using EvilBaschdi.Core.MultiThreading;
+using EvilBaschdi.Core.Threading;
 using EvilBaschdi.Core.Wpf;
 using Folders2Md5.Core;
 using Folders2Md5.Internal;
@@ -57,8 +57,8 @@ namespace Folders2Md5
             InitializeComponent();
             _bw = new BackgroundWorker();
             TaskbarItemInfo = new TaskbarItemInfo();
-            _style = new MetroStyleByToggleSwitch(this, Accent, ThemeSwitch, _coreSettings);
-            _style.Load(true, false);
+            _style = new MetroStyle(this, Accent, ThemeSwitch, _coreSettings);
+            _style.Load(true);
             _calculate = new Calculate();
             _toast = new Toast("md5.png");
             Load();
@@ -186,7 +186,7 @@ namespace Folders2Md5
 
             _result = outputBuilder.ToString();
 
-            File.AppendAllText($@"{configuration.LoggingPath}\Folders2Md5_Log_{DateTime.Now.ToString("yyyy-MM-dd_HHmm")}.txt", _result);
+            File.AppendAllText($@"{configuration.LoggingPath}\Folders2Md5_Log_{DateTime.Now:yyyy-MM-dd_HHmm}.txt", _result);
 
             if (configuration.CloseHiddenInstancesOnFinish)
             {
@@ -244,8 +244,8 @@ namespace Folders2Md5
 
             foreach (
                 var nonactiveFlyout in
-                    Flyouts.Items.Cast<Flyout>()
-                           .Where(nonactiveFlyout => nonactiveFlyout.IsOpen && nonactiveFlyout.Name != activeFlyout.Name))
+                Flyouts.Items.Cast<Flyout>()
+                       .Where(nonactiveFlyout => nonactiveFlyout.IsOpen && nonactiveFlyout.Name != activeFlyout.Name))
             {
                 nonactiveFlyout.IsOpen = false;
             }
