@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -13,10 +14,12 @@ using System.Windows.Shell;
 using EvilBaschdi.Core.Application;
 using EvilBaschdi.Core.Browsers;
 using EvilBaschdi.Core.DirectoryExtensions;
+using EvilBaschdi.Core.Logging;
 using EvilBaschdi.Core.Threading;
 using EvilBaschdi.Core.Wpf;
 using Folders2Md5.Core;
 using Folders2Md5.Internal;
+using Folders2Md5.Models;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 
@@ -33,7 +36,7 @@ namespace Folders2Md5
 
         private readonly BackgroundWorker _bw;
         private Configuration _configuration;
-        private string _result;
+        private ObservableCollection<Folders2Md5LogEntry> _folders2Md5LogEntries;
         private readonly IMetroStyle _style;
         private readonly IFolderBrowser _folderBrowser;
         private readonly IApplicationSettings _applicationSettings;
@@ -51,7 +54,7 @@ namespace Folders2Md5
         public MainWindow()
         {
             _coreSettings = new CoreSettings();
-            _folderBrowser = new ExplorerFolderBrower();
+            _folderBrowser = new ExplorerFolderBrowser();
             _applicationSettings = new ApplicationSettings();
             _basics = new ApplicationBasics(_folderBrowser, _applicationSettings);
             InitializeComponent();
@@ -84,7 +87,7 @@ namespace Folders2Md5
 
         private void BackgroundWorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            Output.Text = _result;
+            ResultGrid.ItemsSource = _folders2Md5LogEntries;
             var message =
                 $"Checksums for path '{_initialDirectory}' were generated." +
                 $"{Environment.NewLine}You can find the logging file at '{_loggingPath}'.";
@@ -130,11 +133,14 @@ namespace Folders2Md5
 
         private void RunHashCalculation()
         {
+            var multiThreadingHelper = new MultiThreadingHelper();
+            var filePath = new FilePath(multiThreadingHelper);
+            var appendAllTextWithHeadline = new AppendAllTextWithHeadline();
+            var folders2Md5LogEntries = new ObservableCollection<Folders2Md5LogEntry>();
+            var result = new ObservableCollection<Folders2Md5LogEntry>();
             var configuration = _configuration;
             var type = configuration.HashType;
-            var outputList = new List<string>();
-            var outputBuilder = new StringBuilder();
-            outputBuilder.Append($"Start: {DateTime.Now}{Environment.NewLine}{Environment.NewLine}");
+            var stringBuilder = new StringBuilder();
 
             var includeExtensionList = new List<string>();
             var excludeExtensionList = new List<string>
@@ -150,43 +156,67 @@ namespace Folders2Md5
                                           "folders2md5_log_"
                                       };
 
-
-            var multiThreadingHelper = new MultiThreadingHelper();
-            var filePath = new FilePath(multiThreadingHelper);
             var fileList = filePath.GetFileList(configuration.InitialDirectory, includeExtensionList, excludeExtensionList, includeFileNameList, excludeFileNameList).Distinct();
 
             Parallel.ForEach(fileList, file =>
                                        {
-                                           var output = new StringBuilder();
+                                           var hashFileName = _calculate.HashFileName(file, type, configuration.KeepFileExtension);
+                                           var fileInfo = new FileInfo(file);
+                                           var folders2Md5LogEntry = new Folders2Md5LogEntry
+                                                                     {
+                                                                         FileName = file,
+                                                                         ShortFileName = fileInfo.Name,
+                                                                         HashFileName = hashFileName,
+                                                                         Type = type.ToUpper(),
+                                                                         TimeStamp = DateTime.Now
+                                                                     };
 
-                                           var fileName = _calculate.HashFileName(file, type, configuration.KeepFileExtension);
-
-                                           if (!File.Exists(fileName))
+                                           if (!File.Exists(hashFileName))
                                            {
                                                var hashSum = _calculate.Hash(file, type);
-
-                                               output.Append($"file: '{file}'{Environment.NewLine}");
-
-                                               output.Append($"{type.ToUpper()}: {hashSum}{Environment.NewLine}");
-
-                                               File.AppendAllText(fileName, hashSum);
-                                               output.Append($"generated: '{fileName}'{Environment.NewLine}");
-                                               output.Append(Environment.NewLine);
+                                               folders2Md5LogEntry.HashSum = hashSum;
+                                               folders2Md5LogEntry.AlreadyExisting = false;
+                                               File.AppendAllText(hashFileName, hashSum);
                                            }
-                                           //else
-                                           //{
-                                           //    output.Append($"already existing: '{fileName}'{Environment.NewLine}");
-                                           //}
-
-                                           outputList.Add(output.ToString());
+                                           else
+                                           {
+                                               folders2Md5LogEntry.HashSum = File.ReadAllText(hashFileName).Trim();
+                                               folders2Md5LogEntry.AlreadyExisting = true;
+                                           }
+                                           folders2Md5LogEntries.Add(folders2Md5LogEntry);
                                        });
+            if (folders2Md5LogEntries.Any())
+            {
+                //todo: problems with multithreading and string builder
+                //Parallel.ForEach(folders2Md5LogEntries,
+                //    logEntry =>
+                //    {
+                //        if (logEntry != null)
+                //        {
+                //            stringBuilder.Append(
+                //                $"file:///{logEntry.FileName.Replace("\\", "/")};{logEntry.AlreadyExisting};{logEntry.Type};{logEntry.HashSum};{Environment.NewLine}");
+                //        }
+                //    });
+                foreach (var logEntry in folders2Md5LogEntries)
+                {
+                    if (logEntry != null)
+                    {
+                        stringBuilder.Append(
+                            $"{logEntry.FileName};{logEntry.Type};{logEntry.HashSum};{logEntry.AlreadyExisting};{Environment.NewLine}");
+                    }
+                }
 
-            outputList.ForEach(o => outputBuilder.Append(o));
-            outputBuilder.Append($"End: {DateTime.Now}{Environment.NewLine}{Environment.NewLine}");
+                appendAllTextWithHeadline.For($@"{configuration.LoggingPath}\Folders2Md5_Log_{DateTime.Now:yyyy-MM-dd_HHmm}.csv", stringBuilder,
+                    "FileName;Type;HashSum;AlreadyExisting;");
 
-            _result = outputBuilder.ToString();
+                if (folders2Md5LogEntries.Any(item => item != null && item.AlreadyExisting == false))
+                {
+                    result = new ObservableCollection<Folders2Md5LogEntry>(folders2Md5LogEntries.Where(item => item != null && item.AlreadyExisting == false));
+                }
+            }
 
-            File.AppendAllText($@"{configuration.LoggingPath}\Folders2Md5_Log_{DateTime.Now:yyyy-MM-dd_HHmm}.txt", _result);
+
+            _folders2Md5LogEntries = result;
 
             if (configuration.CloseHiddenInstancesOnFinish)
             {

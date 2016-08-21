@@ -58,9 +58,16 @@
                 <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" Text="generate" />
             </StackPanel>
         </Button>
-        <TextBox Name="Output" Margin="10,45,10,10" IsReadOnly="True" TextWrapping="Wrap"
-                 VerticalScrollBarVisibility="Auto"
-                 Text="It probably will take a while until you see results. Window may be inactive." />
+        <DataGrid x:Name="ResultGrid" Margin="10,45,10,10" AutoGenerateColumns="False" CanUserAddRows="False"
+                  CanUserDeleteRows="False" ColumnWidth="*" SelectionUnit="FullRow"
+                  GridLinesVisibility="Horizontal" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding ShortFileName}" Header="File" />
+                <DataGridTextColumn Binding="{Binding Type}" Header="Type" Width="60" />
+                <DataGridTextColumn Binding="{Binding HashSum}" Header="HashSum" />
+                <DataGridTextColumn Binding="{Binding TimeStamp, StringFormat=\{0:dd.MM.yyyy HH:mm:ss\}}" Header="Time Stamp" />
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
     <!--  Flyouts  -->
     <controls:MetroWindow.Flyouts>
