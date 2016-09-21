@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Shell;
 using EvilBaschdi.Core.Application;
@@ -63,7 +64,9 @@ namespace Folders2Md5
             _style = new MetroStyle(this, Accent, ThemeSwitch, _coreSettings);
             _style.Load(true);
             _calculate = new Calculate();
-            _toast = new Toast("md5.png");
+            _toast = new Toast(Title, "md5.png");
+            var linkerTime = Assembly.GetExecutingAssembly().GetLinkerTime();
+            LinkerTime.Content = linkerTime.ToString(CultureInfo.InvariantCulture);
             Load();
         }
 
@@ -318,21 +321,16 @@ namespace Folders2Md5
 
         #region GenerationSettings
 
-        private void KeepFileExtensionChecked(object sender, RoutedEventArgs e)
+        private void FileExtension(object sender, EventArgs e)
         {
-            Handle(sender as CheckBox);
+            HandleFileExtension(sender as ToggleSwitch);
         }
 
-        private void KeepFileExtensionUnchecked(object sender, RoutedEventArgs e)
+        private void HandleFileExtension(ToggleSwitch toggleSwitch)
         {
-            Handle(sender as CheckBox);
-        }
-
-        private void Handle(ToggleButton checkBox)
-        {
-            if (checkBox.IsChecked != null)
+            if (toggleSwitch.IsChecked != null)
             {
-                _applicationSettings.KeepFileExtension = checkBox.IsChecked.Value;
+                _applicationSettings.KeepFileExtension = toggleSwitch.IsChecked.Value;
             }
         }
 

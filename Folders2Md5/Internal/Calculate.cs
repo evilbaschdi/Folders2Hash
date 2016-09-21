@@ -15,6 +15,8 @@ namespace Folders2Md5.Internal
                     return Md5Hash(filename);
                 case "sha1":
                     return Sha1Hash(filename);
+                case "sha256":
+                    return Sha256Hash(filename);
             }
             return "type not found";
         }
@@ -54,6 +56,29 @@ namespace Folders2Md5.Internal
             try
             {
                 var sha1 = SHA1.Create();
+                using (var fs = new FileStream(filename, FileMode.Open, FileAccess.Read))
+                {
+                    var hash = sha1.ComputeHash(fs);
+
+                    var sb = new StringBuilder();
+                    foreach (var t in hash)
+                    {
+                        sb.Append(t.ToString("X2"));
+                    }
+                    return sb.ToString();
+                }
+            }
+            catch (Exception exception)
+            {
+                return exception.Message;
+            }
+        }
+
+        private string Sha256Hash(string filename)
+        {
+            try
+            {
+                var sha1 = SHA256.Create();
                 using (var fs = new FileStream(filename, FileMode.Open, FileAccess.Read))
                 {
                     var hash = sha1.ComputeHash(fs);
