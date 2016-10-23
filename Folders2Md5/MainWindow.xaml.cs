@@ -49,6 +49,7 @@ namespace Folders2Md5
         private string _loggingPath;
         private int _overrideProtection;
         private int _executionCount;
+        private ProgressDialogController _controller;
 
         // ReSharper restore PrivateFieldCanBeConvertedToLocalVariable
 
@@ -88,27 +89,19 @@ namespace Folders2Md5
             _overrideProtection = 1;
         }
 
-        private void BackgroundWorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            ResultGrid.ItemsSource = _folders2Md5LogEntries;
-            var message =
-                $"Checksums for path '{_initialDirectory}' were generated." +
-                $"{Environment.NewLine}You can find the logging file at '{_loggingPath}'.";
-
-            ShowMessage("Completed", message);
-            _toast.Show("Completed", message);
-
-            TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
-            Cursor = Cursors.Arrow;
-        }
+        #region Background Worker
 
         private void GenerateHashsOnClick(object sender, RoutedEventArgs e)
         {
             TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
-            ConfigureGenerateHashs();
+            var configureGenerateHashs = ConfigureGenerateHashs();
+            if (configureGenerateHashs.IsCompleted || configureGenerateHashs.IsCanceled)
+            {
+                configureGenerateHashs.Dispose();
+            }
         }
 
-        public void ConfigureGenerateHashs()
+        public async Task ConfigureGenerateHashs()
         {
             _executionCount++;
             var configuration = new Configuration
@@ -124,14 +117,55 @@ namespace Folders2Md5
             {
                 _bw.DoWork += (o, args) => RunHashCalculation();
                 _bw.WorkerReportsProgress = true;
+                _bw.WorkerSupportsCancellation = true;
                 _bw.RunWorkerCompleted += BackgroundWorkerRunWorkerCompleted;
             }
+            var options = new MetroDialogSettings
+                          {
+                              ColorScheme = MetroDialogColorScheme.Theme
+                          };
+
+            MetroDialogOptions = options;
+            _controller = await this.ShowProgressAsync("Please wait...", "Hashs are getting generated.", true, options);
+            _controller.SetIndeterminate();
+            _controller.Canceled += ControllerCanceled;
             _bw.RunWorkerAsync();
         }
+
+        private void BackgroundWorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            _controller.CloseAsync();
+            _controller.Closed += ControllerClosed;
+        }
+
+        #endregion Background Worker
+
+        #region Process Controller
+
+        private void ControllerClosed(object sender, EventArgs e)
+        {
+            ResultGrid.ItemsSource = _folders2Md5LogEntries;
+            var message =
+                $"Checksums for path '{_initialDirectory}' were generated." +
+                $"{Environment.NewLine}You can find the logging file at '{_loggingPath}'.";
+            ShowMessage("Completed", message);
+            _toast.Show("Completed", message);
+            TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
+            TaskbarItemInfo.ProgressValue = 1;
+            Cursor = Cursors.Arrow;
+        }
+
+        private void ControllerCanceled(object sender, EventArgs e)
+        {
+            _bw.CancelAsync();
+        }
+
+        #endregion Process Controller
 
         public void RunPreconfiguredHashCalculation(Configuration configuration)
         {
             _configuration = configuration;
+            RunHashCalculation();
         }
 
         private void RunHashCalculation()
@@ -235,7 +269,7 @@ namespace Folders2Md5
                           };
 
             MetroDialogOptions = options;
-            await this.ShowMessageAsync(title, message);
+            await this.ShowMessageAsync(title, message, MessageDialogStyle.Affirmative, options);
         }
 
         #region Initial Directory
