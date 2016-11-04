@@ -176,17 +176,31 @@ namespace Folders2Md5
             var folders2Md5LogEntries = new ObservableCollection<Folders2Md5LogEntry>();
             var result = new ObservableCollection<Folders2Md5LogEntry>();
             var configuration = _configuration;
-            var type = configuration.HashType;
+            var calculateAllHashTypes = false;
+            var hashTypes = calculateAllHashTypes
+                ? new List<string>
+                  {
+                      "md5",
+                      "sha1",
+                      "sha256",
+                      "sha384",
+                      "sha512"
+                  }
+                : new List<string>
+                  {
+                      configuration.HashType.ToLower()
+                  };
+
             var stringBuilder = new StringBuilder();
 
             var includeExtensionList = new List<string>();
             var excludeExtensionList = new List<string>
                                        {
-                                           "md5",
-                                           "sha",
                                            "ini",
                                            "db"
                                        };
+            excludeExtensionList.AddRange(hashTypes);
+
             var includeFileNameList = new List<string>();
             var excludeFileNameList = new List<string>
                                       {
@@ -195,33 +209,43 @@ namespace Folders2Md5
 
             var fileList = filePath.GetFileList(configuration.InitialDirectory, includeExtensionList, excludeExtensionList, includeFileNameList, excludeFileNameList).Distinct();
 
-            Parallel.ForEach(fileList, file =>
-                                       {
-                                           var hashFileName = _calculate.HashFileName(file, type, configuration.KeepFileExtension);
-                                           var fileInfo = new FileInfo(file);
-                                           var folders2Md5LogEntry = new Folders2Md5LogEntry
-                                                                     {
-                                                                         FileName = file,
-                                                                         ShortFileName = fileInfo.Name,
-                                                                         HashFileName = hashFileName,
-                                                                         Type = type.ToUpper(),
-                                                                         TimeStamp = DateTime.Now
-                                                                     };
+            Parallel.ForEach(hashTypes,
+                type =>
+                {
+                    Parallel.ForEach(fileList,
+                        file =>
+                        {
+                            var hashFileName = _calculate.HashFileName(file, type, configuration.KeepFileExtension);
+                            var fileInfo = new FileInfo(file);
+                            var folders2Md5LogEntry = new Folders2Md5LogEntry
+                                                      {
+                                                          FileName = file,
+                                                          ShortFileName = fileInfo.Name,
+                                                          HashFileName = hashFileName,
+                                                          Type = type.ToUpper(),
+                                                          TimeStamp = DateTime.Now
+                                                      };
 
-                                           if (!File.Exists(hashFileName))
-                                           {
-                                               var hashSum = _calculate.Hash(file, type);
-                                               folders2Md5LogEntry.HashSum = hashSum;
-                                               folders2Md5LogEntry.AlreadyExisting = false;
-                                               File.AppendAllText(hashFileName, hashSum);
-                                           }
-                                           else
-                                           {
-                                               folders2Md5LogEntry.HashSum = File.ReadAllText(hashFileName).Trim();
-                                               folders2Md5LogEntry.AlreadyExisting = true;
-                                           }
-                                           folders2Md5LogEntries.Add(folders2Md5LogEntry);
-                                       });
+                            if (!File.Exists(hashFileName))
+                            {
+                                var hashSum = _calculate.Hash(file, type);
+
+                                folders2Md5LogEntry.HashSum = hashSum;
+                                folders2Md5LogEntry.AlreadyExisting = false;
+                                File.AppendAllText(hashFileName, hashSum);
+                            }
+                            else
+                            {
+                                folders2Md5LogEntry.HashSum = File.ReadAllText(hashFileName).Trim();
+                                folders2Md5LogEntry.AlreadyExisting = true;
+                            }
+                            folders2Md5LogEntries.Add(folders2Md5LogEntry);
+                        }
+                    );
+                }
+            );
+
+
             if (folders2Md5LogEntries.Any())
             {
                 //todo: problems with multithreading and string builder
