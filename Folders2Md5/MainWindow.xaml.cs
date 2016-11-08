@@ -438,36 +438,29 @@ namespace Folders2Md5
                 var droppedElements = (string[]) e.Data.GetData(DataFormats.FileDrop, true);
                 if (droppedElements != null)
                 {
-                    if (droppedElements.Length > 1)
+                    foreach (var droppedElement in droppedElements)
                     {
-                        ShowMessage("Drag & Drop", "Please drag & drop only one item!");
-                    }
-                    else
-                    {
-                        foreach (var droppedElement in droppedElements)
+                        try
                         {
-                            try
+                            var fileAttributes = File.GetAttributes(droppedElement);
+                            var isDirectory = (fileAttributes & FileAttributes.Directory) == FileAttributes.Directory;
+                            if (!_pathsToScan.ContainsKey(droppedElement))
                             {
-                                var fileAttributes = File.GetAttributes(droppedElement);
-                                var isDirectory = (fileAttributes & FileAttributes.Directory) == FileAttributes.Directory;
-                                if (!_pathsToScan.ContainsKey(droppedElement))
-                                {
-                                    _pathsToScan.TryAdd(droppedElement, isDirectory);
-                                }
-                                CallConfigureBackgroundWorker();
-                            }
-                            catch (Exception ex)
-                            {
-                                if (ex.InnerException != null)
-                                {
-                                    MessageBox.Show(ex.InnerException.Message + " - " + ex.InnerException.StackTrace);
-                                }
-                                MessageBox.Show(ex.Message + " - " + ex.StackTrace);
-                                // ReSharper disable once ThrowingSystemException
-                                throw;
+                                _pathsToScan.TryAdd(droppedElement, isDirectory);
                             }
                         }
+                        catch (Exception ex)
+                        {
+                            if (ex.InnerException != null)
+                            {
+                                MessageBox.Show(ex.InnerException.Message + " - " + ex.InnerException.StackTrace);
+                            }
+                            MessageBox.Show(ex.Message + " - " + ex.StackTrace);
+                            // ReSharper disable once ThrowingSystemException
+                            throw;
+                        }
                     }
+                    CallConfigureBackgroundWorker();
                 }
             }
             e.Handled = true;
