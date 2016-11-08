@@ -94,6 +94,7 @@
     <Compile Include="Core\ApplicationSettings.cs">
       <DependentUpon>IApplicationSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Core\ConcurrentBagExtensions.cs" />
     <Compile Include="Core\IApplicationBasics.cs" />
     <Compile Include="Core\IApplicationSettings.cs" />
     <Compile Include="Core\CoreSettings.cs" />

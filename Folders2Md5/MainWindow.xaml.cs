@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -45,7 +46,7 @@ namespace Folders2Md5
         private readonly ICalculate _calculate;
         private readonly IToast _toast;
         private readonly ISettings _coreSettings;
-        private string _initialDirectory;
+        private readonly ConcurrentDictionary<string, bool> _pathsToScan = new ConcurrentDictionary<string, bool>();
         private string _loggingPath;
         private int _overrideProtection;
         private int _executionCount;
@@ -77,9 +78,7 @@ namespace Folders2Md5
                                  Directory.Exists(_applicationSettings.InitialDirectory);
 
             KeepFileExtension.IsChecked = _applicationSettings.KeepFileExtension;
-
-            _initialDirectory = _applicationSettings.InitialDirectory;
-            InitialDirectory.Text = _initialDirectory;
+            InitialDirectory.Text = _applicationSettings.InitialDirectory;
 
             _loggingPath = !string.IsNullOrWhiteSpace(_applicationSettings.LoggingPath)
                 ? _applicationSettings.LoggingPath
@@ -93,20 +92,26 @@ namespace Folders2Md5
 
         private void GenerateHashsOnClick(object sender, RoutedEventArgs e)
         {
+            _pathsToScan.TryAdd(_applicationSettings.InitialDirectory, true);
+            CallConfigureBackgroundWorker();
+        }
+
+        private void CallConfigureBackgroundWorker()
+        {
             TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
-            var configureGenerateHashs = ConfigureGenerateHashs();
+            var configureGenerateHashs = ConfigureBackroundWorker();
             if (configureGenerateHashs.IsCompleted || configureGenerateHashs.IsCanceled)
             {
                 configureGenerateHashs.Dispose();
             }
         }
 
-        public async Task ConfigureGenerateHashs()
+        public async Task ConfigureBackroundWorker()
         {
             _executionCount++;
             var configuration = new Configuration
                                 {
-                                    InitialDirectory = _initialDirectory,
+                                    PathsToScan = _pathsToScan,
                                     LoggingPath = _loggingPath,
                                     HashType = "md5",
                                     KeepFileExtension = _applicationSettings.KeepFileExtension
@@ -132,6 +137,7 @@ namespace Folders2Md5
             _bw.RunWorkerAsync();
         }
 
+
         private void BackgroundWorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             _controller.CloseAsync();
@@ -145,14 +151,13 @@ namespace Folders2Md5
         private void ControllerClosed(object sender, EventArgs e)
         {
             ResultGrid.ItemsSource = _folders2Md5LogEntries;
-            var message =
-                $"Checksums for path '{_initialDirectory}' were generated." +
-                $"{Environment.NewLine}You can find the logging file at '{_loggingPath}'.";
+            var message = $"Checksums were generated. {Environment.NewLine}You can find the logging file at '{_loggingPath}'.";
             ShowMessage("Completed", message);
             _toast.Show("Completed", message);
             TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
             TaskbarItemInfo.ProgressValue = 1;
             Cursor = Cursors.Arrow;
+            _pathsToScan.Clear();
         }
 
         private void ControllerCanceled(object sender, EventArgs e)
@@ -207,12 +212,26 @@ namespace Folders2Md5
                                           "folders2md5_log_"
                                       };
 
-            var fileList = filePath.GetFileList(configuration.InitialDirectory, includeExtensionList, excludeExtensionList, includeFileNameList, excludeFileNameList).Distinct();
+            var fileList = new ConcurrentBag<string>();
+
+            Parallel.ForEach(_pathsToScan,
+                item =>
+                {
+                    if (item.Value)
+                    {
+                        fileList.AddRange(filePath.GetFileList(item.Key, includeExtensionList, excludeExtensionList, includeFileNameList, excludeFileNameList).Distinct());
+                    }
+                    else
+                    {
+                        fileList.Add(item.Key);
+                    }
+                }
+            );
 
             Parallel.ForEach(hashTypes,
                 type =>
                 {
-                    Parallel.ForEach(fileList,
+                    Parallel.ForEach(fileList.Distinct(),
                         file =>
                         {
                             var hashFileName = _calculate.HashFileName(file, type, configuration.KeepFileExtension);
@@ -302,7 +321,6 @@ namespace Folders2Md5
         {
             _basics.BrowseFolder();
             InitialDirectory.Text = _applicationSettings.InitialDirectory;
-            _initialDirectory = _applicationSettings.InitialDirectory;
             Load();
         }
 
@@ -311,7 +329,6 @@ namespace Folders2Md5
             if (Directory.Exists(InitialDirectory.Text))
             {
                 _applicationSettings.InitialDirectory = InitialDirectory.Text;
-                _initialDirectory = _applicationSettings.InitialDirectory;
             }
             Load();
         }
@@ -411,5 +428,87 @@ namespace Folders2Md5
         }
 
         #endregion GenerationSettings
+
+        #region Drag and Drop
+
+        private void GridOnDrop(object sender, DragEventArgs e)
+        {
+            if (null != e.Data && e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                var droppedElements = (string[]) e.Data.GetData(DataFormats.FileDrop, true);
+                if (droppedElements != null)
+                {
+                    if (droppedElements.Length > 1)
+                    {
+                        ShowMessage("Drag & Drop", "Please drag & drop only one item!");
+                    }
+                    else
+                    {
+                        foreach (var droppedElement in droppedElements)
+                        {
+                            try
+                            {
+                                var fileAttributes = File.GetAttributes(droppedElement);
+                                var isDirectory = (fileAttributes & FileAttributes.Directory) == FileAttributes.Directory;
+                                if (!_pathsToScan.ContainsKey(droppedElement))
+                                {
+                                    _pathsToScan.TryAdd(droppedElement, isDirectory);
+                                }
+                                CallConfigureBackgroundWorker();
+                            }
+                            catch (Exception ex)
+                            {
+                                if (ex.InnerException != null)
+                                {
+                                    MessageBox.Show(ex.InnerException.Message + " - " + ex.InnerException.StackTrace);
+                                }
+                                MessageBox.Show(ex.Message + " - " + ex.StackTrace);
+                                // ReSharper disable once ThrowingSystemException
+                                throw;
+                            }
+                        }
+                    }
+                }
+            }
+            e.Handled = true;
+        }
+
+        private void GridOnDragOver(object sender, DragEventArgs e)
+        {
+            bool isCorrect = true;
+
+            if (e.Data.GetDataPresent(DataFormats.FileDrop, true))
+            {
+                var droppedElements = (string[]) e.Data.GetData(DataFormats.FileDrop, true);
+                if (droppedElements != null)
+                {
+                    foreach (var droppedElement in droppedElements)
+                    {
+                        var fileAttributes = File.GetAttributes(droppedElement);
+                        var isDirectory = (fileAttributes & FileAttributes.Directory) == FileAttributes.Directory;
+                        if (isDirectory)
+                        {
+                            if (!Directory.Exists(droppedElement))
+                            {
+                                isCorrect = false;
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            if (!File.Exists(droppedElement))
+                            {
+                                isCorrect = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            e.Effects = isCorrect ? DragDropEffects.All : DragDropEffects.None;
+            e.Handled = true;
+        }
+
+        #endregion
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Folders2Md5.Internal
+﻿using System.Collections.Concurrent;
+
+namespace Folders2Md5.Internal
 {
     public class Configuration : IConfiguration
     {
@@ -6,7 +8,7 @@
 
         public bool KeepFileExtension { get; set; }
 
-        public string InitialDirectory { get; set; }
+        public ConcurrentDictionary<string, bool> PathsToScan { get; set; }
 
         public string LoggingPath { get; set; }
 

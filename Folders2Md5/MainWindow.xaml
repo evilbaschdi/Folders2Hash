@@ -27,7 +27,7 @@
         <TaskbarItemInfo />
     </Window.TaskbarItemInfo>
     <!--Grid-->
-    <Grid>
+    <Grid HorizontalAlignment="Stretch" DockPanel.Dock="Top" Height="Auto" AllowDrop="True" Drop="GridOnDrop" DragOver="GridOnDragOver" Background="Transparent">
         <Label Width="35" Height="30" Margin="10,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
                Content="Path" />
         <TextBox x:Name="InitialDirectory" Height="30" Margin="50,10,220,0" VerticalAlignment="Top"
