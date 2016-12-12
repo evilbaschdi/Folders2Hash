@@ -2,6 +2,9 @@
 
 namespace Folders2Md5.Core
 {
+    /// <summary>
+    /// Core Settings.
+    /// </summary>
     public class CoreSettings : ISettings
     {
         /// <summary>

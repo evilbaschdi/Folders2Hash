@@ -33,7 +33,14 @@ namespace Folders2Md5
     public partial class MainWindow
     {
         // ReSharper disable PrivateFieldCanBeConvertedToLocalVariable
+        /// <summary>
+        ///     Set tru to close hidden instances on finish.
+        /// </summary>
         public bool CloseHiddenInstancesOnFinish { get; set; }
+
+        /// <summary>
+        ///     Current hidden instance for use with instances through command line.
+        /// </summary>
         public MainWindow CurrentHiddenInstance { get; set; }
 
         private readonly BackgroundWorker _bw;
@@ -44,7 +51,7 @@ namespace Folders2Md5
         private readonly IApplicationSettings _applicationSettings;
         private readonly IApplicationBasics _basics;
         private readonly ICalculate _calculate;
-        private readonly IToast _toast;
+
         private readonly ISettings _coreSettings;
         private readonly ConcurrentDictionary<string, bool> _pathsToScan = new ConcurrentDictionary<string, bool>();
         private string _loggingPath;
@@ -53,7 +60,8 @@ namespace Folders2Md5
         private ProgressDialogController _controller;
 
         // ReSharper restore PrivateFieldCanBeConvertedToLocalVariable
-
+        /// <summary>
+        /// </summary>
         public MainWindow()
         {
             _coreSettings = new CoreSettings();
@@ -66,7 +74,6 @@ namespace Folders2Md5
             _style = new MetroStyle(this, Accent, ThemeSwitch, _coreSettings);
             _style.Load(true);
             _calculate = new Calculate();
-            _toast = new Toast(Title, "md5.png");
             var linkerTime = Assembly.GetExecutingAssembly().GetLinkerTime();
             LinkerTime.Content = linkerTime.ToString(CultureInfo.InvariantCulture);
             Load();
@@ -106,6 +113,9 @@ namespace Folders2Md5
             }
         }
 
+        /// <summary>
+        /// </summary>
+        /// <returns></returns>
         public async Task ConfigureBackroundWorker()
         {
             _executionCount++;
@@ -127,7 +137,7 @@ namespace Folders2Md5
             }
             var options = new MetroDialogSettings
                           {
-                              ColorScheme = MetroDialogColorScheme.Theme
+                              ColorScheme = MetroDialogColorScheme.Accented
                           };
 
             MetroDialogOptions = options;
@@ -152,8 +162,7 @@ namespace Folders2Md5
         {
             ResultGrid.ItemsSource = _folders2Md5LogEntries;
             var message = $"Checksums were generated. {Environment.NewLine}You can find the logging file at '{_loggingPath}'.";
-            ShowMessage("Completed", message);
-            _toast.Show("Completed", message);
+            ShowMessageAsync("Completed", message);
             TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
             TaskbarItemInfo.ProgressValue = 1;
             Cursor = Cursors.Arrow;
@@ -167,6 +176,9 @@ namespace Folders2Md5
 
         #endregion Process Controller
 
+        /// <summary>
+        /// </summary>
+        /// <param name="configuration"></param>
         public void RunPreconfiguredHashCalculation(Configuration configuration)
         {
             _configuration = configuration;
@@ -182,6 +194,7 @@ namespace Folders2Md5
             var result = new ObservableCollection<Folders2Md5LogEntry>();
             var configuration = _configuration;
             var calculateAllHashTypes = false;
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             var hashTypes = calculateAllHashTypes
                 ? new List<string>
                   {
@@ -235,6 +248,7 @@ namespace Folders2Md5
                         file =>
                         {
                             var hashFileName = _calculate.HashFileName(file, type, configuration.KeepFileExtension);
+
                             var fileInfo = new FileInfo(file);
                             var folders2Md5LogEntry = new Folders2Md5LogEntry
                                                       {
@@ -245,9 +259,14 @@ namespace Folders2Md5
                                                           TimeStamp = DateTime.Now
                                                       };
 
-                            if (!File.Exists(hashFileName))
+                            if (!File.Exists(hashFileName) || File.GetLastWriteTime(file) > File.GetLastWriteTime(hashFileName))
                             {
                                 var hashSum = _calculate.Hash(file, type);
+
+                                if (File.Exists(hashFileName))
+                                {
+                                    File.Delete(hashFileName);
+                                }
 
                                 folders2Md5LogEntry.HashSum = hashSum;
                                 folders2Md5LogEntry.AlreadyExisting = false;
@@ -304,11 +323,15 @@ namespace Folders2Md5
             }
         }
 
-        public async void ShowMessage(string title, string message)
+        /// <summary>
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="message"></param>
+        public async void ShowMessageAsync(string title, string message)
         {
             var options = new MetroDialogSettings
                           {
-                              ColorScheme = MetroDialogColorScheme.Theme
+                              ColorScheme = MetroDialogColorScheme.Accented
                           };
 
             MetroDialogOptions = options;
@@ -453,9 +476,9 @@ namespace Folders2Md5
                         {
                             if (ex.InnerException != null)
                             {
-                                MessageBox.Show(ex.InnerException.Message + " - " + ex.InnerException.StackTrace);
+                                MessageBox.Show($"{ex.InnerException.Message} - {ex.InnerException.StackTrace}");
                             }
-                            MessageBox.Show(ex.Message + " - " + ex.StackTrace);
+                            MessageBox.Show($"{ex.Message} - {ex.StackTrace}");
                             // ReSharper disable once ThrowingSystemException
                             throw;
                         }
