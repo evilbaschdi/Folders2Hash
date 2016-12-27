@@ -1,13 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace Folders2Md5.Internal
 {
+    /// <summary>
+    /// </summary>
     public class Calculate : ICalculate
     {
+        /// <summary>
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public string Hash(string filename, string type)
         {
             switch (type.ToLower())
@@ -22,16 +28,17 @@ namespace Folders2Md5.Internal
                     return Sha384Hash(filename);
                 case "sha512":
                     return Sha512Hash(filename);
-
             }
             return "type not found";
         }
 
-        //public List<string> All(string filename)
-        //{
-        //    throw new NotImplementedException();
-        //}
 
+        /// <summary>
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="type"></param>
+        /// <param name="keepFileExtension"></param>
+        /// <returns></returns>
         public string HashFileName(string file, string type, bool keepFileExtension)
         {
             return keepFileExtension
@@ -129,7 +136,6 @@ namespace Folders2Md5.Internal
             {
                 return exception.Message;
             }
-
         }
 
         private string Sha512Hash(string filename)

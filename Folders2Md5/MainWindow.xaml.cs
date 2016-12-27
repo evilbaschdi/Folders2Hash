@@ -2,7 +2,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -16,6 +15,7 @@ using System.Windows.Shell;
 using EvilBaschdi.Core.Application;
 using EvilBaschdi.Core.Browsers;
 using EvilBaschdi.Core.DirectoryExtensions;
+using EvilBaschdi.Core.DotNetExtensions;
 using EvilBaschdi.Core.Logging;
 using EvilBaschdi.Core.Threading;
 using EvilBaschdi.Core.Wpf;
@@ -43,35 +43,37 @@ namespace Folders2Md5
         /// </summary>
         public MainWindow CurrentHiddenInstance { get; set; }
 
-        private readonly BackgroundWorker _bw;
-        private Configuration _configuration;
-        private ObservableCollection<Folders2Md5LogEntry> _folders2Md5LogEntries;
         private readonly IMetroStyle _style;
         private readonly IFolderBrowser _folderBrowser;
         private readonly IApplicationSettings _applicationSettings;
         private readonly IApplicationBasics _basics;
         private readonly ICalculate _calculate;
-
+        private readonly IDialogService _dialogService;
         private readonly ISettings _coreSettings;
+        private readonly IThemeManagerHelper _themeManagerHelper;
+        private Configuration _configuration;
+        private ObservableCollection<Folders2Md5LogEntry> _folders2Md5LogEntries;
+        private Task<ObservableCollection<Folders2Md5LogEntry>> _task;
+        private ProgressDialogController _controller;
         private readonly ConcurrentDictionary<string, bool> _pathsToScan = new ConcurrentDictionary<string, bool>();
         private string _loggingPath;
         private int _overrideProtection;
-        private int _executionCount;
-        private ProgressDialogController _controller;
 
         // ReSharper restore PrivateFieldCanBeConvertedToLocalVariable
         /// <summary>
         /// </summary>
         public MainWindow()
         {
-            _coreSettings = new CoreSettings();
+            InitializeComponent();
             _folderBrowser = new ExplorerFolderBrowser();
             _applicationSettings = new ApplicationSettings();
             _basics = new ApplicationBasics(_folderBrowser, _applicationSettings);
-            InitializeComponent();
-            _bw = new BackgroundWorker();
+
+            _dialogService = new DialogService(this);
             TaskbarItemInfo = new TaskbarItemInfo();
-            _style = new MetroStyle(this, Accent, ThemeSwitch, _coreSettings);
+            _themeManagerHelper = new ThemeManagerHelper();
+            _coreSettings = new CoreSettings(Properties.Settings.Default);
+            _style = new MetroStyle(this, Accent, ThemeSwitch, _coreSettings, _themeManagerHelper);
             _style.Load(true);
             _calculate = new Calculate();
             var linkerTime = Assembly.GetExecutingAssembly().GetLinkerTime();
@@ -95,30 +97,21 @@ namespace Folders2Md5
             _overrideProtection = 1;
         }
 
-        #region Background Worker
+        #region Process Controller
 
-        private void GenerateHashsOnClick(object sender, RoutedEventArgs e)
+        private async void GenerateHashsOnClick(object sender, RoutedEventArgs e)
         {
             _pathsToScan.TryAdd(_applicationSettings.InitialDirectory, true);
-            CallConfigureBackgroundWorker();
-        }
-
-        private void CallConfigureBackgroundWorker()
-        {
-            TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
-            var configureGenerateHashs = ConfigureBackroundWorker();
-            if (configureGenerateHashs.IsCompleted || configureGenerateHashs.IsCanceled)
-            {
-                configureGenerateHashs.Dispose();
-            }
+            await ConfigureController();
         }
 
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public async Task ConfigureBackroundWorker()
+        public async Task ConfigureController()
         {
-            _executionCount++;
+            TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
+
             var configuration = new Configuration
                                 {
                                     PathsToScan = _pathsToScan,
@@ -128,13 +121,6 @@ namespace Folders2Md5
                                 };
             Cursor = Cursors.Wait;
             _configuration = configuration;
-            if (_executionCount == 1)
-            {
-                _bw.DoWork += (o, args) => RunHashCalculation();
-                _bw.WorkerReportsProgress = true;
-                _bw.WorkerSupportsCancellation = true;
-                _bw.RunWorkerCompleted += BackgroundWorkerRunWorkerCompleted;
-            }
             var options = new MetroDialogSettings
                           {
                               ColorScheme = MetroDialogColorScheme.Accented
@@ -144,25 +130,23 @@ namespace Folders2Md5
             _controller = await this.ShowProgressAsync("Please wait...", "Hashs are getting generated.", true, options);
             _controller.SetIndeterminate();
             _controller.Canceled += ControllerCanceled;
-            _bw.RunWorkerAsync();
+            _task = Task<ObservableCollection<Folders2Md5LogEntry>>.Factory.StartNew(RunHashCalculation);
+            await _task;
+            _task.GetAwaiter().OnCompleted(TaskCompleted);
+            _folders2Md5LogEntries = _task.Result;
         }
 
-
-        private void BackgroundWorkerRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void TaskCompleted()
         {
             _controller.CloseAsync();
             _controller.Closed += ControllerClosed;
         }
 
-        #endregion Background Worker
-
-        #region Process Controller
-
         private void ControllerClosed(object sender, EventArgs e)
         {
             ResultGrid.ItemsSource = _folders2Md5LogEntries;
             var message = $"Checksums were generated. {Environment.NewLine}You can find the logging file at '{_loggingPath}'.";
-            ShowMessageAsync("Completed", message);
+            _dialogService.ShowMessage("Completed", message);
             TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
             TaskbarItemInfo.ProgressValue = 1;
             Cursor = Cursors.Arrow;
@@ -171,7 +155,7 @@ namespace Folders2Md5
 
         private void ControllerCanceled(object sender, EventArgs e)
         {
-            _bw.CancelAsync();
+            _task.Dispose();
         }
 
         #endregion Process Controller
@@ -185,12 +169,12 @@ namespace Folders2Md5
             RunHashCalculation();
         }
 
-        private void RunHashCalculation()
+        private ObservableCollection<Folders2Md5LogEntry> RunHashCalculation()
         {
             var multiThreadingHelper = new MultiThreadingHelper();
             var filePath = new FilePath(multiThreadingHelper);
             var appendAllTextWithHeadline = new AppendAllTextWithHeadline();
-            var folders2Md5LogEntries = new ObservableCollection<Folders2Md5LogEntry>();
+            var folders2Md5LogEntries = new ConcurrentBag<Folders2Md5LogEntry>();
             var result = new ObservableCollection<Folders2Md5LogEntry>();
             var configuration = _configuration;
             var calculateAllHashTypes = false;
@@ -315,27 +299,11 @@ namespace Folders2Md5
             }
 
 
-            _folders2Md5LogEntries = result;
-
             if (configuration.CloseHiddenInstancesOnFinish)
             {
                 CurrentHiddenInstance.Close();
             }
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="title"></param>
-        /// <param name="message"></param>
-        public async void ShowMessageAsync(string title, string message)
-        {
-            var options = new MetroDialogSettings
-                          {
-                              ColorScheme = MetroDialogColorScheme.Accented
-                          };
-
-            MetroDialogOptions = options;
-            await this.ShowMessageAsync(title, message, MessageDialogStyle.Affirmative, options);
+            return result;
         }
 
         #region Initial Directory
@@ -454,7 +422,7 @@ namespace Folders2Md5
 
         #region Drag and Drop
 
-        private void GridOnDrop(object sender, DragEventArgs e)
+        private async void GridOnDrop(object sender, DragEventArgs e)
         {
             if (null != e.Data && e.Data.GetDataPresent(DataFormats.FileDrop))
             {
@@ -483,7 +451,7 @@ namespace Folders2Md5
                             throw;
                         }
                     }
-                    CallConfigureBackgroundWorker();
+                    await ConfigureController();
                 }
             }
             e.Handled = true;

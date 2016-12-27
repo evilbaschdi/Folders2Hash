@@ -4,6 +4,28 @@
         <name>EvilBaschdi.Core</name>
     </assembly>
     <members>
+        <member name="T:EvilBaschdi.Core.Application.CoreSettings">
+            <summary>
+                Wrapper arround ApplicationSettings.
+            </summary>
+        </member>
+        <member name="M:EvilBaschdi.Core.Application.CoreSettings.#ctor(System.Configuration.ApplicationSettingsBase)">
+            <summary>
+                Constructor of the class.
+            </summary>
+            <param name="settings"></param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="P:EvilBaschdi.Core.Application.CoreSettings.Accent">
+            <summary>
+                MahApps ThemeManager Accent.
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.Core.Application.CoreSettings.Theme">
+            <summary>
+                MahApps ThemeManager Theme.
+            </summary>
+        </member>
         <member name="T:EvilBaschdi.Core.Application.Info">
             <summary>
                 Extension class to display change dates of current application.
@@ -28,7 +50,7 @@
         </member>
         <member name="T:EvilBaschdi.Core.Application.ISettings">
             <summary>
-                Wrapper arround Default Settings.
+                Wrapper arround ApplicationSettings.
             </summary>
         </member>
         <member name="P:EvilBaschdi.Core.Application.ISettings.Accent">
@@ -377,6 +399,95 @@
             <param name="hex"></param>
             <returns></returns>
         </member>
+        <member name="T:EvilBaschdi.Core.DotNetExtensions.ConcurrentBagExtensions">
+            <summary>
+                HelperClass to extend ConcurrentBag with "AddRange".
+            </summary>
+        </member>
+        <member name="M:EvilBaschdi.Core.DotNetExtensions.ConcurrentBagExtensions.AddRange``1(System.Collections.Concurrent.ConcurrentBag{``0},System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+                Add Range.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="bag"></param>
+            <param name="toAdd"></param>
+        </member>
+        <member name="T:EvilBaschdi.Core.DotNetExtensions.ILoad">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:EvilBaschdi.Core.DotNetExtensions.ILoad.Load">
+            <summary>
+            </summary>
+        </member>
+        <member name="T:EvilBaschdi.Core.DotNetExtensions.IRun">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:EvilBaschdi.Core.DotNetExtensions.IRun.Run">
+            <summary>
+            </summary>
+        </member>
+        <member name="T:EvilBaschdi.Core.DotNetExtensions.IRunFor`1">
+            <summary>
+            </summary>
+            <typeparam name="TIn"></typeparam>
+        </member>
+        <member name="M:EvilBaschdi.Core.DotNetExtensions.IRunFor`1.Run(`0)">
+            <summary>
+            </summary>
+        </member>
+        <member name="T:EvilBaschdi.Core.DotNetExtensions.IRunFor1`1">
+            <summary>
+            </summary>
+            <typeparam name="TIn1"></typeparam>
+        </member>
+        <member name="T:EvilBaschdi.Core.DotNetExtensions.IRunFor2`2">
+            <summary>
+            </summary>
+            <typeparam name="TIn1"></typeparam>
+            <typeparam name="TIn2"></typeparam>
+        </member>
+        <member name="M:EvilBaschdi.Core.DotNetExtensions.IRunFor2`2.Run(`0,`1)">
+            <summary>
+            </summary>
+        </member>
+        <member name="T:EvilBaschdi.Core.DotNetExtensions.IRunFor3`3">
+            <summary>
+            </summary>
+            <typeparam name="TIn1"></typeparam>
+            <typeparam name="TIn2"></typeparam>
+            <typeparam name="TIn3"></typeparam>
+        </member>
+        <member name="M:EvilBaschdi.Core.DotNetExtensions.IRunFor3`3.Run(`0,`1,`2)">
+            <summary>
+            </summary>
+        </member>
+        <member name="T:EvilBaschdi.Core.DotNetExtensions.IRunFor4`4">
+            <summary>
+            </summary>
+            <typeparam name="TIn1"></typeparam>
+            <typeparam name="TIn2"></typeparam>
+            <typeparam name="TIn3"></typeparam>
+            <typeparam name="TIn4"></typeparam>
+        </member>
+        <member name="M:EvilBaschdi.Core.DotNetExtensions.IRunFor4`4.Run(`0,`1,`2,`3)">
+            <summary>
+            </summary>
+        </member>
+        <member name="T:EvilBaschdi.Core.DotNetExtensions.IRunFor5`5">
+            <summary>
+            </summary>
+            <typeparam name="TIn1"></typeparam>
+            <typeparam name="TIn2"></typeparam>
+            <typeparam name="TIn3"></typeparam>
+            <typeparam name="TIn4"></typeparam>
+            <typeparam name="TIn5"></typeparam>
+        </member>
+        <member name="M:EvilBaschdi.Core.DotNetExtensions.IRunFor5`5.Run(`0,`1,`2,`3,`4)">
+            <summary>
+            </summary>
+        </member>
         <member name="T:EvilBaschdi.Core.DotNetExtensions.IValue`1">
             <summary>
                 Generic Interface construct to encapsulate Classes without Interfaces
@@ -386,6 +497,74 @@
         <member name="P:EvilBaschdi.Core.DotNetExtensions.IValue`1.Value">
             <summary>Value</summary>
         </member>
+        <member name="T:EvilBaschdi.Core.DotNetExtensions.IValueFor`2">
+            <summary>
+                Generic Interface construct to encapsulate Classes without Interfaces
+            </summary>
+            <typeparam name="TOut"></typeparam>
+            ///
+            <typeparam name="TIn"></typeparam>
+        </member>
+        <member name="M:EvilBaschdi.Core.DotNetExtensions.IValueFor`2.ValueFor(`0)">
+            <summary>Value</summary>
+        </member>
+        <member name="T:EvilBaschdi.Core.DotNetExtensions.IValueFor1`2">
+            <summary>
+                Generic Interface construct to encapsulate Classes without Interfaces
+            </summary>
+            <typeparam name="TOut"></typeparam>
+            <typeparam name="TIn1"></typeparam>
+        </member>
+        <member name="T:EvilBaschdi.Core.DotNetExtensions.IValueFor2`3">
+            <summary>
+                Generic Interface construct to encapsulate Classes without Interfaces
+            </summary>
+            <typeparam name="TOut"></typeparam>
+            <typeparam name="TIn1"></typeparam>
+            <typeparam name="TIn2"></typeparam>
+        </member>
+        <member name="M:EvilBaschdi.Core.DotNetExtensions.IValueFor2`3.ValueFor(`0,`1)">
+            <summary>Value</summary>
+        </member>
+        <member name="T:EvilBaschdi.Core.DotNetExtensions.IValueFor3`4">
+            <summary>
+                Generic Interface construct to encapsulate Classes without Interfaces
+            </summary>
+            <typeparam name="TOut"></typeparam>
+            <typeparam name="TIn1"></typeparam>
+            <typeparam name="TIn2"></typeparam>
+            <typeparam name="TIn3"></typeparam>
+        </member>
+        <member name="M:EvilBaschdi.Core.DotNetExtensions.IValueFor3`4.ValueFor(`0,`1,`2)">
+            <summary>Value</summary>
+        </member>
+        <member name="T:EvilBaschdi.Core.DotNetExtensions.IValueFor4`5">
+            <summary>
+                Generic Interface construct to encapsulate Classes without Interfaces
+            </summary>
+            <typeparam name="TOut"></typeparam>
+            <typeparam name="TIn1"></typeparam>
+            <typeparam name="TIn2"></typeparam>
+            <typeparam name="TIn3"></typeparam>
+            <typeparam name="TIn4"></typeparam>
+        </member>
+        <member name="M:EvilBaschdi.Core.DotNetExtensions.IValueFor4`5.ValueFor(`0,`1,`2,`3)">
+            <summary>Value</summary>
+        </member>
+        <member name="T:EvilBaschdi.Core.DotNetExtensions.IValueFor5`6">
+            <summary>
+                Generic Interface construct to encapsulate Classes without Interfaces
+            </summary>
+            <typeparam name="TOut"></typeparam>
+            <typeparam name="TIn1"></typeparam>
+            <typeparam name="TIn2"></typeparam>
+            <typeparam name="TIn3"></typeparam>
+            <typeparam name="TIn4"></typeparam>
+            <typeparam name="TIn5"></typeparam>
+        </member>
+        <member name="M:EvilBaschdi.Core.DotNetExtensions.IValueFor5`6.ValueFor(`0,`1,`2,`3,`4)">
+            <summary>Value</summary>
+        </member>
         <member name="T:EvilBaschdi.Core.DotNetExtensions.VersionHelper">
             <summary>
                 Get if Windows Version is vista or higher.
@@ -393,15 +572,20 @@
         </member>
         <member name="P:EvilBaschdi.Core.DotNetExtensions.VersionHelper.IsVista">
             <summary>
-                OS is at least Windows Vista.
+                OS is Windows Vista.
             </summary>
         </member>
         <member name="P:EvilBaschdi.Core.DotNetExtensions.VersionHelper.IsWindows7">
             <summary>
-                OS is Windows 7 or higher.
+                OS is Windows 7.
             </summary>
         </member>
-        <member name="M:EvilBaschdi.Core.DotNetExtensions.VersionHelper.IsWindows10">
+        <member name="P:EvilBaschdi.Core.DotNetExtensions.VersionHelper.IsWindows8">
+            <summary>
+                OS is Windows 8 or 8.1.
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.Core.DotNetExtensions.VersionHelper.IsWindows10">
             <summary>
                 OS is Windows 10.
             </summary>
@@ -519,6 +703,87 @@
                 <paramref name="worker" /> is <see langword="null" />.
             </exception>
         </member>
+        <member name="T:EvilBaschdi.Core.Wpf.ControlContent">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.Core.Wpf.ControlContent.Content">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.Core.Wpf.ControlContent.ImageResourceName">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.Core.Wpf.ControlContent.ImageSize">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.Core.Wpf.ControlContent.FillBrush">
+            <summary>
+            </summary>
+        </member>
+        <member name="T:EvilBaschdi.Core.Wpf.CustomFlyout">
+            <summary>
+            Custom Flyout. Adds theme, accent and linker time to an existing flyout or adds a new one.
+            </summary>
+        </member>
+        <member name="M:EvilBaschdi.Core.Wpf.CustomFlyout.#ctor(MahApps.Metro.Controls.MetroWindow,EvilBaschdi.Core.Wpf.IMetroStyle,System.DateTime)">
+            <exception cref="T:System.ArgumentNullException"><paramref name="mainWindow" /> is <see langword="null" />.</exception>
+        </member>
+        <member name="M:EvilBaschdi.Core.Wpf.CustomFlyout.Load">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:EvilBaschdi.Core.Wpf.DialogService">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:EvilBaschdi.Core.Wpf.DialogService.#ctor(MahApps.Metro.Controls.MetroWindow)">
+            <summary>
+                Constructor of the class
+            </summary>
+            <param name="mainWindow"></param>
+        </member>
+        <member name="M:EvilBaschdi.Core.Wpf.DialogService.ShowMessage(System.String,System.String)">
+            <summary>
+            </summary>
+            <param name="title"></param>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EvilBaschdi.Core.Wpf.DialogService.ShowMessage(System.String,System.String,MahApps.Metro.Controls.Dialogs.MessageDialogStyle)">
+            <summary>
+            </summary>
+            <param name="title"></param>
+            <param name="message"></param>
+            <param name="dialogStyle"></param>
+            <returns></returns>
+        </member>
+        <member name="T:EvilBaschdi.Core.Wpf.IDialogService">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:EvilBaschdi.Core.Wpf.IDialogService.ShowMessage(System.String,System.String)">
+            <summary>
+            </summary>
+            <param name="title"></param>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EvilBaschdi.Core.Wpf.IDialogService.ShowMessage(System.String,System.String,MahApps.Metro.Controls.Dialogs.MessageDialogStyle)">
+            <summary>
+            </summary>
+            <param name="title"></param>
+            <param name="message"></param>
+            <param name="dialogStyle"></param>
+            <returns></returns>
+        </member>
+        <member name="T:EvilBaschdi.Core.Wpf.IFlyout">
+            <summary>
+            </summary>
+        </member>
         <member name="T:EvilBaschdi.Core.Wpf.IThemeManagerHelper">
             <summary>
                 Interface for ThemeManagerHelper class.
@@ -531,7 +796,7 @@
             <param name="color">Color to create app style for.</param>
             <param name="accentName">Name of the new app style.</param>
         </member>
-        <member name="M:EvilBaschdi.Core.Wpf.IThemeManagerHelper.RegisterSysteColorTheme">
+        <member name="M:EvilBaschdi.Core.Wpf.IThemeManagerHelper.RegisterSystemColorTheme">
             <summary>
                 Gets Color of current (applied) system settings, generates an app style and adds it to available accents.
             </summary>
@@ -568,7 +833,13 @@
                 Theme of Application MetroStyle.
             </summary>
         </member>
-        <member name="M:EvilBaschdi.Core.Wpf.MetroStyle.#ctor(MahApps.Metro.Controls.MetroWindow,System.Windows.Controls.ComboBox,System.Windows.Controls.RadioButton,System.Windows.Controls.RadioButton,EvilBaschdi.Core.Application.ISettings)">
+        <member name="M:EvilBaschdi.Core.Wpf.MetroStyle.#ctor(MahApps.Metro.Controls.MetroWindow,EvilBaschdi.Core.Application.ISettings)">
+            <summary>
+            </summary>
+            <param name="mainWindow"></param>
+            <param name="settings"></param>
+        </member>
+        <member name="M:EvilBaschdi.Core.Wpf.MetroStyle.#ctor(MahApps.Metro.Controls.MetroWindow,System.Windows.Controls.ComboBox,System.Windows.Controls.RadioButton,System.Windows.Controls.RadioButton,EvilBaschdi.Core.Application.ISettings,EvilBaschdi.Core.Wpf.IThemeManagerHelper)">
             <summary>
                 Handle metro style by radio buttons.
             </summary>
@@ -577,15 +848,17 @@
             <param name="themeLight" />
             <param name="settings" />
             <param name="themeDark" />
+            <param name="themeManagerHelper"></param>
             <exception cref="T:System.ArgumentNullException">
                 <paramref name="mainWindow" /> is <see langword="null" />.
                 <paramref name="accent" /> is <see langword="null" />.
                 <paramref name="themeDark" /> is <see langword="null" />.
                 <paramref name="themeLight" /> is <see langword="null" />.
                 <paramref name="settings" /> is <see langword="null" />.
+                <paramref name="themeManagerHelper" /> is <see langword="null" />.
             </exception>
         </member>
-        <member name="M:EvilBaschdi.Core.Wpf.MetroStyle.#ctor(MahApps.Metro.Controls.MetroWindow,System.Windows.Controls.ComboBox,MahApps.Metro.Controls.ToggleSwitch,EvilBaschdi.Core.Application.ISettings)">
+        <member name="M:EvilBaschdi.Core.Wpf.MetroStyle.#ctor(MahApps.Metro.Controls.MetroWindow,System.Windows.Controls.ComboBox,MahApps.Metro.Controls.ToggleSwitch,EvilBaschdi.Core.Application.ISettings,EvilBaschdi.Core.Wpf.IThemeManagerHelper)">
             <summary>
                 Handle metro style by ToggleSwitch.
             </summary>
@@ -594,11 +867,27 @@
             <param name="accent" />
             <param name="themeSwitch" />
             <param name="settings" />
+            <param name="themeManagerHelper"></param>
             <exception cref="T:System.ArgumentNullException">
                 <paramref name="mainWindow" /> is <see langword="null" />.
                 <paramref name="accent" /> is <see langword="null" />.
                 <paramref name="themeSwitch" /> is <see langword="null" />.
                 <paramref name="settings" /> is <see langword="null" />.
+                <paramref name="themeManagerHelper" /> is <see langword="null" />.
+            </exception>
+        </member>
+        <member name="M:EvilBaschdi.Core.Wpf.MetroStyle.#ctor(MahApps.Metro.Controls.MetroWindow,EvilBaschdi.Core.Application.ISettings,EvilBaschdi.Core.Wpf.IThemeManagerHelper)">
+            <summary>
+                Handle metro style by ToggleSwitch.
+            </summary>
+            ///
+            <param name="mainWindow" />
+            <param name="settings" />
+            <param name="themeManagerHelper"></param>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="mainWindow" /> is <see langword="null" />.
+                <paramref name="settings" /> is <see langword="null" />.
+                <paramref name="themeManagerHelper" /> is <see langword="null" />.
             </exception>
         </member>
         <member name="M:EvilBaschdi.Core.Wpf.MetroStyle.Load(System.Boolean,System.Boolean)">
@@ -636,6 +925,16 @@
         <member name="M:EvilBaschdi.Core.Wpf.MetroStyle.SaveStyle">
             <summary>
                 Save Style.
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.Core.Wpf.MetroStyle.Accent">
+            <summary>
+                ComboBox for choosing an accent.
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.Core.Wpf.MetroStyle.Theme">
+            <summary>
+                ToggleSwitch for choosing a theme.
             </summary>
         </member>
         <member name="T:EvilBaschdi.Core.Wpf.GlassEffectHelper">
@@ -699,6 +998,26 @@
             <summary>
                 Save Style.
             </summary>
+        </member>
+        <member name="P:EvilBaschdi.Core.Wpf.IMetroStyle.Accent">
+            <summary>
+                ComboBox for choosing an accent.
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.Core.Wpf.IMetroStyle.Theme">
+            <summary>
+                ToggleSwitch for choosing a theme.
+            </summary>
+        </member>
+        <member name="T:EvilBaschdi.Core.Wpf.RemoveChildHelper">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:EvilBaschdi.Core.Wpf.RemoveChildHelper.RemoveChild(System.Windows.DependencyObject,System.Windows.UIElement)">
+            <summary>
+            </summary>
+            <param name="parent"></param>
+            <param name="child"></param>
         </member>
         <member name="T:EvilBaschdi.Core.Wpf.ThemeManagerHelper">
             <summary>

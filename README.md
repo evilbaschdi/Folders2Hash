@@ -17,7 +17,6 @@ Folders2Md5.exe g 'F:\Setup\Images' l 'C:\Temp' k
 ## Requirements ##
 
 ! https://github.com/evilbaschdi/EvilBaschdi.Core is required for this project !
-The recommended way is to store / clone both repositories in the same root directory.
-Next step would be to open and restore the nuget packages of EvilBaschdi.Core project.
+This will be provided through nuget packages from myget.org
 
 Now you can open and rebuild the Folders2Md5 project. The EvilBaschdi.Core project will be rebuild automatically as a pre-build step of Folders2Md5.
