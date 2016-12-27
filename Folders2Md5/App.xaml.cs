@@ -24,8 +24,7 @@ namespace Folders2Md5
         {
             var mainWindow = new MainWindow();
 
-
-            if (e.Args.Any())
+            if (e?.Args != null && e.Args.Any())
             {
                 //Folders2Md5.exe g 'F:\Setup\Images' l 'C:\temp'
                 var argumentsWithKeepFalse = ArgumentsWithKeepFalse(e.Args);
