@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -58,6 +59,8 @@ namespace Folders2Md5
         private readonly ConcurrentDictionary<string, bool> _pathsToScan = new ConcurrentDictionary<string, bool>();
         private string _loggingPath;
         private int _overrideProtection;
+        private ObservableCollection<SelectableObject<HashAlgorithmModel>> _observableCollection;
+        private Dictionary<string, string> _hashAlgorithmDictionary;
 
         // ReSharper restore PrivateFieldCanBeConvertedToLocalVariable
         /// <summary>
@@ -83,6 +86,8 @@ namespace Folders2Md5
 
         private void Load()
         {
+            GetHashAlgorithms();
+            HashAlgorithms.ItemsSource = _observableCollection;
             Generate.IsEnabled = !string.IsNullOrWhiteSpace(_applicationSettings.InitialDirectory) &&
                                  Directory.Exists(_applicationSettings.InitialDirectory);
 
@@ -115,8 +120,8 @@ namespace Folders2Md5
             var configuration = new Configuration
                                 {
                                     PathsToScan = _pathsToScan,
+                                    HashTypes = _applicationSettings.CurrentHashAlgorithms.Cast<string>().ToList(),
                                     LoggingPath = _loggingPath,
-                                    HashType = "md5",
                                     KeepFileExtension = _applicationSettings.KeepFileExtension
                                 };
             Cursor = Cursors.Wait;
@@ -160,6 +165,8 @@ namespace Folders2Md5
 
         #endregion Process Controller
 
+        #region Calculation
+
         /// <summary>
         /// </summary>
         /// <param name="configuration"></param>
@@ -177,21 +184,7 @@ namespace Folders2Md5
             var folders2Md5LogEntries = new ConcurrentBag<Folders2Md5LogEntry>();
             var result = new ObservableCollection<Folders2Md5LogEntry>();
             var configuration = _configuration;
-            var calculateAllHashTypes = false;
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            var hashTypes = calculateAllHashTypes
-                ? new List<string>
-                  {
-                      "md5",
-                      "sha1",
-                      "sha256",
-                      "sha384",
-                      "sha512"
-                  }
-                : new List<string>
-                  {
-                      configuration.HashType.ToLower()
-                  };
+            var currentHashAlgorithms = configuration.HashTypes;
 
             var stringBuilder = new StringBuilder();
 
@@ -201,7 +194,7 @@ namespace Folders2Md5
                                            "ini",
                                            "db"
                                        };
-            excludeExtensionList.AddRange(hashTypes);
+            excludeExtensionList.AddRange(currentHashAlgorithms);
 
             var includeFileNameList = new List<string>();
             var excludeFileNameList = new List<string>
@@ -225,7 +218,7 @@ namespace Folders2Md5
                 }
             );
 
-            Parallel.ForEach(hashTypes,
+            Parallel.ForEach(currentHashAlgorithms,
                 type =>
                 {
                     Parallel.ForEach(fileList.Distinct(),
@@ -270,16 +263,6 @@ namespace Folders2Md5
 
             if (folders2Md5LogEntries.Any())
             {
-                //todo: problems with multithreading and string builder
-                //Parallel.ForEach(folders2Md5LogEntries,
-                //    logEntry =>
-                //    {
-                //        if (logEntry != null)
-                //        {
-                //            stringBuilder.Append(
-                //                $"file:///{logEntry.FileName.Replace("\\", "/")};{logEntry.AlreadyExisting};{logEntry.Type};{logEntry.HashSum};{Environment.NewLine}");
-                //        }
-                //    });
                 foreach (var logEntry in folders2Md5LogEntries)
                 {
                     if (logEntry != null)
@@ -306,84 +289,7 @@ namespace Folders2Md5
             return result;
         }
 
-        #region Initial Directory
-
-        private void BrowseClick(object sender, RoutedEventArgs e)
-        {
-            _basics.BrowseFolder();
-            InitialDirectory.Text = _applicationSettings.InitialDirectory;
-            Load();
-        }
-
-        private void InitialDirectoryOnLostFocus(object sender, RoutedEventArgs e)
-        {
-            if (Directory.Exists(InitialDirectory.Text))
-            {
-                _applicationSettings.InitialDirectory = InitialDirectory.Text;
-            }
-            Load();
-        }
-
-        #endregion Initial Directory
-
-        #region Flyout
-
-        private void ToggleSettingsFlyoutClick(object sender, RoutedEventArgs e)
-        {
-            ToggleFlyout(0);
-        }
-
-        private void ToggleFlyout(int index, bool stayOpen = false)
-        {
-            var activeFlyout = (Flyout) Flyouts.Items[index];
-            if (activeFlyout == null)
-            {
-                return;
-            }
-
-            foreach (
-                var nonactiveFlyout in
-                Flyouts.Items.Cast<Flyout>()
-                       .Where(nonactiveFlyout => nonactiveFlyout.IsOpen && nonactiveFlyout.Name != activeFlyout.Name))
-            {
-                nonactiveFlyout.IsOpen = false;
-            }
-
-            activeFlyout.IsOpen = activeFlyout.IsOpen && stayOpen || !activeFlyout.IsOpen;
-        }
-
-        #endregion Flyout
-
-        #region MetroStyle
-
-        private void SaveStyleClick(object sender, RoutedEventArgs e)
-        {
-            if (_overrideProtection == 0)
-            {
-                return;
-            }
-            _style.SaveStyle();
-        }
-
-        private void Theme(object sender, EventArgs e)
-        {
-            if (_overrideProtection == 0)
-            {
-                return;
-            }
-            _style.SetTheme(sender);
-        }
-
-        private void AccentOnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (_overrideProtection == 0)
-            {
-                return;
-            }
-            _style.SetAccent(sender, e);
-        }
-
-        #endregion MetroStyle
+        #endregion Calculation
 
         #region GenerationSettings
 
@@ -494,5 +400,147 @@ namespace Folders2Md5
         }
 
         #endregion
+
+        #region HashAlgorithms
+
+        private void HashAlgorithmsOnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox comboBox = (ComboBox) sender;
+            comboBox.SelectedItem = null;
+        }
+
+        private void HashAlgorithmsOnCheckBoxChecked(object sender, RoutedEventArgs e)
+        {
+            var currentHashAlgorithms = new StringCollection();
+
+            foreach (SelectableObject<HashAlgorithmModel> hashType in HashAlgorithms.Items)
+            {
+                if (hashType.IsSelected)
+                {
+                    currentHashAlgorithms.Add(hashType.ObjectData.Extension);
+                }
+            }
+
+            _applicationSettings.CurrentHashAlgorithms = currentHashAlgorithms;
+            SetHashAlgorithmstWatermark();
+        }
+
+        private void GetHashAlgorithms()
+        {
+            _observableCollection = new ObservableCollection<SelectableObject<HashAlgorithmModel>>();
+
+            _hashAlgorithmDictionary = new Dictionary<string, string>
+                                       {
+                                           { "MD5", "md5" },
+                                           { "SHA-1", "sha1" },
+                                           { "SHA-256", "sha256" },
+                                           { "SHA-384", "sha384" },
+                                           { "SHA-512", "sha512" }
+                                       };
+
+            foreach (var item in _hashAlgorithmDictionary)
+            {
+                var hashAlgorithmModel = new HashAlgorithmModel
+                                         {
+                                             Extension = item.Value,
+                                             DisplayName = item.Key,
+                                             IsSelected = _applicationSettings.CurrentHashAlgorithms.Contains(item.Value)
+                                         };
+                var selectableObject = new SelectableObject<HashAlgorithmModel>(hashAlgorithmModel)
+                                       {
+                                           IsSelected = hashAlgorithmModel.IsSelected
+                                       };
+                _observableCollection.Add(selectableObject);
+            }
+            SetHashAlgorithmstWatermark();
+        }
+
+        private void SetHashAlgorithmstWatermark()
+        {
+            var currentHashAlgorithms = _applicationSettings.CurrentHashAlgorithms.Cast<string>().ToList();
+            TextBoxHelper.SetWatermark(HashAlgorithms,
+                string.Join(", ", (from item in _hashAlgorithmDictionary where currentHashAlgorithms.Contains(item.Value) select item.Key).ToList()));
+        }
+
+        #endregion HashAlgorithms
+
+        #region Initial Directory
+
+        private void BrowseClick(object sender, RoutedEventArgs e)
+        {
+            _basics.BrowseFolder();
+            InitialDirectory.Text = _applicationSettings.InitialDirectory;
+            Load();
+        }
+
+        private void InitialDirectoryOnLostFocus(object sender, RoutedEventArgs e)
+        {
+            if (Directory.Exists(InitialDirectory.Text))
+            {
+                _applicationSettings.InitialDirectory = InitialDirectory.Text;
+            }
+            Load();
+        }
+
+        #endregion Initial Directory
+
+        #region Flyout
+
+        private void ToggleSettingsFlyoutClick(object sender, RoutedEventArgs e)
+        {
+            ToggleFlyout(0);
+        }
+
+        private void ToggleFlyout(int index, bool stayOpen = false)
+        {
+            var activeFlyout = (Flyout) Flyouts.Items[index];
+            if (activeFlyout == null)
+            {
+                return;
+            }
+
+            foreach (
+                var nonactiveFlyout in
+                Flyouts.Items.Cast<Flyout>()
+                       .Where(nonactiveFlyout => nonactiveFlyout.IsOpen && nonactiveFlyout.Name != activeFlyout.Name))
+            {
+                nonactiveFlyout.IsOpen = false;
+            }
+
+            activeFlyout.IsOpen = activeFlyout.IsOpen && stayOpen || !activeFlyout.IsOpen;
+        }
+
+        #endregion Flyout
+
+        #region MetroStyle
+
+        private void SaveStyleClick(object sender, RoutedEventArgs e)
+        {
+            if (_overrideProtection == 0)
+            {
+                return;
+            }
+            _style.SaveStyle();
+        }
+
+        private void Theme(object sender, EventArgs e)
+        {
+            if (_overrideProtection == 0)
+            {
+                return;
+            }
+            _style.SetTheme(sender);
+        }
+
+        private void AccentOnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_overrideProtection == 0)
+            {
+                return;
+            }
+            _style.SetAccent(sender, e);
+        }
+
+        #endregion MetroStyle
     }
 }

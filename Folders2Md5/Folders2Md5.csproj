@@ -125,16 +125,17 @@
     <Compile Include="Core\ApplicationSettings.cs">
       <DependentUpon>IApplicationSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Core\SelectableObject.cs" />
     <Compile Include="Core\IApplicationBasics.cs" />
     <Compile Include="Core\IApplicationSettings.cs" />
     <Compile Include="Internal\Calculate.cs">
       <DependentUpon>ICalculate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Internal\Configuration.cs">
+    <Compile Include="Models\Configuration.cs">
       <DependentUpon>IConfiguration.cs</DependentUpon>
     </Compile>
     <Compile Include="Internal\ICalculate.cs" />
-    <Compile Include="Internal\IConfiguration.cs" />
+    <Compile Include="Models\IConfiguration.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -150,6 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\Folders2Md5LogEntry.cs" />
+    <Compile Include="Models\HashAlgorithmModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -3,6 +3,8 @@ using EvilBaschdi.Core.Browsers;
 
 namespace Folders2Md5.Core
 {
+    /// <summary>
+    /// </summary>
     public class ApplicationBasics : IApplicationBasics
     {
         private readonly IFolderBrowser _folderBrowser;
@@ -25,6 +27,8 @@ namespace Folders2Md5.Core
             _applicationSettings = applicationSettings;
         }
 
+        /// <summary>
+        /// </summary>
         public void BrowseFolder()
         {
             _folderBrowser.SelectedPath = _applicationSettings.InitialDirectory;
@@ -32,6 +36,8 @@ namespace Folders2Md5.Core
             _applicationSettings.InitialDirectory = _folderBrowser.SelectedPath;
         }
 
+        /// <summary>
+        /// </summary>
         public void BrowseLoggingFolder()
         {
             _folderBrowser.SelectedPath = _applicationSettings.LoggingPath;

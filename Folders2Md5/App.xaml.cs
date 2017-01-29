@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using Folders2Md5.Internal;
+using Folders2Md5.Models;
 
 namespace Folders2Md5
 {
@@ -37,10 +38,14 @@ namespace Folders2Md5
 
                     mainWindow.CurrentHiddenInstance = mainWindow;
                     _pathsToScan.TryAdd(e.Args[1].Replace("'", ""), true);
+                    var hashTypes = new List<string>
+                                    {
+                                        "md5"
+                                    };
                     var configuration = new Configuration
                                         {
                                             //HashType.
-                                            HashType = "md5",
+                                            HashTypes = hashTypes,
                                             //Application has to be closed if triggered through command line.
                                             CloseHiddenInstancesOnFinish = true,
                                             PathsToScan = _pathsToScan,
