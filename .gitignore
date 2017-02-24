@@ -74,3 +74,4 @@ UpgradeLog*.htm
 
 # Windows
 Thumbs.db
+.vs
