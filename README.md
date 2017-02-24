@@ -1,18 +1,34 @@
 # Folders2Md5
-A little tool I wrote to generate checksum file of type md5 for each file in a folder and it's subdirectories.
 
+Tool to calculate hashsums for all files of a folder and its subfolders by a given folder or by drag and drop a file / folder to ui.
 It's also possible to trigger this tool through command line / scheduled task to generate the checksums in an interval to provide them for ftp downloads for example.
 
-## Configuration of command line arguments: ##
+## Silentmode (command line) configuration ##
 
-- g '*path*' to set the path the checksums should be created for.
-- l '*path*' to set the path you logging file should be stored at.</br>
-Folders2Md5.exe g 'F:\Setup\Images' l 'C:\Temp'
+### Configuration of "SilentConfiguration.json"
 
-*(optional)*
+- KeepFileExtension (true/false): keep or remove file extensions for generated hash files (myfile.md5 / myfile.exe.md5)
+- PathsToScan: list of paths to scan. "true" at the moment marks a path to be a directory, "false" would be a single file
+- LoggingPath: directory where the result of a single calculation run will be stored as a "csv" file
+- HashTypes: list of hash sum types to generate for each file. Currently supported: md5, sha1, sha256, sha384 and sha512. Maybe more to follow.
 
-- k to keep the file extension of the file you created a checksum for. For example: backup.zip => backup.zip.md5 </br>
-Folders2Md5.exe g 'F:\Setup\Images' l 'C:\Temp' k
+Example:
+```json
+{
+    "KeepFileExtension": true,
+    "PathsToScan": {
+        "C:\\Files": true    
+    },
+    "LoggingPath": "C:\\Apps\\Folders2Md5\\Logs",
+    "HashTypes": [
+        "md5",
+        "sha256"
+    ]
+}
+```
+
+### Execution
+> 'Folders2Md5.exe -silent'
 
 ## Requirements ##
 

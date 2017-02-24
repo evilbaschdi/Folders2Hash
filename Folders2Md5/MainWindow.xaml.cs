@@ -7,7 +7,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,8 +15,6 @@ using System.Windows.Shell;
 using EvilBaschdi.Core.Application;
 using EvilBaschdi.Core.Browsers;
 using EvilBaschdi.Core.DirectoryExtensions;
-using EvilBaschdi.Core.DotNetExtensions;
-using EvilBaschdi.Core.Logging;
 using EvilBaschdi.Core.Threading;
 using EvilBaschdi.Core.Wpf;
 using Folders2Md5.Core;
@@ -48,7 +45,6 @@ namespace Folders2Md5
         private readonly IFolderBrowser _folderBrowser;
         private readonly IApplicationSettings _applicationSettings;
         private readonly IApplicationBasics _basics;
-        private readonly ICalculate _calculate;
         private readonly IDialogService _dialogService;
         private readonly ISettings _coreSettings;
         private readonly IThemeManagerHelper _themeManagerHelper;
@@ -56,6 +52,7 @@ namespace Folders2Md5
         private ObservableCollection<Folders2Md5LogEntry> _folders2Md5LogEntries;
         private Task<ObservableCollection<Folders2Md5LogEntry>> _task;
         private ProgressDialogController _controller;
+        //true == directory, false == file
         private readonly ConcurrentDictionary<string, bool> _pathsToScan = new ConcurrentDictionary<string, bool>();
         private string _loggingPath;
         private int _overrideProtection;
@@ -71,14 +68,13 @@ namespace Folders2Md5
             _folderBrowser = new ExplorerFolderBrowser();
             _applicationSettings = new ApplicationSettings();
             _basics = new ApplicationBasics(_folderBrowser, _applicationSettings);
-
             _dialogService = new DialogService(this);
             TaskbarItemInfo = new TaskbarItemInfo();
             _themeManagerHelper = new ThemeManagerHelper();
             _coreSettings = new CoreSettings(Properties.Settings.Default);
             _style = new MetroStyle(this, Accent, ThemeSwitch, _coreSettings, _themeManagerHelper);
             _style.Load(true);
-            _calculate = new Calculate();
+
             var linkerTime = Assembly.GetExecutingAssembly().GetLinkerTime();
             LinkerTime.Content = linkerTime.ToString(CultureInfo.InvariantCulture);
             Load();
@@ -178,111 +174,16 @@ namespace Folders2Md5
 
         private ObservableCollection<Folders2Md5LogEntry> RunHashCalculation()
         {
-            var multiThreadingHelper = new MultiThreadingHelper();
-            var filePath = new FilePath(multiThreadingHelper);
-            var appendAllTextWithHeadline = new AppendAllTextWithHeadline();
-            var folders2Md5LogEntries = new ConcurrentBag<Folders2Md5LogEntry>();
-            var result = new ObservableCollection<Folders2Md5LogEntry>();
-            var configuration = _configuration;
-            var currentHashAlgorithms = configuration.HashTypes;
+            ICalculate calculate = new Calculate();
+            IMultiThreadingHelper multiThreadingHelper = new MultiThreadingHelper();
+            IFilePath filePath = new FilePath(multiThreadingHelper);
+            ILogging logging = new Logging();
+            IFileListCalculationProcessor fileListCalculationProcessor = new FileListCalculationProcessor(calculate, filePath, logging);
 
-            var stringBuilder = new StringBuilder();
-
-            var includeExtensionList = new List<string>();
-            var excludeExtensionList = new List<string>
-                                       {
-                                           "ini",
-                                           "db"
-                                       };
-            excludeExtensionList.AddRange(currentHashAlgorithms);
-
-            var includeFileNameList = new List<string>();
-            var excludeFileNameList = new List<string>
-                                      {
-                                          "folders2md5_log_"
-                                      };
-
-            var fileList = new ConcurrentBag<string>();
-
-            Parallel.ForEach(_pathsToScan,
-                item =>
-                {
-                    if (item.Value)
-                    {
-                        fileList.AddRange(filePath.GetFileList(item.Key, includeExtensionList, excludeExtensionList, includeFileNameList, excludeFileNameList).Distinct());
-                    }
-                    else
-                    {
-                        fileList.Add(item.Key);
-                    }
-                }
-            );
-
-            Parallel.ForEach(currentHashAlgorithms,
-                type =>
-                {
-                    Parallel.ForEach(fileList.Distinct(),
-                        file =>
-                        {
-                            var hashFileName = _calculate.HashFileName(file, type, configuration.KeepFileExtension);
-
-                            var fileInfo = new FileInfo(file);
-                            var folders2Md5LogEntry = new Folders2Md5LogEntry
-                                                      {
-                                                          FileName = file,
-                                                          ShortFileName = fileInfo.Name,
-                                                          HashFileName = hashFileName,
-                                                          Type = type.ToUpper(),
-                                                          TimeStamp = DateTime.Now
-                                                      };
-
-                            if (!File.Exists(hashFileName) || File.GetLastWriteTime(file) > File.GetLastWriteTime(hashFileName))
-                            {
-                                var hashSum = _calculate.Hash(file, type);
-
-                                if (File.Exists(hashFileName))
-                                {
-                                    File.Delete(hashFileName);
-                                }
-
-                                folders2Md5LogEntry.HashSum = hashSum;
-                                folders2Md5LogEntry.AlreadyExisting = false;
-                                File.AppendAllText(hashFileName, hashSum);
-                            }
-                            else
-                            {
-                                folders2Md5LogEntry.HashSum = File.ReadAllText(hashFileName).Trim();
-                                folders2Md5LogEntry.AlreadyExisting = true;
-                            }
-                            folders2Md5LogEntries.Add(folders2Md5LogEntry);
-                        }
-                    );
-                }
-            );
+            var result = fileListCalculationProcessor.ValueFor(_configuration);
 
 
-            if (folders2Md5LogEntries.Any())
-            {
-                foreach (var logEntry in folders2Md5LogEntries)
-                {
-                    if (logEntry != null)
-                    {
-                        stringBuilder.Append(
-                            $"{logEntry.FileName};{logEntry.Type};{logEntry.HashSum};{logEntry.AlreadyExisting};{Environment.NewLine}");
-                    }
-                }
-
-                appendAllTextWithHeadline.For($@"{configuration.LoggingPath}\Folders2Md5_Log_{DateTime.Now:yyyy-MM-dd_HHmm}.csv", stringBuilder,
-                    "FileName;Type;HashSum;AlreadyExisting;");
-
-                if (folders2Md5LogEntries.Any(item => item != null && item.AlreadyExisting == false))
-                {
-                    result = new ObservableCollection<Folders2Md5LogEntry>(folders2Md5LogEntries.Where(item => item != null && item.AlreadyExisting == false));
-                }
-            }
-
-
-            if (configuration.CloseHiddenInstancesOnFinish)
+            if (_configuration.CloseHiddenInstancesOnFinish)
             {
                 CurrentHiddenInstance.Close();
             }
@@ -422,7 +323,7 @@ namespace Folders2Md5
             }
 
             _applicationSettings.CurrentHashAlgorithms = currentHashAlgorithms;
-            SetHashAlgorithmstWatermark();
+            SetHashAlgorithmsWatermark();
         }
 
         private void GetHashAlgorithms()
@@ -452,10 +353,10 @@ namespace Folders2Md5
                                        };
                 _observableCollection.Add(selectableObject);
             }
-            SetHashAlgorithmstWatermark();
+            SetHashAlgorithmsWatermark();
         }
 
-        private void SetHashAlgorithmstWatermark()
+        private void SetHashAlgorithmsWatermark()
         {
             var currentHashAlgorithms = _applicationSettings.CurrentHashAlgorithms.Cast<string>().ToList();
             TextBoxHelper.SetWatermark(HashAlgorithms,

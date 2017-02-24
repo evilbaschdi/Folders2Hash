@@ -17,7 +17,7 @@
                             <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_settings}" />
                         </Rectangle.OpacityMask>
                     </Rectangle>
-                    <TextBlock Margin="5 0 0 0" VerticalAlignment="Center" Text="Settings" />
+                    <TextBlock Margin="5 0 0 0" VerticalAlignment="Center" Text="settings" />
                 </StackPanel>
             </Button>
         </controls:WindowCommands>
@@ -86,16 +86,18 @@
                                                FontSize="12" IsCheckedChanged="FileExtension"
                                                OnSwitchBrush="{DynamicResource AccentColorBrush}" OnLabel="Keep file extension (filename.ext.md5)"
                                                OffSwitchBrush="{DynamicResource AccentColorBrush}" OffLabel="Remove file extension (filename.md5)" />
-                        
+
                     </StackPanel>
                     <!-- Hash Algorithms -->
                     <StackPanel Margin="10,0,0,0" Orientation="Horizontal">
                         <Label Width="60" Margin="0,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="For" />
-                        <ComboBox Name="HashAlgorithms"  Width="505" Margin="10,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" SelectionChanged="HashAlgorithmsOnSelectionChanged" controls:TextBoxHelper.Watermark="choose algorithms to generate hashes for">
+                        <ComboBox Name="HashAlgorithms" Width="505" Margin="10,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                                  SelectionChanged="HashAlgorithmsOnSelectionChanged" controls:TextBoxHelper.Watermark="choose algorithms to generate hashes for">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <CheckBox IsChecked="{Binding IsSelected}" Width="20" VerticalAlignment="Center" Checked="HashAlgorithmsOnCheckBoxChecked" Unchecked="HashAlgorithmsOnCheckBoxChecked" />
+                                        <CheckBox IsChecked="{Binding IsSelected}" Width="20" VerticalAlignment="Center" Checked="HashAlgorithmsOnCheckBoxChecked"
+                                                  Unchecked="HashAlgorithmsOnCheckBoxChecked" />
                                         <TextBlock Text="{Binding ObjectData.DisplayName}" VerticalAlignment="Center" />
                                     </StackPanel>
                                 </DataTemplate>
@@ -104,7 +106,7 @@
                     </StackPanel>
                     <!-- Separator -->
                     <StackPanel Margin="15,10,15,0" Orientation="Vertical">
-                        <Separator Background="{DynamicResource AccentColorBrush}"/>
+                        <Separator Background="{DynamicResource AccentColorBrush}" />
                     </StackPanel>
                     <StackPanel>
                         <!-- Logging -->
@@ -134,7 +136,7 @@
                     </StackPanel>
                     <!-- Separator -->
                     <StackPanel Margin="15,10,15,0" Orientation="Vertical">
-                        <Separator Background="{DynamicResource AccentColorBrush}"/>
+                        <Separator Background="{DynamicResource AccentColorBrush}" />
                     </StackPanel>
                     <!--Application Style-->
                     <StackPanel>
@@ -173,7 +175,7 @@
                     </StackPanel>
                     <!-- Separator -->
                     <StackPanel Margin="15,10,15,0" Orientation="Vertical">
-                        <Separator Background="{DynamicResource AccentColorBrush}"/>
+                        <Separator Background="{DynamicResource AccentColorBrush}" />
                     </StackPanel>
                     <!-- Build / Linker Time -->
                     <StackPanel Orientation="Horizontal">

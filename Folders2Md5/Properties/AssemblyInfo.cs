@@ -7,11 +7,11 @@ using System.Windows;
 // associated with an assembly.
 
 [assembly: AssemblyTitle("Folders2Md5")]
-[assembly: AssemblyDescription("generates a md5 hash file for each file in a folder and it's subdirectories.")]
+[assembly: AssemblyDescription("generates a hash file for each file in a folder and its subdirectories.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("evil.baschdi")]
 [assembly: AssemblyProduct("Folders2Md5")]
-[assembly: AssemblyCopyright("Copyright © evil.baschdi 2015 - 2016")]
+[assembly: AssemblyCopyright("Copyright © evil.baschdi 2015 - 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -38,7 +38,7 @@ using System.Windows;
     ResourceDictionaryLocation.SourceAssembly //where the generic resource dictionary is located
     //(used if a resource is not found in the page, 
     // app, or any theme specific resource dictionaries)
-    )]
+)]
 
 
 // Version information for an assembly consists of the following four values:

@@ -62,8 +62,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>
-    </StartupObject>
+    <StartupObject>Folders2Md5.App</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>67FDE7089A4ECE8CD32A6DCCBC34EEB075472AD4</ManifestCertificateThumbprint>
@@ -82,16 +81,19 @@
       <HintPath>..\packages\EvilBaschdi.Core.1.0.0.6\lib\net462\EvilBaschdi.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MahApps.Metro, Version=1.4.3.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f">
+    <Reference Include="MahApps.Metro, Version=1.4.3.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.4.3\lib\net45\MahApps.Metro.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.4.3\lib\net45\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
     </Reference>
@@ -125,6 +127,22 @@
     </Compile>
     <Compile Include="Core\ApplicationSettings.cs">
       <DependentUpon>IApplicationSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Core\ISilentConfiguration.cs" />
+    <Compile Include="Core\ISilentConfigurationPath.cs" />
+    <Compile Include="Core\SilentConfiguration.cs">
+      <DependentUpon>ISilentConfiguration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Core\SilentConfigurationPath.cs">
+      <DependentUpon>ISilentConfigurationPath.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Internal\FileListCalculationProcessor.cs">
+      <DependentUpon>IFileListCalculationProcessor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Internal\IFileListCalculationProcessor.cs" />
+    <Compile Include="Internal\ILogging.cs" />
+    <Compile Include="Internal\Logging.cs">
+      <DependentUpon>ILogging.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\SelectableObject.cs" />
     <Compile Include="Core\IApplicationBasics.cs" />
@@ -174,14 +192,15 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Folders2Md5_TemporaryKey.pfx" />
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="SilentConfiguration.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Resource Include="Resources\Entypo.ttf" />
   </ItemGroup>
   <ItemGroup>
@@ -196,7 +215,10 @@
     <Content Include="Folders2Md5.VisualElementsManifest.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="md5.png">
+    <Content Include="hash150.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="hash70.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Resource Include="Resources\Entypo-license.txt" />
@@ -227,6 +249,14 @@
     </PublishFile>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

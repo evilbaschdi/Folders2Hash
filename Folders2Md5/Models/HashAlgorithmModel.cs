@@ -11,8 +11,8 @@
         /// <summary>
         /// </summary>
         public string DisplayName { get; set; }
+
         /// <summary>
-        /// 
         /// </summary>
         public bool IsSelected { get; set; }
     }
