@@ -33,6 +33,4 @@ Example:
 ## Requirements ##
 
 ! https://github.com/evilbaschdi/EvilBaschdi.Core is required for this project !
-This will be provided through nuget packages from myget.org
-
-Now you can open and rebuild the Folders2Md5 project. The EvilBaschdi.Core project will be rebuild automatically as a pre-build step of Folders2Md5.
+This package will be provided adding a myget.org path by nuget.config
