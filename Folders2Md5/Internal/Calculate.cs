@@ -16,6 +16,14 @@ namespace Folders2Hash.Internal
         /// <returns></returns>
         public string Hash(string filename, string type)
         {
+            if (filename == null)
+            {
+                throw new ArgumentNullException(nameof(filename));
+            }
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
             switch (type.ToLower())
             {
                 case "md5":
@@ -44,8 +52,27 @@ namespace Folders2Hash.Internal
         /// <param name="type"></param>
         /// <param name="keepFileExtension"></param>
         /// <returns></returns>
+        public string HashFileName(string file, string type)
+        {
+            return HashFileName(file, type, false);
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="type"></param>
+        /// <param name="keepFileExtension"></param>
+        /// <returns></returns>
         public string HashFileName(string file, string type, bool keepFileExtension)
         {
+            if (file == null)
+            {
+                throw new ArgumentNullException(nameof(file));
+            }
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
             return keepFileExtension
                 ? $@"{Path.GetDirectoryName(file)}\{Path.GetFileName(file)}.{type}"
                 : $@"{Path.GetDirectoryName(file)}\{Path.GetFileNameWithoutExtension(file)}.{type}";
@@ -53,6 +80,14 @@ namespace Folders2Hash.Internal
 
         private string Hash(string filename, HashAlgorithm hashAlgorithm)
         {
+            if (filename == null)
+            {
+                throw new ArgumentNullException(nameof(filename));
+            }
+            if (hashAlgorithm == null)
+            {
+                throw new ArgumentNullException(nameof(hashAlgorithm));
+            }
             try
             {
                 using (var fs = new FileStream(filename, FileMode.Open, FileAccess.Read))
