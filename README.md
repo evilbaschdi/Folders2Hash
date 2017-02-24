@@ -28,7 +28,7 @@ Example:
 ```
 
 ### Execution
-> 'Folders2Md5.exe -silent'
+> 'Folders2Hash.exe -silent'
 
 ## Requirements ##
 
