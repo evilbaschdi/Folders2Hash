@@ -52,8 +52,10 @@ namespace Folders2Hash
         private ObservableCollection<LogEntry> _logEntries;
         private Task<ObservableCollection<LogEntry>> _task;
         private ProgressDialogController _controller;
+
         //true == directory, false == file
         private readonly ConcurrentDictionary<string, bool> _pathsToScan = new ConcurrentDictionary<string, bool>();
+
         private string _loggingPath;
         private int _overrideProtection;
         private ObservableCollection<SelectableObject<HashAlgorithmModel>> _observableCollection;
@@ -84,8 +86,7 @@ namespace Folders2Hash
         {
             GetHashAlgorithms();
             HashAlgorithms.ItemsSource = _observableCollection;
-            Generate.IsEnabled = !string.IsNullOrWhiteSpace(_applicationSettings.InitialDirectory) &&
-                                 Directory.Exists(_applicationSettings.InitialDirectory);
+            Generate.IsEnabled = !string.IsNullOrWhiteSpace(_applicationSettings.InitialDirectory) && Directory.Exists(_applicationSettings.InitialDirectory);
 
             KeepFileExtension.IsChecked = _applicationSettings.KeepFileExtension;
             InitialDirectory.Text = _applicationSettings.InitialDirectory;
@@ -181,7 +182,6 @@ namespace Folders2Hash
             IFileListCalculationProcessor fileListCalculationProcessor = new FileListCalculationProcessor(calculate, filePath, logging);
 
             var result = fileListCalculationProcessor.ValueFor(_configuration);
-
 
             if (_configuration.CloseHiddenInstancesOnFinish)
             {
@@ -300,7 +300,7 @@ namespace Folders2Hash
             e.Handled = true;
         }
 
-        #endregion
+        #endregion Drag and Drop
 
         #region HashAlgorithms
 

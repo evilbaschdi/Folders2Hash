@@ -26,7 +26,7 @@ namespace Folders2Hash.Internal
             var appendAllTextWithHeadline = new AppendAllTextWithHeadline();
             var stringBuilder = new StringBuilder();
 
-            foreach (var logEntry in logEntries.OrderBy(x=> x.FileName).ThenBy(x=>x.Type))
+            foreach (var logEntry in logEntries.OrderBy(x => x.FileName).ThenBy(x => x.Type))
             {
                 if (logEntry != null)
                 {
