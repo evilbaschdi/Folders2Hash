@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Folders2Md5.Models
+namespace Folders2Hash.Models
 {
     /// <summary>
     /// </summary>

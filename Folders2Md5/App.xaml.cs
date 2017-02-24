@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
-using Folders2Md5.Core;
+using Folders2Hash.Core;
 
-namespace Folders2Md5
+namespace Folders2Hash
 {
     /// <summary>
     ///     Interaction logic for App.xaml

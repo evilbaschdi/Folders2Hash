@@ -3,7 +3,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Folders2Md5.Internal
+namespace Folders2Hash.Internal
 {
     /// <summary>
     /// </summary>

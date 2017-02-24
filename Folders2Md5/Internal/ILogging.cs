@@ -1,13 +1,13 @@
 ﻿using System.Collections.Concurrent;
 using EvilBaschdi.Core.DotNetExtensions;
-using Folders2Md5.Models;
+using Folders2Hash.Models;
 
-namespace Folders2Md5.Internal
+namespace Folders2Hash.Internal
 {
     /// <summary>
     ///     Is generating a logging file.
     /// </summary>
-    public interface ILogging : IRunFor2<ConcurrentBag<Folders2Md5LogEntry>, Configuration>
+    public interface ILogging : IRunFor2<ConcurrentBag<LogEntry>, Configuration>
     {
     }
 }

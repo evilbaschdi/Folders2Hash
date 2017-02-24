@@ -1,4 +1,4 @@
-namespace Folders2Md5.Core
+namespace Folders2Hash.Core
 {
     /// <summary>
     /// </summary>

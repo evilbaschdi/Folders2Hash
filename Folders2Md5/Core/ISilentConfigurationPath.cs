@@ -1,6 +1,6 @@
 ﻿using EvilBaschdi.Core.DotNetExtensions;
 
-namespace Folders2Md5.Core
+namespace Folders2Hash.Core
 {
     /// <summary>
     ///     Path of the silent configuration file

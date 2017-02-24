@@ -1,4 +1,4 @@
-# Folders2Md5
+# Folders2Hash
 
 Tool to calculate hashsums for all files of a folder and its subfolders by a given folder or by drag and drop a file / folder to ui.
 It's also possible to trigger this tool through command line / scheduled task to generate the checksums in an interval to provide them for ftp downloads for example.
@@ -19,7 +19,7 @@ Example:
     "PathsToScan": {
         "C:\\Files": true    
     },
-    "LoggingPath": "C:\\Apps\\Folders2Md5\\Logs",
+    "LoggingPath": "C:\\Apps\\Folders2Hash\\Logs",
     "HashTypes": [
         "md5",
         "sha256"

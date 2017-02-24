@@ -7,9 +7,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using EvilBaschdi.Core.DirectoryExtensions;
 using EvilBaschdi.Core.DotNetExtensions;
-using Folders2Md5.Models;
+using Folders2Hash.Models;
 
-namespace Folders2Md5.Internal
+namespace Folders2Hash.Internal
 {
     /// <summary>
     ///     Processes file calculation by file path
@@ -46,14 +46,14 @@ namespace Folders2Md5.Internal
         }
 
         /// <inheritdoc />
-        public ObservableCollection<Folders2Md5LogEntry> ValueFor(Configuration configuration)
+        public ObservableCollection<LogEntry> ValueFor(Configuration configuration)
         {
             if (configuration == null)
             {
                 throw new ArgumentNullException(nameof(configuration));
             }
-            var folders2Md5LogEntries = new ConcurrentBag<Folders2Md5LogEntry>();
-            var result = new ObservableCollection<Folders2Md5LogEntry>();
+            var hashLogEntries = new ConcurrentBag<LogEntry>();
+            var result = new ObservableCollection<LogEntry>();
             var currentHashAlgorithms = configuration.HashTypes;
 
             var includeExtensionList = new List<string>();
@@ -67,7 +67,7 @@ namespace Folders2Md5.Internal
             var includeFileNameList = new List<string>();
             var excludeFileNameList = new List<string>
                                       {
-                                          "folders2md5_log_"
+                                          "folders2hash_log"
                                       };
 
             var fileList = new ConcurrentBag<string>();
@@ -95,14 +95,14 @@ namespace Folders2Md5.Internal
                             var hashFileName = _calculate.HashFileName(file, type, configuration.KeepFileExtension);
 
                             var fileInfo = new FileInfo(file);
-                            var folders2Md5LogEntry = new Folders2Md5LogEntry
-                                                      {
-                                                          FileName = file,
-                                                          ShortFileName = fileInfo.Name,
-                                                          HashFileName = hashFileName,
-                                                          Type = type.ToUpper(),
-                                                          TimeStamp = DateTime.Now
-                                                      };
+                            var logEntry = new LogEntry
+                                           {
+                                               FileName = file,
+                                               ShortFileName = fileInfo.Name,
+                                               HashFileName = hashFileName,
+                                               Type = type.ToUpper(),
+                                               TimeStamp = DateTime.Now
+                                           };
 
                             if (!File.Exists(hashFileName) || File.GetLastWriteTime(file) > File.GetLastWriteTime(hashFileName))
                             {
@@ -113,30 +113,29 @@ namespace Folders2Md5.Internal
                                     File.Delete(hashFileName);
                                 }
 
-                                folders2Md5LogEntry.HashSum = hashSum;
-                                folders2Md5LogEntry.AlreadyExisting = false;
+                                logEntry.HashSum = hashSum;
+                                logEntry.AlreadyExisting = false;
                                 File.AppendAllText(hashFileName, hashSum);
                             }
                             else
                             {
-                                folders2Md5LogEntry.HashSum = File.ReadAllText(hashFileName).Trim();
-                                folders2Md5LogEntry.AlreadyExisting = true;
+                                logEntry.HashSum = File.ReadAllText(hashFileName).Trim();
+                                logEntry.AlreadyExisting = true;
                             }
-                            folders2Md5LogEntries.Add(folders2Md5LogEntry);
+                            hashLogEntries.Add(logEntry);
                         }
                     );
                 }
             );
 
-            if (folders2Md5LogEntries.Any())
+            if (hashLogEntries.Any())
             {
-                if (folders2Md5LogEntries.Any(item => item != null && item.AlreadyExisting == false))
+                if (hashLogEntries.Any(item => item != null && item.AlreadyExisting == false))
                 {
-                    result = new ObservableCollection<Folders2Md5LogEntry>(folders2Md5LogEntries.Where(item => item != null && item.AlreadyExisting == false));
-
-
-                    _logging.Run(folders2Md5LogEntries, configuration);
+                    result = new ObservableCollection<LogEntry>(hashLogEntries.Where(item => item != null && item.AlreadyExisting == false));
                 }
+
+                _logging.Run(hashLogEntries, configuration);
             }
             return result;
         }

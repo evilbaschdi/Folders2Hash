@@ -17,13 +17,13 @@ using EvilBaschdi.Core.Browsers;
 using EvilBaschdi.Core.DirectoryExtensions;
 using EvilBaschdi.Core.Threading;
 using EvilBaschdi.Core.Wpf;
-using Folders2Md5.Core;
-using Folders2Md5.Internal;
-using Folders2Md5.Models;
+using Folders2Hash.Core;
+using Folders2Hash.Internal;
+using Folders2Hash.Models;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 
-namespace Folders2Md5
+namespace Folders2Hash
 {
     /// <summary>
     ///     Interaction logic for MainWindow.xaml
@@ -49,8 +49,8 @@ namespace Folders2Md5
         private readonly ISettings _coreSettings;
         private readonly IThemeManagerHelper _themeManagerHelper;
         private Configuration _configuration;
-        private ObservableCollection<Folders2Md5LogEntry> _folders2Md5LogEntries;
-        private Task<ObservableCollection<Folders2Md5LogEntry>> _task;
+        private ObservableCollection<LogEntry> _logEntries;
+        private Task<ObservableCollection<LogEntry>> _task;
         private ProgressDialogController _controller;
         //true == directory, false == file
         private readonly ConcurrentDictionary<string, bool> _pathsToScan = new ConcurrentDictionary<string, bool>();
@@ -131,10 +131,10 @@ namespace Folders2Md5
             _controller = await this.ShowProgressAsync("Please wait...", "Hashs are getting generated.", true, options);
             _controller.SetIndeterminate();
             _controller.Canceled += ControllerCanceled;
-            _task = Task<ObservableCollection<Folders2Md5LogEntry>>.Factory.StartNew(RunHashCalculation);
+            _task = Task<ObservableCollection<LogEntry>>.Factory.StartNew(RunHashCalculation);
             await _task;
             _task.GetAwaiter().OnCompleted(TaskCompleted);
-            _folders2Md5LogEntries = _task.Result;
+            _logEntries = _task.Result;
         }
 
         private void TaskCompleted()
@@ -145,7 +145,7 @@ namespace Folders2Md5
 
         private void ControllerClosed(object sender, EventArgs e)
         {
-            ResultGrid.ItemsSource = _folders2Md5LogEntries;
+            ResultGrid.ItemsSource = _logEntries;
             var message = $"Checksums were generated. {Environment.NewLine}You can find the logging file at '{_loggingPath}'.";
             _dialogService.ShowMessage("Completed", message);
             TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
@@ -172,7 +172,7 @@ namespace Folders2Md5
             RunHashCalculation();
         }
 
-        private ObservableCollection<Folders2Md5LogEntry> RunHashCalculation()
+        private ObservableCollection<LogEntry> RunHashCalculation()
         {
             ICalculate calculate = new Calculate();
             IMultiThreadingHelper multiThreadingHelper = new MultiThreadingHelper();

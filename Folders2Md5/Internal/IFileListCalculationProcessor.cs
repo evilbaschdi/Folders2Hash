@@ -1,13 +1,13 @@
 using System.Collections.ObjectModel;
 using EvilBaschdi.Core.DotNetExtensions;
-using Folders2Md5.Models;
+using Folders2Hash.Models;
 
-namespace Folders2Md5.Internal
+namespace Folders2Hash.Internal
 {
     /// <summary>
     ///     Processes file calculation by file path
     /// </summary>
-    public interface IFileListCalculationProcessor : IValueFor<Configuration, ObservableCollection<Folders2Md5LogEntry>>
+    public interface IFileListCalculationProcessor : IValueFor<Configuration, ObservableCollection<LogEntry>>
     {
     }
 }

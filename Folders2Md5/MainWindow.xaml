@@ -1,9 +1,9 @@
-﻿<controls:MetroWindow x:Class="Folders2Md5.MainWindow"
+﻿<controls:MetroWindow x:Class="Folders2Hash.MainWindow"
                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                       ShowIconOnTitleBar="False" TitleCharacterCasing="Normal"
-                      Title="Folders 2 Md5" Width="800" Height="600" Icon="md5.ico" ShowInTaskbar="False"
+                      Title="Folders2Hash" Width="800" Height="600" Icon="md5.ico" ShowInTaskbar="False"
                       Visibility="Hidden" GlowBrush="{DynamicResource AccentColorBrush}">
     <!--  RightWindowCommands  -->
     <controls:MetroWindow.RightWindowCommands>

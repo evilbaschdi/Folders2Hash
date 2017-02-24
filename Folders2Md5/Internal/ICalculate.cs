@@ -1,4 +1,4 @@
-﻿namespace Folders2Md5.Internal
+﻿namespace Folders2Hash.Internal
 {
     /// <summary>
     /// </summary>

@@ -6,11 +6,11 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("Folders2Md5")]
+[assembly: AssemblyTitle("Folders2Hash")]
 [assembly: AssemblyDescription("generates a hash file for each file in a folder and its subdirectories.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("evil.baschdi")]
-[assembly: AssemblyProduct("Folders2Md5")]
+[assembly: AssemblyProduct("Folders2Hash")]
 [assembly: AssemblyCopyright("Copyright © evil.baschdi 2015 - 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

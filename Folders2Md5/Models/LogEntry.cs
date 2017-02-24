@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Folders2Md5.Models
+namespace Folders2Hash.Models
 {
     /// <summary>
     /// </summary>
     [DataContract]
-    public class Folders2Md5LogEntry
+    public class LogEntry
     {
         /// <summary>
         /// </summary>

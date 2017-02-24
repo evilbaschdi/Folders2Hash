@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
-using Folders2Md5.Models;
+using Folders2Hash.Models;
 using Newtonsoft.Json;
 
-namespace Folders2Md5.Core
+namespace Folders2Hash.Core
 {
     /// <summary>
     ///     Provides the configuration for silent run

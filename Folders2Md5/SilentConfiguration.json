@@ -1,10 +1,11 @@
 ﻿{
-    "KeepFileExtension": true,
+  "KeepFileExtension": true,
   "PathsToScan": {
     "C:\\Projekte": true
   },
-    "LoggingPath": "C:\\Apps\\Folders2Md5\\Logs",
-    "HashTypes": [
-        "md5", "sha256"
-      ]
-  }
+  "LoggingPath": "C:\\Apps\\Folders2Hash\\Logs",
+  "HashTypes": [
+    "md5",
+    "sha256"
+  ]
+}

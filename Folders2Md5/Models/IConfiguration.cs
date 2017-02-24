@@ -1,7 +1,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
-namespace Folders2Md5.Models
+namespace Folders2Hash.Models
 {
     /// <summary>
     /// </summary>
