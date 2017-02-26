@@ -47,7 +47,7 @@
         </Button>
         <!--Generate-->
         <Button x:Name="Generate" Width="100" Margin="0,10,10,0" HorizontalAlignment="Right" VerticalAlignment="Top"
-                Click="GenerateHashsOnClick">
+                Click="GenerateHashesOnClick">
             <StackPanel Orientation="Horizontal">
                 <Rectangle Width="20" Height="20"
                            Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
@@ -69,10 +69,10 @@
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
-    <!--  Flyouts  -->
+    <!--  Fly-outs  -->
     <controls:MetroWindow.Flyouts>
         <controls:FlyoutsControl>
-            <!--  Settings Flyout  -->
+            <!--  Settings Fly-out  -->
             <controls:Flyout Name="SettingsFlyout" Width="600" AnimateOnPositionChange="True" AnimateOpacity="True"
                              Header="Settings" Position="Right" Theme="Accent">
                 <StackPanel>

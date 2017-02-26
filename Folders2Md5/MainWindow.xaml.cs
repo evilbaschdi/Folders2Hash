@@ -32,7 +32,7 @@ namespace Folders2Hash
     {
         // ReSharper disable PrivateFieldCanBeConvertedToLocalVariable
         /// <summary>
-        ///     Set tru to close hidden instances on finish.
+        ///     Set true to close hidden instances on finish.
         /// </summary>
         public bool CloseHiddenInstancesOnFinish { get; set; }
 
@@ -101,7 +101,7 @@ namespace Folders2Hash
 
         #region Process Controller
 
-        private async void GenerateHashsOnClick(object sender, RoutedEventArgs e)
+        private async void GenerateHashesOnClick(object sender, RoutedEventArgs e)
         {
             _pathsToScan.TryAdd(_applicationSettings.InitialDirectory, true);
             await ConfigureController();
@@ -129,7 +129,7 @@ namespace Folders2Hash
                           };
 
             MetroDialogOptions = options;
-            _controller = await this.ShowProgressAsync("Please wait...", "Hashs are getting generated.", true, options);
+            _controller = await this.ShowProgressAsync("Please wait...", "Hashes are getting generated.", true, options);
             _controller.SetIndeterminate();
             _controller.Canceled += ControllerCanceled;
             _task = Task<ObservableCollection<LogEntry>>.Factory.StartNew(RunHashCalculation);
@@ -385,7 +385,7 @@ namespace Folders2Hash
 
         #endregion Initial Directory
 
-        #region Flyout
+        #region Fly-out
 
         private void ToggleSettingsFlyoutClick(object sender, RoutedEventArgs e)
         {
@@ -411,7 +411,7 @@ namespace Folders2Hash
             activeFlyout.IsOpen = activeFlyout.IsOpen && stayOpen || !activeFlyout.IsOpen;
         }
 
-        #endregion Flyout
+        #endregion Fly-out
 
         #region MetroStyle
 
