@@ -2,6 +2,7 @@
                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                       ShowIconOnTitleBar="False" TitleCharacterCasing="Normal"
                       Title="Folders2Hash" Width="800" Height="600" Icon="md5.ico" ShowInTaskbar="False"
                       Visibility="Hidden" GlowBrush="{DynamicResource AccentColorBrush}">
@@ -11,12 +12,7 @@
             <!--  Settings  -->
             <Button Click="ToggleSettingsFlyoutClick">
                 <StackPanel Orientation="Horizontal">
-                    <Rectangle Width="20" Height="20"
-                               Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
-                        <Rectangle.OpacityMask>
-                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_settings}" />
-                        </Rectangle.OpacityMask>
-                    </Rectangle>
+                    <iconPacks:PackIconMaterial Kind="Settings" Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center" />
                     <TextBlock Margin="5 0 0 0" VerticalAlignment="Center" Text="settings" />
                 </StackPanel>
             </Button>
@@ -36,12 +32,7 @@
         <Button Name="Browse" Width="100" Margin="0,10,115,0" HorizontalAlignment="Right" VerticalAlignment="Top"
                 Click="BrowseClick">
             <StackPanel Orientation="Horizontal">
-                <Rectangle Width="20" Height="20"
-                           Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
-                    <Rectangle.OpacityMask>
-                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_folder}" />
-                    </Rectangle.OpacityMask>
-                </Rectangle>
+                <iconPacks:PackIconMaterial Kind="FolderOutline" Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center" />
                 <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" Text="browse" />
             </StackPanel>
         </Button>
@@ -49,12 +40,7 @@
         <Button x:Name="Generate" Width="100" Margin="0,10,10,0" HorizontalAlignment="Right" VerticalAlignment="Top"
                 Click="GenerateHashesOnClick">
             <StackPanel Orientation="Horizontal">
-                <Rectangle Width="20" Height="20"
-                           Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
-                    <Rectangle.OpacityMask>
-                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_progress}" />
-                    </Rectangle.OpacityMask>
-                </Rectangle>
+                <iconPacks:PackIconMaterial Kind="FileMultiple" Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center" />
                 <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" Text="generate" />
             </StackPanel>
         </Button>
@@ -123,12 +109,7 @@
                             <Button Name="BrowseLoggingPath" Width="95" Margin="10,5,0,0" HorizontalAlignment="Right"
                                     VerticalAlignment="Top" Click="BrowseLoggingPathClick">
                                 <StackPanel Orientation="Horizontal">
-                                    <Rectangle Width="20" Height="20"
-                                               Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
-                                        <Rectangle.OpacityMask>
-                                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_folder}" />
-                                        </Rectangle.OpacityMask>
-                                    </Rectangle>
+                                    <iconPacks:PackIconMaterial Kind="FolderOutline" Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                     <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" Text="browse" />
                                 </StackPanel>
                             </Button>
@@ -162,12 +143,7 @@
                         <StackPanel Margin="10,5,0,0" Orientation="Horizontal">
                             <Button Name="SaveStyle" Width="505" Margin="70,5,0,0" Click="SaveStyleClick">
                                 <StackPanel Orientation="Horizontal">
-                                    <Rectangle Width="16" Height="16"
-                                               Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
-                                        <Rectangle.OpacityMask>
-                                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_save}" />
-                                        </Rectangle.OpacityMask>
-                                    </Rectangle>
+                                    <iconPacks:PackIconMaterial Kind="ContentSaveSettings" Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                     <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" Text="save style" />
                                 </StackPanel>
                             </Button>

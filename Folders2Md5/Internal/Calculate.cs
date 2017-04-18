@@ -50,7 +50,6 @@ namespace Folders2Hash.Internal
         /// </summary>
         /// <param name="file"></param>
         /// <param name="type"></param>
-        /// <param name="keepFileExtension"></param>
         /// <returns></returns>
         public string HashFileName(string file, string type)
         {
