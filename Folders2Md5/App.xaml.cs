@@ -48,8 +48,8 @@ namespace Folders2Hash
                                                        };
                             hashEvaluationDialog.Closing += HashEvaluationDialogClosing;
                             hashEvaluationDialog.Show();
+                            break;
                         }
-                        break;
                     }
                 }
             }

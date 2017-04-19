@@ -257,14 +257,19 @@
       <FileType>Assembly</FileType>
     </PublishFile>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RegisterFileTypes\RegisterFileTypes.csproj">
+      <Project>{6fc2568e-2e5a-4474-a386-fcd554667d27}</Project>
+      <Name>RegisterFileTypes</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>xcopy "$(SolutionDir)\RegisterFileTypes\bin\Release" "$(SolutionDir)\Folders2Md5\bin\Release" /Y /I</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

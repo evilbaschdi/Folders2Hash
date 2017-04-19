@@ -7,6 +7,7 @@ namespace Folders2Hash.Internal
     public class HashAlgorithmDictionary : IHashAlgorithmDictionary
     {
         /// <summary>
+        ///     todo: please also extend RegisterFileTypes\Program.cs
         /// </summary>
         public Dictionary<string, string> Value => new Dictionary<string, string>
                                                    {
