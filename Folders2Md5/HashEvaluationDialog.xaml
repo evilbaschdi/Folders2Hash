@@ -3,7 +3,7 @@
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                       GlowBrush="{DynamicResource AccentColorBrush}" Icon="md5.ico" TitleCharacterCasing="Normal"
-                      Title="Hash Evaluation" Height="195" Width="1000">
+                      Title="Hash Evaluation" Height="195" Width="1000" ShowMaxRestoreButton="False">
     <!-- TaskbarItemInfo -->
     <Window.TaskbarItemInfo>
         <TaskbarItemInfo />
@@ -14,14 +14,14 @@
             <GroupBox Name="HashFileName" Header="Hash File">
                 <StackPanel Orientation="Horizontal">
                     <Label Width="65" Height="30" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Hash Sum:" />
-                    <TextBox Name="HashFileContent" Width="895" Height="30" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                    <TextBox Name="HashFileContent" Width="895" Height="30" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" IsReadOnly="True" />
                 </StackPanel>
             </GroupBox>
 
             <GroupBox Name="SourceFileName" Header="Original Source File">
                 <StackPanel Orientation="Horizontal">
                     <Label Width="65" Height="30" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Hash Sum:" />
-                    <TextBox Name="SourceFileHash" Width="895" Height="30" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
+                    <TextBox Name="SourceFileHash" Width="895" Height="30" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" IsReadOnly="True"
                              controls:TextBoxHelper.Watermark="hash sum evaluation is only supported for hash files containing the original file extension (filename.ext.md5)" />
                 </StackPanel>
             </GroupBox>
