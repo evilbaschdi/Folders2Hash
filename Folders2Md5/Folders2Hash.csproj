@@ -122,6 +122,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="HashEvaluationDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -144,10 +148,17 @@
     <Compile Include="Core\SilentConfigurationPath.cs">
       <DependentUpon>ISilentConfigurationPath.cs</DependentUpon>
     </Compile>
+    <Compile Include="HashEvaluationDialog.xaml.cs">
+      <DependentUpon>HashEvaluationDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Internal\FileListCalculationProcessor.cs">
       <DependentUpon>IFileListCalculationProcessor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Internal\HashAlgorithmDictionary.cs">
+      <DependentUpon>IHashAlgorithmDictionary.cs</DependentUpon>
+    </Compile>
     <Compile Include="Internal\IFileListCalculationProcessor.cs" />
+    <Compile Include="Internal\IHashAlgorithmDictionary.cs" />
     <Compile Include="Internal\ILogging.cs" />
     <Compile Include="Internal\Logging.cs">
       <DependentUpon>ILogging.cs</DependentUpon>

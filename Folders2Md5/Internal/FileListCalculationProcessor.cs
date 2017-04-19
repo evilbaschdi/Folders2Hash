@@ -135,7 +135,7 @@ namespace Folders2Hash.Internal
                     result = new ObservableCollection<LogEntry>(hashLogEntries.Where(item => item != null && item.AlreadyExisting == false));
                 }
 
-                _logging.Run(hashLogEntries, configuration);
+                _logging.RunFor(hashLogEntries, configuration);
             }
             return result;
         }

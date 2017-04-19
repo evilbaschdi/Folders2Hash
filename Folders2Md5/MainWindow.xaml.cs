@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Globalization;
@@ -59,14 +58,16 @@ namespace Folders2Hash
         private string _loggingPath;
         private int _overrideProtection;
         private ObservableCollection<SelectableObject<HashAlgorithmModel>> _observableCollection;
-        private Dictionary<string, string> _hashAlgorithmDictionary;
+        private readonly IHashAlgorithmDictionary _hashAlgorithmDictionary;
 
         // ReSharper restore PrivateFieldCanBeConvertedToLocalVariable
+
         /// <summary>
         /// </summary>
         public MainWindow()
         {
             InitializeComponent();
+            _hashAlgorithmDictionary = new HashAlgorithmDictionary();
             _folderBrowser = new ExplorerFolderBrowser();
             _applicationSettings = new ApplicationSettings();
             _basics = new ApplicationBasics(_folderBrowser, _applicationSettings);
@@ -75,6 +76,7 @@ namespace Folders2Hash
             _themeManagerHelper = new ThemeManagerHelper();
             _coreSettings = new CoreSettings(Properties.Settings.Default);
             _style = new MetroStyle(this, Accent, ThemeSwitch, _coreSettings, _themeManagerHelper);
+
             _style.Load(true);
 
             var linkerTime = Assembly.GetExecutingAssembly().GetLinkerTime();
@@ -330,16 +332,9 @@ namespace Folders2Hash
         {
             _observableCollection = new ObservableCollection<SelectableObject<HashAlgorithmModel>>();
 
-            _hashAlgorithmDictionary = new Dictionary<string, string>
-                                       {
-                                           { "MD5", "md5" },
-                                           { "SHA-1", "sha1" },
-                                           { "SHA-256", "sha256" },
-                                           { "SHA-384", "sha384" },
-                                           { "SHA-512", "sha512" }
-                                       };
+            var hashAlgorithmDictionary = _hashAlgorithmDictionary.Value;
 
-            foreach (var item in _hashAlgorithmDictionary)
+            foreach (var item in hashAlgorithmDictionary)
             {
                 var hashAlgorithmModel = new HashAlgorithmModel
                                          {
@@ -358,9 +353,10 @@ namespace Folders2Hash
 
         private void SetHashAlgorithmsWatermark()
         {
+            var hashAlgorithmDictionary = _hashAlgorithmDictionary.Value;
             var currentHashAlgorithms = _applicationSettings.CurrentHashAlgorithms.Cast<string>().ToList();
             TextBoxHelper.SetWatermark(HashAlgorithms,
-                string.Join(", ", (from item in _hashAlgorithmDictionary where currentHashAlgorithms.Contains(item.Value) select item.Key).ToList()));
+                string.Join(", ", (from item in hashAlgorithmDictionary where currentHashAlgorithms.Contains(item.Value) select item.Key).ToList()));
         }
 
         #endregion HashAlgorithms

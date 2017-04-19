@@ -13,7 +13,7 @@ namespace Folders2Hash.Internal
     public class Logging : ILogging
     {
         /// <inheritdoc />
-        public void Run(ConcurrentBag<LogEntry> logEntries, Configuration configuration)
+        public void RunFor(ConcurrentBag<LogEntry> logEntries, Configuration configuration)
         {
             if (logEntries == null)
             {
