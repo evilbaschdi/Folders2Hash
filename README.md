@@ -1,5 +1,7 @@
 # Folders2Hash
 
+[![Join the chat at https://gitter.im/evilbaschdi/Folders2Hash](https://badges.gitter.im/evilbaschdi/Folders2Hash.svg)](https://gitter.im/evilbaschdi/Folders2Hash?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Tool to calculate hashsums for all files of a folder and its subfolders by a given folder or by drag and drop a file / folder to ui.
 It's also possible to trigger this tool through command line / scheduled task to generate the checksums in an interval to provide them for ftp downloads for example.
 
