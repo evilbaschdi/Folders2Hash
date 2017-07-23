@@ -68,7 +68,7 @@
     <ManifestCertificateThumbprint>67FDE7089A4ECE8CD32A6DCCBC34EEB075472AD4</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>Folders2Md5_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>Folders2Hash_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>false</GenerateManifests>
@@ -269,7 +269,7 @@
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(SolutionDir)\RegisterFileTypes\bin\Release" "$(SolutionDir)\Folders2Md5\bin\Release" /Y /I</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(SolutionDir)\RegisterFileTypes\bin\Release" "$(SolutionDir)\Folders2Hash\bin\Release" /Y /I</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
