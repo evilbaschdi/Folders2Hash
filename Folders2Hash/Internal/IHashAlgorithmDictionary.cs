@@ -3,8 +3,7 @@ using EvilBaschdi.Core.DotNetExtensions;
 
 namespace Folders2Hash.Internal
 {
-    /// <summary>
-    /// </summary>
+    /// <inheritdoc />
     public interface IHashAlgorithmDictionary : IValue<Dictionary<string, string>>
     {
     }

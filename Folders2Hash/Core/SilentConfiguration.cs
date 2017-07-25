@@ -5,9 +5,7 @@ using Newtonsoft.Json;
 
 namespace Folders2Hash.Core
 {
-    /// <summary>
-    ///     Provides the configuration for silent run
-    /// </summary>
+    /// <inheritdoc />
     public class SilentConfiguration : ISilentConfiguration
     {
         private readonly ISilentConfigurationPath _silentConfigurationPath;

@@ -19,36 +19,28 @@ using EvilBaschdi.Core.Wpf;
 using Folders2Hash.Core;
 using Folders2Hash.Internal;
 using Folders2Hash.Models;
+using Folders2Hash.Properties;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 
 namespace Folders2Hash
 {
-    /// <summary>
-    ///     Interaction logic for MainWindow.xaml
-    /// </summary>
+    /// <inheritdoc cref="MetroWindow" />
     public partial class MainWindow
     {
-        // ReSharper disable PrivateFieldCanBeConvertedToLocalVariable
-        /// <summary>
-        ///     Set true to close hidden instances on finish.
-        /// </summary>
-        public bool CloseHiddenInstancesOnFinish { get; set; }
-
         /// <summary>
         ///     Current hidden instance for use with instances through command line.
         /// </summary>
-        public MainWindow CurrentHiddenInstance { get; set; }
+        public MainWindow CurrentHiddenInstance { private get; set; }
 
-        private readonly IMetroStyle _style;
-        private readonly IFolderBrowser _folderBrowser;
         private readonly IApplicationSettings _applicationSettings;
         private readonly IApplicationBasics _basics;
         private readonly IDialogService _dialogService;
-        private readonly ISettings _coreSettings;
-        private readonly IThemeManagerHelper _themeManagerHelper;
+        private readonly IHashAlgorithmDictionary _hashAlgorithmDictionary;
+        private readonly IMetroStyle _style;
         private Configuration _configuration;
         private ObservableCollection<LogEntry> _logEntries;
+        private ObservableCollection<SelectableObject<HashAlgorithmModel>> _observableCollection;
         private Task<ObservableCollection<LogEntry>> _task;
         private ProgressDialogController _controller;
 
@@ -57,25 +49,20 @@ namespace Folders2Hash
 
         private string _loggingPath;
         private int _overrideProtection;
-        private ObservableCollection<SelectableObject<HashAlgorithmModel>> _observableCollection;
-        private readonly IHashAlgorithmDictionary _hashAlgorithmDictionary;
 
-        // ReSharper restore PrivateFieldCanBeConvertedToLocalVariable
-
-        /// <summary>
-        /// </summary>
+        /// <inheritdoc />
         public MainWindow()
         {
             InitializeComponent();
             _hashAlgorithmDictionary = new HashAlgorithmDictionary();
-            _folderBrowser = new ExplorerFolderBrowser();
+            IFolderBrowser folderBrowser = new ExplorerFolderBrowser();
             _applicationSettings = new ApplicationSettings();
-            _basics = new ApplicationBasics(_folderBrowser, _applicationSettings);
+            _basics = new ApplicationBasics(folderBrowser, _applicationSettings);
             _dialogService = new DialogService(this);
             TaskbarItemInfo = new TaskbarItemInfo();
-            _themeManagerHelper = new ThemeManagerHelper();
-            _coreSettings = new CoreSettings(Properties.Settings.Default);
-            _style = new MetroStyle(this, Accent, ThemeSwitch, _coreSettings, _themeManagerHelper);
+            IThemeManagerHelper themeManagerHelper = new ThemeManagerHelper();
+            ISettings coreSettings = new CoreSettings(Settings.Default);
+            _style = new MetroStyle(this, Accent, ThemeSwitch, coreSettings, themeManagerHelper);
 
             _style.Load(true);
 
@@ -101,6 +88,9 @@ namespace Folders2Hash
             _overrideProtection = 1;
         }
 
+
+        // ReSharper restore PrivateFieldCanBeConvertedToLocalVariable
+
         #region Process Controller
 
         private async void GenerateHashesOnClick(object sender, RoutedEventArgs e)
@@ -112,7 +102,7 @@ namespace Folders2Hash
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public async Task ConfigureController()
+        private async Task ConfigureController()
         {
             TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
 
@@ -268,7 +258,7 @@ namespace Folders2Hash
 
         private void GridOnDragOver(object sender, DragEventArgs e)
         {
-            bool isCorrect = true;
+            var isCorrect = true;
 
             if (e.Data.GetDataPresent(DataFormats.FileDrop, true))
             {
@@ -308,7 +298,7 @@ namespace Folders2Hash
 
         private void HashAlgorithmsOnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ComboBox comboBox = (ComboBox) sender;
+            var comboBox = (ComboBox) sender;
             comboBox.SelectedItem = null;
         }
 
@@ -399,7 +389,7 @@ namespace Folders2Hash
             foreach (
                 var nonactiveFlyout in
                 Flyouts.Items.Cast<Flyout>()
-                       .Where(nonactiveFlyout => nonactiveFlyout.IsOpen && nonactiveFlyout.Name != activeFlyout.Name))
+                        .Where(nonactiveFlyout => nonactiveFlyout.IsOpen && nonactiveFlyout.Name != activeFlyout.Name))
             {
                 nonactiveFlyout.IsOpen = false;
             }

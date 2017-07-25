@@ -7,9 +7,7 @@ using Folders2Hash.Models;
 
 namespace Folders2Hash.Internal
 {
-    /// <summary>
-    ///     Is generating a logging file.
-    /// </summary>
+    /// <inheritdoc />
     public class Logging : ILogging
     {
         /// <inheritdoc />
@@ -28,11 +26,7 @@ namespace Folders2Hash.Internal
 
             foreach (var logEntry in logEntries.OrderBy(x => x.FileName).ThenBy(x => x.Type))
             {
-                if (logEntry != null)
-                {
-                    stringBuilder.Append(
-                        $"{logEntry.FileName};{logEntry.Type};{logEntry.HashSum};{logEntry.AlreadyExisting};{Environment.NewLine}");
-                }
+                stringBuilder.Append($"{logEntry.FileName};{logEntry.Type};{logEntry.HashSum};{logEntry.AlreadyExisting};{Environment.NewLine}");
             }
 
             appendAllTextWithHeadline.For($@"{configuration.LoggingPath}\Folders2Hash_Log_{DateTime.Now:yyyy-MM-dd_HHmm}.csv", stringBuilder,

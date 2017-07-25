@@ -4,6 +4,7 @@ using Folders2Hash.Models;
 
 namespace Folders2Hash.Internal
 {
+    /// <inheritdoc />
     /// <summary>
     ///     Is generating a logging file.
     /// </summary>

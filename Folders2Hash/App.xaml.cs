@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using Folders2Hash.Core;
@@ -6,16 +6,17 @@ using Folders2Hash.Internal;
 
 namespace Folders2Hash
 {
+    /// <inheritdoc />
     /// <summary>
     ///     Interaction logic for App.xaml
     /// </summary>
-    // ReSharper disable RedundantExtendsListEntry
-    public partial class App : Application
+    public partial class App
         // ReSharper restore RedundantExtendsListEntry
     {
         private MainWindow _mainWindow;
 
-        /// <exception cref="OverflowException">
+        /// <inheritdoc />
+        /// <exception cref="T:System.OverflowException">
         ///     The dictionary already contains the maximum number of elements (
         ///     <see cref="F:System.Int32.MaxValue" />).
         /// </exception>
@@ -60,7 +61,7 @@ namespace Folders2Hash
             }
         }
 
-        private void HashEvaluationDialogClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void HashEvaluationDialogClosing(object sender, CancelEventArgs e)
         {
             _mainWindow.Close();
         }

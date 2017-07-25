@@ -2,9 +2,7 @@
 
 namespace Folders2Hash.Core
 {
-    /// <summary>
-    ///     Path of the silent configuration file
-    /// </summary>
+    /// <inheritdoc />
     public class SilentConfigurationPath : ISilentConfigurationPath
     {
         /// <inheritdoc />

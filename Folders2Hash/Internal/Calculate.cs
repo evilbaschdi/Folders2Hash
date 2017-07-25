@@ -5,15 +5,10 @@ using System.Text;
 
 namespace Folders2Hash.Internal
 {
-    /// <summary>
-    /// </summary>
+    /// <inheritdoc />
     public class Calculate : ICalculate
     {
-        /// <summary>
-        /// </summary>
-        /// <param name="filename"></param>
-        /// <param name="type"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public string Hash(string filename, string type)
         {
             if (filename == null)
@@ -45,23 +40,7 @@ namespace Folders2Hash.Internal
             return "Algorithm not supported";
         }
 
-
-        /// <summary>
-        /// </summary>
-        /// <param name="file"></param>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public string HashFileName(string file, string type)
-        {
-            return HashFileName(file, type, false);
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="file"></param>
-        /// <param name="type"></param>
-        /// <param name="keepFileExtension"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public string HashFileName(string file, string type, bool keepFileExtension)
         {
             if (file == null)

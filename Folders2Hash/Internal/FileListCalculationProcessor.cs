@@ -11,9 +11,7 @@ using Folders2Hash.Models;
 
 namespace Folders2Hash.Internal
 {
-    /// <summary>
-    ///     Processes file calculation by file path
-    /// </summary>
+    /// <inheritdoc />
     public class FileListCalculationProcessor : IFileListCalculationProcessor
     {
         private readonly ICalculate _calculate;

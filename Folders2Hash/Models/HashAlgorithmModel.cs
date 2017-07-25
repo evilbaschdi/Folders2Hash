@@ -10,6 +10,7 @@
 
         /// <summary>
         /// </summary>
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public string DisplayName { get; set; }
 
         /// <summary>

@@ -7,14 +7,6 @@
     {
         /// <summary>
         /// </summary>
-        public bool IsSelected { get; set; }
-
-        /// <summary>
-        /// </summary>
-        public T ObjectData { get; set; }
-
-        /// <summary>
-        /// </summary>
         /// <param name="objectData"></param>
         public SelectableObject(T objectData)
         {
@@ -30,5 +22,13 @@
             IsSelected = isSelected;
             ObjectData = objectData;
         }
+
+        /// <summary>
+        /// </summary>
+        public bool IsSelected { get; set; }
+
+        /// <summary>
+        /// </summary>
+        public T ObjectData { get; }
     }
 }

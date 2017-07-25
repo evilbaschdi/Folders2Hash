@@ -3,12 +3,11 @@ using EvilBaschdi.Core.Browsers;
 
 namespace Folders2Hash.Core
 {
-    /// <summary>
-    /// </summary>
+    /// <inheritdoc />
     public class ApplicationBasics : IApplicationBasics
     {
-        private readonly IFolderBrowser _folderBrowser;
         private readonly IApplicationSettings _applicationSettings;
+        private readonly IFolderBrowser _folderBrowser;
 
         /// <summary>
         ///     Initialisiert eine neue Instanz der <see cref="T:System.Object" />-Klasse.
@@ -27,8 +26,7 @@ namespace Folders2Hash.Core
             _applicationSettings = applicationSettings;
         }
 
-        /// <summary>
-        /// </summary>
+        /// <inheritdoc />
         public void BrowseFolder()
         {
             _folderBrowser.SelectedPath = _applicationSettings.InitialDirectory;
@@ -36,8 +34,7 @@ namespace Folders2Hash.Core
             _applicationSettings.InitialDirectory = _folderBrowser.SelectedPath;
         }
 
-        /// <summary>
-        /// </summary>
+        /// <inheritdoc />
         public void BrowseLoggingFolder()
         {
             _folderBrowser.SelectedPath = _applicationSettings.LoggingPath;

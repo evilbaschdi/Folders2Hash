@@ -7,10 +7,11 @@ namespace Folders2Hash.Models
     /// <summary>
     /// </summary>
     [DataContract]
-    public class Configuration : IConfiguration
+    public class Configuration
     {
         /// <summary>
         /// </summary>
+        [DataMember]
         public bool CloseHiddenInstancesOnFinish { get; set; }
 
         /// <summary>

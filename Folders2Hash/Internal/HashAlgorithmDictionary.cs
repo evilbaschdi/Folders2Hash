@@ -2,10 +2,10 @@
 
 namespace Folders2Hash.Internal
 {
-    /// <summary>
-    /// </summary>
+    /// <inheritdoc />
     public class HashAlgorithmDictionary : IHashAlgorithmDictionary
     {
+        /// <inheritdoc />
         /// <summary>
         ///     todo: please also extend RegisterFileTypes\Program.cs
         /// </summary>

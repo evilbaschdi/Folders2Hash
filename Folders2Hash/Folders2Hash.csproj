@@ -163,6 +163,7 @@
     <Compile Include="Internal\Logging.cs">
       <DependentUpon>ILogging.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\Configuration.cs" />
     <Compile Include="Models\LogEntry.cs" />
     <Compile Include="Models\SelectableObject.cs" />
     <Compile Include="Core\IApplicationBasics.cs" />
@@ -170,11 +171,7 @@
     <Compile Include="Internal\Calculate.cs">
       <DependentUpon>ICalculate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\Configuration.cs">
-      <DependentUpon>IConfiguration.cs</DependentUpon>
-    </Compile>
     <Compile Include="Internal\ICalculate.cs" />
-    <Compile Include="Models\IConfiguration.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

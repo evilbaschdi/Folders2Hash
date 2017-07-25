@@ -1,66 +1,56 @@
 ﻿using System.Collections.Specialized;
+using Folders2Hash.Properties;
 
 namespace Folders2Hash.Core
 {
-    /// <summary>
-    /// </summary>
+    /// <inheritdoc />
     public class ApplicationSettings : IApplicationSettings
     {
-        /// <summary>
-        /// </summary>
+        /// <inheritdoc />
         public string InitialDirectory
         {
-            get
-            {
-                return string.IsNullOrWhiteSpace(Properties.Settings.Default.InitialDirectory)
-                    ? ""
-                    : Properties.Settings.Default.InitialDirectory;
-            }
+            get => string.IsNullOrWhiteSpace(Settings.Default.InitialDirectory)
+                ? ""
+                : Settings.Default.InitialDirectory;
             set
             {
-                Properties.Settings.Default.InitialDirectory = value;
-                Properties.Settings.Default.Save();
+                Settings.Default.InitialDirectory = value;
+                Settings.Default.Save();
             }
         }
 
-        /// <summary>
-        /// </summary>
+        /// <inheritdoc />
         public string LoggingPath
         {
-            get
-            {
-                return string.IsNullOrWhiteSpace(Properties.Settings.Default.LoggingPath)
-                    ? ""
-                    : Properties.Settings.Default.LoggingPath;
-            }
+            get => string.IsNullOrWhiteSpace(Settings.Default.LoggingPath)
+                ? ""
+                : Settings.Default.LoggingPath;
             set
             {
-                Properties.Settings.Default.LoggingPath = value;
-                Properties.Settings.Default.Save();
+                Settings.Default.LoggingPath = value;
+                Settings.Default.Save();
             }
         }
 
-        /// <summary>
-        /// </summary>
+        /// <inheritdoc />
         public bool KeepFileExtension
         {
-            get { return Properties.Settings.Default.KeepFileExtension; }
+            get => Settings.Default.KeepFileExtension;
             set
             {
-                Properties.Settings.Default.KeepFileExtension = value;
-                Properties.Settings.Default.Save();
+                Settings.Default.KeepFileExtension = value;
+                Settings.Default.Save();
             }
         }
 
-        /// <summary>
-        /// </summary>
+        /// <inheritdoc />
         public StringCollection CurrentHashAlgorithms
         {
             get
             {
-                if (Properties.Settings.Default.CurrentHashAlgorithms != null && Properties.Settings.Default.CurrentHashAlgorithms.Count > 0)
+                if (Settings.Default.CurrentHashAlgorithms != null && Settings.Default.CurrentHashAlgorithms.Count > 0)
                 {
-                    return Properties.Settings.Default.CurrentHashAlgorithms;
+                    return Settings.Default.CurrentHashAlgorithms;
                 }
                 return new StringCollection
                        {
@@ -69,8 +59,8 @@ namespace Folders2Hash.Core
             }
             set
             {
-                Properties.Settings.Default.CurrentHashAlgorithms = value;
-                Properties.Settings.Default.Save();
+                Settings.Default.CurrentHashAlgorithms = value;
+                Settings.Default.Save();
             }
         }
     }

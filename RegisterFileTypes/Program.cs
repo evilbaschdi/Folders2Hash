@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.Win32;
 
 namespace RegisterFileTypes
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var fileExtensions = new Dictionary<string, string>
                                  {
@@ -28,9 +29,9 @@ namespace RegisterFileTypes
 
         private static void CreateFileAssociation(string executable, KeyValuePair<string, string> extension)
         {
-            var registryKey = Microsoft.Win32.Registry.ClassesRoot.CreateSubKey(extension.Value);
+            var registryKey = Registry.ClassesRoot.CreateSubKey(extension.Value);
             registryKey?.SetValue("", extension.Key);
-            var subKey = Microsoft.Win32.Registry.ClassesRoot.CreateSubKey($@"{extension.Key}\shell\open\command");
+            var subKey = Registry.ClassesRoot.CreateSubKey($@"{extension.Key}\shell\open\command");
             subKey?.SetValue("", $@"""{executable}"" ""%1""");
         }
     }
