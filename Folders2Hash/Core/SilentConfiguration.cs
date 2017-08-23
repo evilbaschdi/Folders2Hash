@@ -18,11 +18,7 @@ namespace Folders2Hash.Core
         public SilentConfiguration(ISilentConfigurationPath silentConfigurationPath
         )
         {
-            if (silentConfigurationPath == null)
-            {
-                throw new ArgumentNullException(nameof(silentConfigurationPath));
-            }
-            _silentConfigurationPath = silentConfigurationPath;
+            _silentConfigurationPath = silentConfigurationPath ?? throw new ArgumentNullException(nameof(silentConfigurationPath));
         }
 
         /// <inheritdoc />

@@ -56,7 +56,8 @@ namespace Folders2Hash
             InitializeComponent();
             _hashAlgorithmDictionary = new HashAlgorithmDictionary();
             IFolderBrowser folderBrowser = new ExplorerFolderBrowser();
-            _applicationSettings = new ApplicationSettings();
+            IExtendedSettings extendedSettings = new ExtendedSettingsByApplicationSettingsBase(Settings.Default);
+            _applicationSettings = new ApplicationSettings(extendedSettings);
             _basics = new ApplicationBasics(folderBrowser, _applicationSettings);
             _dialogService = new DialogService(this);
             TaskbarItemInfo = new TaskbarItemInfo();

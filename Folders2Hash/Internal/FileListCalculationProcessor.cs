@@ -26,21 +26,9 @@ namespace Folders2Hash.Internal
         /// <param name="logging"></param>
         public FileListCalculationProcessor(ICalculate calculate, IFilePath filePath, ILogging logging)
         {
-            if (calculate == null)
-            {
-                throw new ArgumentNullException(nameof(calculate));
-            }
-            if (filePath == null)
-            {
-                throw new ArgumentNullException(nameof(filePath));
-            }
-            if (logging == null)
-            {
-                throw new ArgumentNullException(nameof(logging));
-            }
-            _calculate = calculate;
-            _filePath = filePath;
-            _logging = logging;
+            _calculate = calculate ?? throw new ArgumentNullException(nameof(calculate));
+            _filePath = filePath ?? throw new ArgumentNullException(nameof(filePath));
+            _logging = logging ?? throw new ArgumentNullException(nameof(logging));
         }
 
         /// <inheritdoc />

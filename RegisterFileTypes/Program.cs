@@ -5,10 +5,14 @@ using Microsoft.Win32;
 
 namespace RegisterFileTypes
 {
-    internal class Program
+    internal static class Program
     {
         private static void Main(string[] args)
         {
+            if (args == null)
+            {
+                throw new ArgumentNullException(nameof(args));
+            }
             var fileExtensions = new Dictionary<string, string>
                                  {
                                      { "MD5", ".md5" },
@@ -29,6 +33,11 @@ namespace RegisterFileTypes
 
         private static void CreateFileAssociation(string executable, KeyValuePair<string, string> extension)
         {
+            if (executable == null)
+            {
+                throw new ArgumentNullException(nameof(executable));
+            }
+
             var registryKey = Registry.ClassesRoot.CreateSubKey(extension.Value);
             registryKey?.SetValue("", extension.Key);
             var subKey = Registry.ClassesRoot.CreateSubKey($@"{extension.Key}\shell\open\command");

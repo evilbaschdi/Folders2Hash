@@ -14,16 +14,8 @@ namespace Folders2Hash.Core
         /// </summary>
         public ApplicationBasics(IFolderBrowser folderBrowser, IApplicationSettings applicationSettings)
         {
-            if (folderBrowser == null)
-            {
-                throw new ArgumentNullException(nameof(folderBrowser));
-            }
-            if (applicationSettings == null)
-            {
-                throw new ArgumentNullException(nameof(applicationSettings));
-            }
-            _folderBrowser = folderBrowser;
-            _applicationSettings = applicationSettings;
+            _folderBrowser = folderBrowser ?? throw new ArgumentNullException(nameof(folderBrowser));
+            _applicationSettings = applicationSettings ?? throw new ArgumentNullException(nameof(applicationSettings));
         }
 
         /// <inheritdoc />

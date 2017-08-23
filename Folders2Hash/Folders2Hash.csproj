@@ -92,9 +92,8 @@
       <HintPath>..\packages\MahApps.Metro.IconPacks.1.9.0\lib\net46\MahApps.Metro.IconPacks.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -140,6 +139,7 @@
     <Compile Include="Core\ApplicationSettings.cs">
       <DependentUpon>IApplicationSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Core\Class1.cs" />
     <Compile Include="Core\ISilentConfiguration.cs" />
     <Compile Include="Core\ISilentConfigurationPath.cs" />
     <Compile Include="Core\SilentConfiguration.cs">

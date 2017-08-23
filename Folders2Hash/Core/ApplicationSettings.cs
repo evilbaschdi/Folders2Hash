@@ -1,67 +1,52 @@
-﻿using System.Collections.Specialized;
-using Folders2Hash.Properties;
+﻿using System;
+using System.Collections.Specialized;
+using System.IO;
 
 namespace Folders2Hash.Core
 {
     /// <inheritdoc />
     public class ApplicationSettings : IApplicationSettings
     {
+        private readonly IExtendedSettings _extendedSettings;
+
+        /// <summary>
+        ///     Constructor of the class
+        /// </summary>
+        /// <param name="extendedSettings"></param>
+        public ApplicationSettings(IExtendedSettings extendedSettings)
+        {
+            _extendedSettings = extendedSettings ?? throw new ArgumentNullException(nameof(extendedSettings));
+        }
+
         /// <inheritdoc />
         public string InitialDirectory
         {
-            get => string.IsNullOrWhiteSpace(Settings.Default.InitialDirectory)
-                ? ""
-                : Settings.Default.InitialDirectory;
-            set
-            {
-                Settings.Default.InitialDirectory = value;
-                Settings.Default.Save();
-            }
+            get => _extendedSettings.Get("InitialDirectory", "");
+            set => _extendedSettings.Set("InitialDirectory", value);
         }
 
         /// <inheritdoc />
         public string LoggingPath
         {
-            get => string.IsNullOrWhiteSpace(Settings.Default.LoggingPath)
-                ? ""
-                : Settings.Default.LoggingPath;
-            set
-            {
-                Settings.Default.LoggingPath = value;
-                Settings.Default.Save();
-            }
+            get => _extendedSettings.Get("LoggingPath", $@"{Path.GetPathRoot(Environment.SystemDirectory)}Temp");
+            set => _extendedSettings.Set("LoggingPath", value);
         }
 
         /// <inheritdoc />
         public bool KeepFileExtension
         {
-            get => Settings.Default.KeepFileExtension;
-            set
-            {
-                Settings.Default.KeepFileExtension = value;
-                Settings.Default.Save();
-            }
+            get => _extendedSettings.Get<bool>("KeepFileExtension");
+            set => _extendedSettings.Set("KeepFileExtension", value);
         }
 
         /// <inheritdoc />
         public StringCollection CurrentHashAlgorithms
         {
-            get
-            {
-                if (Settings.Default.CurrentHashAlgorithms != null && Settings.Default.CurrentHashAlgorithms.Count > 0)
-                {
-                    return Settings.Default.CurrentHashAlgorithms;
-                }
-                return new StringCollection
-                       {
-                           "md5"
-                       };
-            }
-            set
-            {
-                Settings.Default.CurrentHashAlgorithms = value;
-                Settings.Default.Save();
-            }
+            get => _extendedSettings.Get("CurrentHashAlgorithms", new StringCollection
+                                                                  {
+                                                                      "md5"
+                                                                  });
+            set => _extendedSettings.Set("CurrentHashAlgorithms", value);
         }
     }
 }
