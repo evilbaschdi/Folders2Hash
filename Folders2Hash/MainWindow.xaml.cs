@@ -168,7 +168,8 @@ namespace Folders2Hash
 
         private ObservableCollection<LogEntry> RunHashCalculation()
         {
-            ICalculate calculate = new Calculate();
+            IHashAlgorithmByName hashAlgorithmByName = new HashAlgorithmByName();
+            ICalculate calculate = new Calculate(hashAlgorithmByName);
             IMultiThreadingHelper multiThreadingHelper = new MultiThreadingHelper();
             IFilePath filePath = new FilePath(multiThreadingHelper);
             ILogging logging = new Logging();
@@ -390,7 +391,7 @@ namespace Folders2Hash
             foreach (
                 var nonactiveFlyout in
                 Flyouts.Items.Cast<Flyout>()
-                        .Where(nonactiveFlyout => nonactiveFlyout.IsOpen && nonactiveFlyout.Name != activeFlyout.Name))
+                       .Where(nonactiveFlyout => nonactiveFlyout.IsOpen && nonactiveFlyout.Name != activeFlyout.Name))
             {
                 nonactiveFlyout.IsOpen = false;
             }

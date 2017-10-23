@@ -154,10 +154,14 @@
     <Compile Include="Internal\FileListCalculationProcessor.cs">
       <DependentUpon>IFileListCalculationProcessor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Internal\HashAlgorithmByName.cs">
+      <DependentUpon>IHashAlgorithmByName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Internal\HashAlgorithmDictionary.cs">
       <DependentUpon>IHashAlgorithmDictionary.cs</DependentUpon>
     </Compile>
     <Compile Include="Internal\IFileListCalculationProcessor.cs" />
+    <Compile Include="Internal\IHashAlgorithmByName.cs" />
     <Compile Include="Internal\IHashAlgorithmDictionary.cs" />
     <Compile Include="Internal\ILogging.cs" />
     <Compile Include="Internal\Logging.cs">

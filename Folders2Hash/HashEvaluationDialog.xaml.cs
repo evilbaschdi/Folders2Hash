@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -11,20 +13,31 @@ using MahApps.Metro.Controls.Dialogs;
 
 namespace Folders2Hash
 {
+    /// <inheritdoc cref="MetroWindow" />
     /// <summary>
     ///     Interaction logic for HashEvaluationDialog.xaml
     /// </summary>
     // ReSharper disable once RedundantExtendsListEntry
     public partial class HashEvaluationDialog : MetroWindow
     {
-        private ProgressDialogController _controller;
-        private bool _windowShown;
-        private Task<bool> _task;
-
         private readonly ICalculate _calculate;
-        private string _sourceFileName;
+        private ProgressDialogController _controller;
         private string _hashFileContent;
         private string _sourceFileHash;
+        private string _sourceFileName;
+        private Task<bool> _task;
+        private bool _windowShown;
+
+
+        /// <inheritdoc />
+        public HashEvaluationDialog()
+        {
+            IHashAlgorithmByName hashAlgorithmByName = new HashAlgorithmByName();
+            _calculate = new Calculate(hashAlgorithmByName);
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
+
+            InitializeComponent();
+        }
 
         /// <summary>
         /// </summary>
@@ -34,16 +47,7 @@ namespace Folders2Hash
         /// </summary>
         public string HashType { get; set; }
 
-        /// <summary>
-        /// </summary>
-        public HashEvaluationDialog()
-        {
-            _calculate = new Calculate();
-            WindowStartupLocation = WindowStartupLocation.CenterScreen;
-
-            InitializeComponent();
-        }
-
+        /// <inheritdoc />
         /// <summary>
         ///     Executing code when window is shown.
         /// </summary>
@@ -65,7 +69,7 @@ namespace Folders2Hash
         /// <summary>
         /// </summary>
         /// <returns></returns>
-        public async Task ConfigureController()
+        private async Task ConfigureController()
         {
             TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
 
@@ -95,8 +99,12 @@ namespace Folders2Hash
             {
                 return false;
             }
-
-            _sourceFileHash = _calculate.Hash(_sourceFileName, HashType);
+            var dic = new Dictionary<string, string>
+                      {
+                          { HashType, HashFile }
+                      };
+            var sourceFileHashes = _calculate.Hashes(_sourceFileName, dic);
+            _sourceFileHash = sourceFileHashes.First(x => x.Key.Equals(HashType, StringComparison.CurrentCultureIgnoreCase)).Value;
             return _sourceFileHash.Trim().Equals(_hashFileContent.Trim(), StringComparison.InvariantCultureIgnoreCase);
         }
 

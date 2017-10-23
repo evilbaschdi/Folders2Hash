@@ -40,7 +40,7 @@ namespace Folders2Hash.Internal
             }
             var hashLogEntries = new ConcurrentBag<LogEntry>();
             var result = new ObservableCollection<LogEntry>();
-            var currentHashAlgorithms = configuration.HashTypes;
+            var configurationHashTypes = configuration.HashTypes;
 
             var includeExtensionList = new List<string>();
             var excludeExtensionList = new List<string>
@@ -48,7 +48,7 @@ namespace Folders2Hash.Internal
                                            "ini",
                                            "db"
                                        };
-            excludeExtensionList.AddRange(currentHashAlgorithms);
+            excludeExtensionList.AddRange(configurationHashTypes);
 
             var includeFileNameList = new List<string>();
             var excludeFileNameList = new List<string>
@@ -72,47 +72,68 @@ namespace Folders2Hash.Internal
                 }
             );
 
-            Parallel.ForEach(currentHashAlgorithms,
-                type =>
-                {
-                    Parallel.ForEach(fileList.Distinct(),
-                        file =>
-                        {
-                            var hashFileName = _calculate.HashFileName(file, type, configuration.KeepFileExtension);
 
-                            var fileInfo = new FileInfo(file);
+            var distinctFileList = fileList.Distinct();
+
+            Parallel.ForEach(distinctFileList,
+                file =>
+                {
+                    var fileInfo = new FileInfo(file);
+                    var localHashTypesToCalculate = new Dictionary<string, string>();
+
+                    foreach (var type in configurationHashTypes)
+                    {
+                        var hashFileName = _calculate.HashFileName(file, type, configuration.KeepFileExtension);
+
+                        if (!File.Exists(hashFileName) || File.GetLastWriteTime(file) > File.GetLastWriteTime(hashFileName))
+                        {
+                            localHashTypesToCalculate.Add(type, hashFileName);
+
+                            if (File.Exists(hashFileName))
+                            {
+                                File.Delete(hashFileName);
+                            }
+                        }
+                        else
+                        {
                             var logEntry = new LogEntry
                                            {
                                                FileName = file,
                                                ShortFileName = fileInfo.Name,
                                                HashFileName = hashFileName,
                                                Type = type.ToUpper(),
-                                               TimeStamp = DateTime.Now
+                                               TimeStamp = DateTime.Now,
+                                               HashSum = File.ReadAllText(hashFileName).Trim(),
+                                               AlreadyExisting = true
                                            };
-
-                            if (!File.Exists(hashFileName) || File.GetLastWriteTime(file) > File.GetLastWriteTime(hashFileName))
-                            {
-                                var hashSum = _calculate.Hash(file, type);
-
-                                if (File.Exists(hashFileName))
-                                {
-                                    File.Delete(hashFileName);
-                                }
-
-                                logEntry.HashSum = hashSum;
-                                logEntry.AlreadyExisting = false;
-                                File.AppendAllText(hashFileName, hashSum);
-                            }
-                            else
-                            {
-                                logEntry.HashSum = File.ReadAllText(hashFileName).Trim();
-                                logEntry.AlreadyExisting = true;
-                            }
                             hashLogEntries.Add(logEntry);
                         }
-                    );
+                    }
+
+
+                    var calculatedHashes = _calculate.Hashes(file, localHashTypesToCalculate);
+
+                    foreach (var calculatedHash in calculatedHashes)
+                    {
+                        var type = calculatedHash.Key;
+                        var hashSum = calculatedHash.Value;
+                        var hashFileName = localHashTypesToCalculate.First(name => name.Key.Equals(type)).Value;
+                        var logEntry = new LogEntry
+                                       {
+                                           FileName = file,
+                                           ShortFileName = fileInfo.Name,
+                                           HashFileName = hashFileName,
+                                           Type = type.ToUpper(),
+                                           TimeStamp = DateTime.Now,
+                                           HashSum = hashSum,
+                                           AlreadyExisting = false
+                                       };
+                        File.AppendAllText(hashFileName, hashSum);
+                        hashLogEntries.Add(logEntry);
+                    }
                 }
             );
+
 
             if (hashLogEntries.Any())
             {
