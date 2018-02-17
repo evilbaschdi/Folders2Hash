@@ -1,4 +1,4 @@
-﻿using EvilBaschdi.Core.DotNetExtensions;
+﻿using EvilBaschdi.Core;
 
 namespace Folders2Hash.Core
 {

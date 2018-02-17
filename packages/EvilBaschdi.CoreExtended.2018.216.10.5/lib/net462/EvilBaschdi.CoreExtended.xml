@@ -1,0 +1,878 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EvilBaschdi.CoreExtended</name>
+    </assembly>
+    <members>
+        <member name="T:EvilBaschdi.CoreExtended.Mvvm.AboutWindowContent">
+            <inheritdoc />
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Mvvm.AboutWindowContent.#ctor(System.Reflection.Assembly,System.Windows.Media.Imaging.BitmapImage)">
+            <summary>
+                Constructor of the class
+            </summary>
+            <param name="assembly"></param>
+            <param name="logoSource"></param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Mvvm.AboutWindowContent.Value">
+            <inheritdoc />
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.Mvvm.IAboutWindowContent">
+            <inheritdoc />
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.Mvvm.ViewModel.ControlContent">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Mvvm.ViewModel.ControlContent.Content">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Mvvm.ViewModel.ControlContent.ImageResourceName">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Mvvm.ViewModel.ControlContent.ImageSize">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Mvvm.ViewModel.ControlContent.FillBrush">
+            <summary>
+            </summary>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.Mvvm.ViewModel.AboutViewModel">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Mvvm.ViewModel.AboutViewModel.#ctor(EvilBaschdi.CoreExtended.Mvvm.IAboutWindowContent)">
+            <summary>
+            </summary>
+            <param name="aboutWindowContent"></param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Mvvm.ViewModel.AboutViewModel.ApplicationTitle">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Mvvm.ViewModel.AboutViewModel.ProductName">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Mvvm.ViewModel.AboutViewModel.Copyright">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Mvvm.ViewModel.AboutViewModel.Company">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Mvvm.ViewModel.AboutViewModel.Description">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Mvvm.ViewModel.AboutViewModel.Version">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Mvvm.ViewModel.AboutViewModel.LogoSource">
+            <summary>
+            </summary>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.Mvvm.View.AboutWindow">
+            <inheritdoc cref="T:MahApps.Metro.Controls.MetroWindow" />
+            <summary>
+                Interaction logic for AboutWindow.xaml
+            </summary>
+            <summary>
+            AboutWindow
+            </summary>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Mvvm.View.AboutWindow.#ctor">
+            <inheritdoc />
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Mvvm.View.AboutWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.AppHelpers.AppSettingsBase">
+            <inheritdoc />
+            <summary>
+                Classes to get values from or set values in AppSettingsBase
+            </summary>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.AppHelpers.AppSettingsBase.#ctor(System.Configuration.SettingsBase)">
+            <summary>
+            </summary>
+            <param name="settingsBase"></param>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.AppHelpers.AppSettingsBase.Get``1(System.String,``0)">
+            <inheritdoc />
+            <summary>
+                Get value of type T
+            </summary>
+            <param name="setting"></param>
+            <param name="fallback"></param>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.AppHelpers.AppSettingsBase.Set(System.String,System.Object)">
+            <inheritdoc />
+            <summary>
+                Set value of type T
+            </summary>
+            <param name="setting"></param>
+            <param name="value"></param>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.AppHelpers.AutoStart">
+            <inheritdoc />
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.AppHelpers.AutoStart.#ctor(System.String)">
+            <summary>
+                Constructor
+            </summary>
+            <param name="appName"></param>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.AppHelpers.AutoStart.Enable">
+            <inheritdoc />
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.AppHelpers.AutoStart.Disable">
+            <inheritdoc />
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.AppHelpers.AutoStart.IsEnabled">
+            <inheritdoc />
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.AppHelpers.AutoStartByConfiguration">
+            <inheritdoc />
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.AppHelpers.AutoStartByConfiguration.#ctor(EvilBaschdi.CoreExtended.AppHelpers.IAppSettingFromConfigurationManager,EvilBaschdi.CoreExtended.AppHelpers.IAutoStart)">
+            <summary>
+                Constructor of the class
+            </summary>
+            <param name="appSettingFromConfigurationManager"></param>
+            <param name="autoStart"></param>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.AppHelpers.AutoStartByConfiguration.Run">
+            <inheritdoc />
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.AppHelpers.AppSettingFromConfigurationManager">
+            <inheritdoc />
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.AppHelpers.AppSettingFromConfigurationManager.ValueFor(System.String)">
+            <inheritdoc />
+            <summary>
+                Reads key value from app.config.
+            </summary>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.AppHelpers.IAppSettingFromConfigurationManager">
+            <inheritdoc />
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.AppHelpers.CurrentScreen">
+            <inheritdoc />
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.AppHelpers.CurrentScreen.ValueFor(MahApps.Metro.Controls.MetroWindow)">
+            <inheritdoc />
+            <param name="metroWindow"></param>
+            <returns></returns>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.AppHelpers.IAppSettingsBase">
+            <summary>
+                Interface for classes to get values from or set values in AppSettingsBase
+            </summary>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.AppHelpers.IAppSettingsBase.Get``1(System.String,``0)">
+            <summary>
+                Get value of type T
+            </summary>
+            <param name="setting"></param>
+            <param name="fallback"></param>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.AppHelpers.IAppSettingsBase.Set(System.String,System.Object)">
+            <summary>
+                Set value of type T
+            </summary>
+            <param name="setting"></param>
+            <param name="value"></param>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.AppHelpers.IAutoStart">
+            <summary>
+                Manage AutoStart
+            </summary>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.AppHelpers.IAutoStart.Enable">
+            <summary>
+                Enable AutoStart
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.AppHelpers.IAutoStart.IsEnabled">
+            <summary>
+                Is AutoStart enabled
+            </summary>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.AppHelpers.IAutoStart.Disable">
+            <summary>
+                Disable AutoStart
+            </summary>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.AppHelpers.IAutoStartByConfiguration">
+            <inheritdoc />
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.AppHelpers.ICurrentScreen">
+            <inheritdoc />
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.AppHelpers.IMoveToScreen">
+            <inheritdoc />
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.AppHelpers.IScreenCapture">
+            <summary>
+                Provides functions to capture the entire screen, or a particular window, and save it to a file.
+            </summary>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.AppHelpers.IScreenCapture.CaptureScreen">
+            <summary>
+                Creates an Image object containing a screen shot of the entire desktop
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.AppHelpers.IScreenCapture.CaptureScreenToFile(System.String,System.Drawing.Imaging.ImageFormat)">
+            <summary>
+                Captures a screen shot of the entire desktop, and saves it to a file
+            </summary>
+            <param name="filename"></param>
+            <param name="format"></param>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.AppHelpers.IScreenCapture.CaptureWindow(System.IntPtr)">
+            <summary>
+                Creates an Image object containing a screen shot of a specific window
+            </summary>
+            <param name="handle">The handle to the window. (In windows forms, this is obtained by the Handle property)</param>
+            <returns></returns>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.AppHelpers.IScreenCapture.CaptureWindowToFile(System.IntPtr,System.String,System.Drawing.Imaging.ImageFormat)">
+            <summary>
+                Captures a screen shot of a specific window, and saves it to a file
+            </summary>
+            <param name="handle"></param>
+            <param name="filename"></param>
+            <param name="format"></param>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.AppHelpers.IScreenCount">
+            <inheritdoc />
+            <summary>
+                Interface for classes that provide the count of current connected screens of the current device / session.
+            </summary>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.AppHelpers.MoveToScreen">
+            <inheritdoc />
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.AppHelpers.MoveToScreen.RunFor(MahApps.Metro.Controls.MetroWindow,System.String)">
+            <inheritdoc />
+            <param name="metroWindow"></param>
+            <param name="deviceName"></param>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.AppHelpers.ScreenCapture">
+            <inheritdoc />
+            <summary>
+                Provides functions to capture the entire screen, or a particular window, and save it to a file.
+            </summary>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.AppHelpers.ScreenCapture.CaptureScreen">
+            <inheritdoc />
+            <summary>
+                Creates an Image object containing a screen shot of the entire desktop
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.AppHelpers.ScreenCapture.CaptureWindow(System.IntPtr)">
+            <inheritdoc />
+            <summary>
+                Creates an Image object containing a screen shot of a specific window
+            </summary>
+            <param name="handle">The handle to the window. (In windows forms, this is obtained by the Handle property)</param>
+            <returns></returns>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.AppHelpers.ScreenCapture.CaptureWindowToFile(System.IntPtr,System.String,System.Drawing.Imaging.ImageFormat)">
+            <inheritdoc />
+            <summary>
+                Captures a screen shot of a specific window, and saves it to a file
+            </summary>
+            <param name="handle"></param>
+            <param name="filename"></param>
+            <param name="format"></param>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.AppHelpers.ScreenCapture.CaptureScreenToFile(System.String,System.Drawing.Imaging.ImageFormat)">
+            <inheritdoc />
+            <summary>
+                Captures a screen shot of the entire desktop, and saves it to a file
+            </summary>
+            <param name="filename"></param>
+            <param name="format"></param>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.AppHelpers.ScreenCapture.Gdi32">
+            <summary>
+                Helper class containing Gdi32 API functions
+            </summary>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.AppHelpers.ScreenCapture.User32">
+            <summary>
+                Helper class containing User32 API functions
+            </summary>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.AppHelpers.ScreenCount">
+            <inheritdoc />
+            <summary>
+                Class that provides the count of current connected screens of the current device / session.
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.AppHelpers.ScreenCount.Value">
+            <inheritdoc />
+            <summary>
+                Count of current connected screens.
+            </summary>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.Metro.ApplicationStyleSettings">
+            <inheritdoc />
+            <summary>
+                ApplicationSettings wrapper Interface implementation.
+            </summary>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Metro.ApplicationStyleSettings.#ctor(EvilBaschdi.CoreExtended.AppHelpers.IAppSettingsBase)">
+            <summary>
+                Constructor of the class.
+            </summary>
+            <param name="appSettingsBase"></param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Metro.ApplicationStyleSettings.Accent">
+            <inheritdoc />
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Metro.ApplicationStyleSettings.Theme">
+            <inheritdoc />
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.Metro.IApplicationStyleSettings">
+            <summary>
+                ApplicationSettings wrapper Interface.
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Metro.IApplicationStyleSettings.Accent">
+            <summary>
+                MahApps ThemeManager Accent.
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Metro.IApplicationStyleSettings.Theme">
+            <summary>
+                MahApps ThemeManager Theme.
+            </summary>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.Metro.IThemeManagerHelper">
+            <summary>
+                ThemeManagerHelper
+            </summary>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Metro.IThemeManagerHelper.CreateAppStyleBy(System.Windows.Media.Color,System.String)">
+            <summary>
+                Creates a new app style by color and name.
+            </summary>
+            <param name="color">Color to create app style for.</param>
+            <param name="accentName">Name of the new app style.</param>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Metro.IThemeManagerHelper.RegisterSystemColorTheme">
+            <summary>
+                Gets Color of current (applied) system applicationStyleSettings, generates an app style and adds it to available
+                accents.
+            </summary>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.Metro.ApplicationStyle">
+            <inheritdoc />
+            <summary>
+                Class that handle metro style on Wpf.
+            </summary>
+        </member>
+        <member name="F:EvilBaschdi.CoreExtended.Metro.ApplicationStyle._styleAccent">
+            <summary>
+                Accent of Application ApplicationStyle.
+            </summary>
+        </member>
+        <member name="F:EvilBaschdi.CoreExtended.Metro.ApplicationStyle._styleTheme">
+            <summary>
+                Theme of Application ApplicationStyle.
+            </summary>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Metro.ApplicationStyle.#ctor(MahApps.Metro.Controls.MetroWindow,EvilBaschdi.CoreExtended.Metro.IApplicationStyleSettings,EvilBaschdi.CoreExtended.Metro.IThemeManagerHelper)">
+            <summary>
+                Handle metro style by ToggleSwitch.
+            </summary>
+            ///
+            <param name="mainWindow" />
+            <param name="applicationStyleSettings" />
+            <param name="themeManagerHelper"></param>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="mainWindow" /> is <see langword="null" />.
+                <paramref name="applicationStyleSettings" /> is <see langword="null" />.
+                <paramref name="themeManagerHelper" /> is <see langword="null" />.
+            </exception>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Metro.ApplicationStyle.#ctor(MahApps.Metro.Controls.MetroWindow,System.Windows.Controls.ComboBox,MahApps.Metro.Controls.ToggleSwitch,EvilBaschdi.CoreExtended.Metro.IApplicationStyleSettings,EvilBaschdi.CoreExtended.Metro.IThemeManagerHelper)">
+            <summary>
+                Handle metro style by ToggleSwitch.
+            </summary>
+            ///
+            <param name="mainWindow" />
+            <param name="accent" />
+            <param name="themeSwitch" />
+            <param name="applicationStyleSettings" />
+            <param name="themeManagerHelper"></param>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="mainWindow" /> is <see langword="null" />.
+                <paramref name="accent" /> is <see langword="null" />.
+                <paramref name="themeSwitch" /> is <see langword="null" />.
+                <paramref name="applicationStyleSettings" /> is <see langword="null" />.
+                <paramref name="themeManagerHelper" /> is <see langword="null" />.
+            </exception>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Metro.ApplicationStyle.Load(System.Boolean,System.Boolean)">
+            <inheritdoc />
+            <summary>
+                Load.
+            </summary>
+            <param name="center"></param>
+            <param name="resizeWithBorder400"></param>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Metro.ApplicationStyle.SetAccent(System.Object,System.Windows.Controls.SelectionChangedEventArgs)">
+            <inheritdoc />
+            <summary>
+                Accent of application style.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Metro.ApplicationStyle.SetTheme(System.Object)">
+            <inheritdoc />
+            <summary>
+                Theme of application style.
+            </summary>
+            <param name="sender"></param>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Metro.ApplicationStyle.SetTheme(System.Object,System.Windows.RoutedEventArgs)">
+            <inheritdoc />
+            <summary>
+                Theme of application style.
+            </summary>
+            <param name="sender"></param>
+            <param name="routedEventArgs"></param>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Metro.ApplicationStyle.SaveStyle">
+            <inheritdoc />
+            <summary>
+                Save ApplicationStyle.
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Metro.ApplicationStyle.Accent">
+            <inheritdoc />
+            <summary>
+                ComboBox for choosing an accent.
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Metro.ApplicationStyle.Theme">
+            <inheritdoc />
+            <summary>
+                ToggleSwitch for choosing a theme.
+            </summary>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Metro.ApplicationStyle.SetStyle">
+            <summary>
+                Sets ApplicationStyle.
+            </summary>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.Metro.IApplicationStyle">
+            <summary>
+                Interface for classes that handle metro style on wpf.
+            </summary>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Metro.IApplicationStyle.Load(System.Boolean,System.Boolean)">
+            <summary>
+                Load.
+            </summary>
+            <param name="center"></param>
+            <param name="resizeWithBorder400"></param>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Metro.IApplicationStyle.SetAccent(System.Object,System.Windows.Controls.SelectionChangedEventArgs)">
+            <summary>
+                Accent of application style.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Metro.IApplicationStyle.SetTheme(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+                Theme of application style.
+            </summary>
+            <param name="sender"></param>
+            <param name="routedEventArgs"></param>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Metro.IApplicationStyle.SetTheme(System.Object)">
+            <summary>
+                Theme of application style.
+            </summary>
+            <param name="sender"></param>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Metro.IApplicationStyle.SaveStyle">
+            <summary>
+                Save ApplicationStyle.
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Metro.IApplicationStyle.Accent">
+            <summary>
+                ComboBox for choosing an accent.
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Metro.IApplicationStyle.Theme">
+            <summary>
+                ToggleSwitch for choosing a theme.
+            </summary>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.Metro.ThemeManagerHelper">
+            <inheritdoc />
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Metro.ThemeManagerHelper.CreateAppStyleBy(System.Windows.Media.Color,System.String)">
+            <inheritdoc />
+            <summary>
+                Creates a new app style by color and name.
+            </summary>
+            <param name="color">Color to create app style for.</param>
+            <param name="accentName">Name of the new app style.</param>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Metro.ThemeManagerHelper.RegisterSystemColorTheme">
+            <inheritdoc />
+            <summary>
+                Gets Color of current (applied) system applicationStyleSettings, generates an app style and adds it to available
+                accents.
+            </summary>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.Browsers.ExplorerFolderBrowser">
+            <inheritdoc />
+            <summary>
+                Stellt einen Auswahldialog für Ordner und Systemelemente ab Windows Vista bereit.
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Browsers.ExplorerFolderBrowser.SelectedPath">
+            <inheritdoc />
+            <summary>
+                Ruft den ausgewählten Ordnerpfad ab bzw. legt diesen fest.
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Browsers.ExplorerFolderBrowser.SelectedElementName">
+            <summary>
+                Ruft den Anzeigenamen eines einzelnen, ausgewählten Elements ab.
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Browsers.ExplorerFolderBrowser.SelectedPaths">
+            <summary>
+                Ruft ein Array mit Ordnerpfaden der ausgewählten Ordner ab.
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Browsers.ExplorerFolderBrowser.SelectedElementNames">
+            <summary>
+                Ruft ein Array mit den Namen der ausgewählten Elemente ab.
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Browsers.ExplorerFolderBrowser.AllowNonStoragePlaces">
+            <summary>
+                Ruft einen Wert ab der angibt ob auch Elemente ausgewählt werden können, die keine Ordner sind oder legt diesen
+                fest.
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Browsers.ExplorerFolderBrowser.Multiselect">
+            <summary>
+                Ruft einen Wert ab der angibt ob mehrere Elemente ausgewählt werden können oder legt diesen fest.
+            </summary>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Browsers.ExplorerFolderBrowser.ShowDialog">
+            <inheritdoc />
+            <summary>
+                Zeigt den Auswahldialog an.
+            </summary>
+            <returns><c>true</c> wenn der Benutzer die Ordnerauswahl bestätigte; andernfalls <c>false</c></returns>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Browsers.ExplorerFolderBrowser.ShowDialog(System.Windows.Window)">
+            <summary>
+                Zeigt den Auswahldialog an.
+            </summary>
+            <param name="owner">Der Besitzer des Fensters</param>
+            <returns><c>true</c> wenn der Benutzer die Ordnerauswahl bestätigte; andernfalls <c>false</c></returns>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Browsers.ExplorerFolderBrowser.ShowDialog(System.Windows.Interop.IWin32Window)">
+            <summary>
+                Zeigt den Auswahldialog an.
+            </summary>
+            <param name="owner">Der Besitzer des Fensters</param>
+            <returns><c>true</c> wenn der Benutzer die Ordnerauswahl bestätigte; andernfalls <c>false</c></returns>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Browsers.ExplorerFolderBrowser.ShowDialog(System.IntPtr)">
+            <summary>
+                Zeigt den Auswahldialog an.
+            </summary>
+            <param name="owner">Der Besitzer des Fensters</param>
+            <returns><c>true</c> wenn der Benutzer die Ordnerauswahl bestätigte; andernfalls <c>false</c></returns>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.Browsers.FolderBrowser">
+            <inheritdoc />
+            <summary>
+                Class for FolderBrowser.
+            </summary>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Browsers.FolderBrowser.ShowDialog">
+            <inheritdoc />
+            <summary>
+                Shows FolderBrowser.
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Browsers.FolderBrowser.SelectedPath">
+            <inheritdoc />
+            <summary>
+                Get or Set selected path.
+            </summary>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.Browsers.IFolderBrowser">
+            <summary>
+                Interface for FolderBrowser.
+            </summary>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Browsers.IFolderBrowser.ShowDialog">
+            <summary>
+                Shows FolderBrowser.
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Browsers.IFolderBrowser.SelectedPath">
+            <summary>
+                Get or Set selected path.
+            </summary>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.Browsers.INetworkBrowser">
+            <inheritdoc />
+            <summary>
+                Interface for NetworkBrowser.
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Browsers.INetworkBrowser.GetNetworkComputers">
+            <summary>
+                Contains an ArrayList of computers found in the network.
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Browsers.INetworkBrowser.Exception">
+            <summary>
+                Contains an Exception if Value has thrown some.
+            </summary>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.Browsers.NetworkBrowser">
+            <inheritdoc />
+            <summary>
+                Class for NetworkBrowser.
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Browsers.NetworkBrowser.Value">
+            <inheritdoc />
+            <summary>
+                Contains an ArrayList of computers found in the network.
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Browsers.NetworkBrowser.GetNetworkComputers">
+            <inheritdoc />
+            <summary>
+                Contains an ArrayList of computers found in the network.
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Browsers.NetworkBrowser.Exception">
+            <inheritdoc />
+            <summary>
+                Contains an Exception if Value has thrown some.
+            </summary>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Browsers.NetworkBrowser.NetServerEnum(System.String,System.Int32,System.IntPtr@,System.Int32,System.Int32@,System.Int32@,System.Int32,System.String,System.Int32@)">
+            <summary>
+                NetServerEnum.
+            </summary>
+            <param name="serverName"></param>
+            <param name="dwLevel"></param>
+            <param name="pBuf"></param>
+            <param name="dwPrefMaxLen"></param>
+            <param name="dwEntriesRead"></param>
+            <param name="dwTotalEntries"></param>
+            <param name="dwServerType"></param>
+            <param name="domain"></param>
+            <param name="dwResumeHandle"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Browsers.NetworkBrowser.NetApiBufferFree(System.IntPtr)">
+            <summary>
+                NetApiBufferFree.
+            </summary>
+            <param name="pBuf"></param>
+            <returns></returns>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.Browsers.NetworkBrowser.ServerInfo">
+            <summary>
+                ServerInfo.
+            </summary>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.Extensions.ColorExtensions">
+            <summary>
+                HelperClass to extend Color functionality.
+            </summary>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Extensions.ColorExtensions.Subtract(System.Byte,System.Int32)">
+            <summary>
+                Subtracts integers from byte.
+            </summary>
+            <param name="value"></param>
+            <param name="integer"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Extensions.ColorExtensions.Add(System.Byte,System.Int32)">
+            <summary>
+                Adds integer to byte.
+            </summary>
+            <param name="value"></param>
+            <param name="integer"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Extensions.ColorExtensions.ToColor(System.String)">
+            <summary>
+                Converts hex to Color.
+            </summary>
+            <param name="hex"></param>
+            <returns></returns>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.Extensions.Margins">
+            <summary>
+                Margins
+            </summary>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.Extensions.RemoveChildExtension">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Extensions.RemoveChildExtension.RemoveChild(System.Windows.DependencyObject,System.Windows.UIElement)">
+            <summary>
+            </summary>
+            <param name="parent"></param>
+            <param name="child"></param>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.Model.AboutWindowConfiguration">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Model.AboutWindowConfiguration.ApplicationTitle">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Model.AboutWindowConfiguration.ProductName">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Model.AboutWindowConfiguration.Copyright">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Model.AboutWindowConfiguration.Company">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Model.AboutWindowConfiguration.Description">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Model.AboutWindowConfiguration.Version">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Model.AboutWindowConfiguration.LogoSource">
+            <summary>
+            </summary>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.Converter.PackIconImageSourceConverterBase`1">
+            <inheritdoc cref="T:System.Windows.Data.IValueConverter" />
+            <inheritdoc cref="T:System.Windows.Markup.MarkupExtension" />
+            <summary>
+                Converts a PackIcon to an ImageSource.
+                Use the ConverterParameter to pass a Brush.
+            </summary>
+        </member>
+        <member name="P:EvilBaschdi.CoreExtended.Converter.PackIconImageSourceConverterBase`1.Thickness">
+            <summary>
+                Gets or sets the thickness to draw the icon with.
+            </summary>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Converter.PackIconImageSourceConverterBase`1.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <inheritdoc />
+            <param name="value"></param>
+            <param name="targetType"></param>
+            <param name="parameter"></param>
+            <param name="culture"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Converter.PackIconImageSourceConverterBase`1.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <inheritdoc />
+            <param name="value"></param>
+            <param name="targetType"></param>
+            <param name="parameter"></param>
+            <param name="culture"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Converter.PackIconImageSourceConverterBase`1.ProvideValue(System.IServiceProvider)">
+            <inheritdoc />
+            <param name="serviceProvider"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.Converter.PackIconImageSourceConverterBase`1.CreateImageSource(System.Object,System.Windows.Media.Brush,System.Double)">
+            <param name="value"></param>
+            <param name="foregroundBrush"></param>
+            <param name="penThickness"></param>
+            <returns></returns>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.DialogService">
+            <inheritdoc />
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.DialogService.#ctor(MahApps.Metro.Controls.MetroWindow)">
+            <summary>
+                Constructor of the class
+            </summary>
+            <param name="mainWindow"></param>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.DialogService.ShowMessage(System.String,System.String)">
+            <inheritdoc />
+            <param name="title"></param>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.DialogService.ShowMessage(System.String,System.String,MahApps.Metro.Controls.Dialogs.MessageDialogStyle)">
+            <inheritdoc />
+            <param name="title"></param>
+            <param name="message"></param>
+            <param name="dialogStyle"></param>
+            <returns></returns>
+        </member>
+        <member name="T:EvilBaschdi.CoreExtended.IDialogService">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.IDialogService.ShowMessage(System.String,System.String)">
+            <summary>
+            </summary>
+            <param name="title"></param>
+            <param name="message"></param>
+            <returns></returns>
+        </member>
+        <member name="M:EvilBaschdi.CoreExtended.IDialogService.ShowMessage(System.String,System.String,MahApps.Metro.Controls.Dialogs.MessageDialogStyle)">
+            <summary>
+            </summary>
+            <param name="title"></param>
+            <param name="message"></param>
+            <param name="dialogStyle"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

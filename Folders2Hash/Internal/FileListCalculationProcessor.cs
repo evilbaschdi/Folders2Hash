@@ -5,8 +5,9 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using EvilBaschdi.Core.DirectoryExtensions;
-using EvilBaschdi.Core.DotNetExtensions;
+using EvilBaschdi.Core.Extensions;
+using EvilBaschdi.Core.Internal;
+using EvilBaschdi.Core.Model;
 using Folders2Hash.Models;
 
 namespace Folders2Hash.Internal
@@ -15,7 +16,7 @@ namespace Folders2Hash.Internal
     public class FileListCalculationProcessor : IFileListCalculationProcessor
     {
         private readonly ICalculate _calculate;
-        private readonly IFilePath _filePath;
+        private readonly IFileListFromPath _filePath;
         private readonly ILogging _logging;
 
         /// <summary>
@@ -24,7 +25,7 @@ namespace Folders2Hash.Internal
         /// <param name="calculate"></param>
         /// <param name="filePath"></param>
         /// <param name="logging"></param>
-        public FileListCalculationProcessor(ICalculate calculate, IFilePath filePath, ILogging logging)
+        public FileListCalculationProcessor(ICalculate calculate, IFileListFromPath filePath, ILogging logging)
         {
             _calculate = calculate ?? throw new ArgumentNullException(nameof(calculate));
             _filePath = filePath ?? throw new ArgumentNullException(nameof(filePath));
@@ -38,11 +39,11 @@ namespace Folders2Hash.Internal
             {
                 throw new ArgumentNullException(nameof(configuration));
             }
+
             var hashLogEntries = new ConcurrentBag<LogEntry>();
             var result = new ObservableCollection<LogEntry>();
             var configurationHashTypes = configuration.HashTypes;
 
-            var includeExtensionList = new List<string>();
             var excludeExtensionList = new List<string>
                                        {
                                            "ini",
@@ -50,7 +51,6 @@ namespace Folders2Hash.Internal
                                        };
             excludeExtensionList.AddRange(configurationHashTypes);
 
-            var includeFileNameList = new List<string>();
             var excludeFileNameList = new List<string>
                                       {
                                           "folders2hash_log"
@@ -63,7 +63,12 @@ namespace Folders2Hash.Internal
                 {
                     if (item.Value)
                     {
-                        fileList.AddRange(_filePath.GetFileList(item.Key, includeExtensionList, excludeExtensionList, includeFileNameList, excludeFileNameList).Distinct());
+                        var filter = new FileListFromPathFilter
+                                     {
+                                         FilterExtensionsNotToEqual = excludeExtensionList,
+                                         FilterFileNamesNotToEqual = excludeFileNameList
+                                     };
+                        fileList.AddRange(_filePath.ValueFor(item.Key, filter).Distinct());
                     }
                     else
                     {
@@ -75,10 +80,15 @@ namespace Folders2Hash.Internal
 
             var distinctFileList = fileList.Distinct();
 
-            Parallel.ForEach(distinctFileList,
-                file =>
+            //Parallel.ForEach(distinctFileList,
+            //    file => { }
+            //);
+
+            foreach (var file in distinctFileList)
+            {
+                try
                 {
-                    var fileInfo = new FileInfo(file);
+                    var fileInfo = file.FileInfo();
                     var localHashTypesToCalculate = new Dictionary<string, string>();
 
                     foreach (var type in configurationHashTypes)
@@ -132,10 +142,18 @@ namespace Folders2Hash.Internal
                         hashLogEntries.Add(logEntry);
                     }
                 }
-            );
+                catch (Exception e)
+                {
+                    _logging.RunFor(file, e.Message, configuration);
+                }
+            }
 
 
-            if (hashLogEntries.Any())
+            if (!hashLogEntries.Any())
+            {
+                return result;
+            }
+
             {
                 if (hashLogEntries.Any(item => item != null && item.AlreadyExisting == false))
                 {
@@ -144,6 +162,7 @@ namespace Folders2Hash.Internal
 
                 _logging.RunFor(hashLogEntries, configuration);
             }
+
             return result;
         }
     }

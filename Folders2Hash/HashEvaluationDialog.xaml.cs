@@ -99,6 +99,7 @@ namespace Folders2Hash
             {
                 return false;
             }
+
             var dic = new Dictionary<string, string>
                       {
                           { HashType, HashFile }

@@ -11,11 +11,13 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Shell;
-using EvilBaschdi.Core.Application;
-using EvilBaschdi.Core.Browsers;
-using EvilBaschdi.Core.DirectoryExtensions;
-using EvilBaschdi.Core.Threading;
-using EvilBaschdi.Core.Wpf;
+using EvilBaschdi.Core.Extensions;
+using EvilBaschdi.Core.Internal;
+using EvilBaschdi.Core.Logging;
+using EvilBaschdi.CoreExtended;
+using EvilBaschdi.CoreExtended.AppHelpers;
+using EvilBaschdi.CoreExtended.Browsers;
+using EvilBaschdi.CoreExtended.Metro;
 using Folders2Hash.Core;
 using Folders2Hash.Internal;
 using Folders2Hash.Models;
@@ -37,7 +39,7 @@ namespace Folders2Hash
         private readonly IApplicationBasics _basics;
         private readonly IDialogService _dialogService;
         private readonly IHashAlgorithmDictionary _hashAlgorithmDictionary;
-        private readonly IMetroStyle _style;
+        private readonly IApplicationStyle _style;
         private Configuration _configuration;
         private ObservableCollection<LogEntry> _logEntries;
         private ObservableCollection<SelectableObject<HashAlgorithmModel>> _observableCollection;
@@ -56,14 +58,14 @@ namespace Folders2Hash
             InitializeComponent();
             _hashAlgorithmDictionary = new HashAlgorithmDictionary();
             IFolderBrowser folderBrowser = new ExplorerFolderBrowser();
-            IExtendedSettings extendedSettings = new ExtendedSettingsByApplicationSettingsBase(Settings.Default);
+            IAppSettingsBase extendedSettings = new AppSettingsBase(Settings.Default);
             _applicationSettings = new ApplicationSettings(extendedSettings);
             _basics = new ApplicationBasics(folderBrowser, _applicationSettings);
             _dialogService = new DialogService(this);
             TaskbarItemInfo = new TaskbarItemInfo();
             IThemeManagerHelper themeManagerHelper = new ThemeManagerHelper();
-            ISettings coreSettings = new CoreSettings(Settings.Default);
-            _style = new MetroStyle(this, Accent, ThemeSwitch, coreSettings, themeManagerHelper);
+            IApplicationStyleSettings coreSettings = new ApplicationStyleSettings(extendedSettings);
+            _style = new ApplicationStyle(this, Accent, ThemeSwitch, coreSettings, themeManagerHelper);
 
             _style.Load(true);
 
@@ -170,9 +172,10 @@ namespace Folders2Hash
         {
             IHashAlgorithmByName hashAlgorithmByName = new HashAlgorithmByName();
             ICalculate calculate = new Calculate(hashAlgorithmByName);
-            IMultiThreadingHelper multiThreadingHelper = new MultiThreadingHelper();
-            IFilePath filePath = new FilePath(multiThreadingHelper);
-            ILogging logging = new Logging();
+            IMultiThreading multiThreadingHelper = new MultiThreading();
+            IFileListFromPath filePath = new FileListFromPath(multiThreadingHelper);
+            IAppendAllTextWithHeadline appendAllTextWithHeadline = new AppendAllTextWithHeadline();
+            ILogging logging = new Logging(appendAllTextWithHeadline);
             IFileListCalculationProcessor fileListCalculationProcessor = new FileListCalculationProcessor(calculate, filePath, logging);
 
             var result = fileListCalculationProcessor.ValueFor(_configuration);
@@ -181,6 +184,7 @@ namespace Folders2Hash
             {
                 CurrentHiddenInstance.Close();
             }
+
             return result;
         }
 
@@ -216,6 +220,7 @@ namespace Folders2Hash
                 _applicationSettings.LoggingPath = LoggingPath.Text;
                 _loggingPath = _applicationSettings.LoggingPath;
             }
+
             Load();
         }
 
@@ -247,14 +252,17 @@ namespace Folders2Hash
                             {
                                 MessageBox.Show($"{ex.InnerException.Message} - {ex.InnerException.StackTrace}");
                             }
+
                             MessageBox.Show($"{ex.Message} - {ex.StackTrace}");
                             // ReSharper disable once ThrowingSystemException
                             throw;
                         }
                     }
+
                     await ConfigureController();
                 }
             }
+
             e.Handled = true;
         }
 
@@ -290,6 +298,7 @@ namespace Folders2Hash
                     }
                 }
             }
+
             e.Effects = isCorrect ? DragDropEffects.All : DragDropEffects.None;
             e.Handled = true;
         }
@@ -340,6 +349,7 @@ namespace Folders2Hash
                                        };
                 _observableCollection.Add(selectableObject);
             }
+
             SetHashAlgorithmsWatermark();
         }
 
@@ -368,6 +378,7 @@ namespace Folders2Hash
             {
                 _applicationSettings.InitialDirectory = InitialDirectory.Text;
             }
+
             Load();
         }
 
@@ -409,6 +420,7 @@ namespace Folders2Hash
             {
                 return;
             }
+
             _style.SaveStyle();
         }
 
@@ -418,6 +430,7 @@ namespace Folders2Hash
             {
                 return;
             }
+
             _style.SetTheme(sender);
         }
 
@@ -427,6 +440,7 @@ namespace Folders2Hash
             {
                 return;
             }
+
             _style.SetAccent(sender, e);
         }
 

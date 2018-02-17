@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.IO;
+using EvilBaschdi.CoreExtended.AppHelpers;
 
 namespace Folders2Hash.Core
 {
     /// <inheritdoc />
     public class ApplicationSettings : IApplicationSettings
     {
-        private readonly IExtendedSettings _extendedSettings;
+        private readonly IAppSettingsBase _extendedSettings;
 
         /// <summary>
         ///     Constructor of the class
         /// </summary>
         /// <param name="extendedSettings"></param>
-        public ApplicationSettings(IExtendedSettings extendedSettings)
+        public ApplicationSettings(IAppSettingsBase extendedSettings)
         {
             _extendedSettings = extendedSettings ?? throw new ArgumentNullException(nameof(extendedSettings));
         }

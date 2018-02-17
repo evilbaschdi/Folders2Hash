@@ -15,6 +15,7 @@ namespace Folders2Hash.Internal
             {
                 throw new ArgumentNullException(nameof(type));
             }
+
             switch (type.ToLower())
             {
                 case "md5":

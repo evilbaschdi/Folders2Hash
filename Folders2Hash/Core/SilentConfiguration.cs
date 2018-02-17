@@ -39,6 +39,7 @@ namespace Folders2Hash.Core
                         _configuration = null;
                     }
                 }
+
                 return _configuration;
             }
         }

@@ -1,5 +1,5 @@
 using System.Collections.ObjectModel;
-using EvilBaschdi.Core.DotNetExtensions;
+using EvilBaschdi.Core;
 using Folders2Hash.Models;
 
 namespace Folders2Hash.Internal

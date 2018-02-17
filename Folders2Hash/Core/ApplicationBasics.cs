@@ -1,5 +1,5 @@
 ﻿using System;
-using EvilBaschdi.Core.Browsers;
+using EvilBaschdi.CoreExtended.Browsers;
 
 namespace Folders2Hash.Core
 {

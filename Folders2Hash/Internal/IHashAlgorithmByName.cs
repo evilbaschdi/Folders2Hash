@@ -1,5 +1,5 @@
 ﻿using System.Security.Cryptography;
-using EvilBaschdi.Core.DotNetExtensions;
+using EvilBaschdi.Core;
 
 namespace Folders2Hash.Internal
 {

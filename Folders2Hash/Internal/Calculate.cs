@@ -26,10 +26,12 @@ namespace Folders2Hash.Internal
             {
                 throw new ArgumentNullException(nameof(file));
             }
+
             if (type == null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
+
             return keepFileExtension
                 ? $@"{Path.GetDirectoryName(file)}\{Path.GetFileName(file)}.{type}"
                 : $@"{Path.GetDirectoryName(file)}\{Path.GetFileNameWithoutExtension(file)}.{type}";
@@ -42,10 +44,12 @@ namespace Folders2Hash.Internal
             {
                 throw new ArgumentNullException(nameof(filename));
             }
+
             if (hashAlgorithmTypes == null)
             {
                 throw new ArgumentNullException(nameof(hashAlgorithmTypes));
             }
+
             var list = new List<KeyValuePair<string, string>>();
             try
             {
@@ -65,12 +69,14 @@ namespace Folders2Hash.Internal
 
                     list.Add(new KeyValuePair<string, string>(hashAlgorithmType, sb.ToString()));
                 }
+
                 fileStream.Close();
             }
             catch (Exception exception)
             {
                 list.Add(new KeyValuePair<string, string>("", exception.Message));
             }
+
             return list;
         }
     }
