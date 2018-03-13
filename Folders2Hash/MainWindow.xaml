@@ -46,7 +46,7 @@
             </StackPanel>
         </Button>
         <DataGrid x:Name="ResultGrid" Margin="10,45,10,10" AutoGenerateColumns="False" CanUserAddRows="False"
-                  CanUserDeleteRows="False" ColumnWidth="*" SelectionUnit="FullRow"
+                  CanUserDeleteRows="False" ColumnWidth="*" SelectionUnit="FullRow" Style="{DynamicResource AzureDataGrid}"
                   GridLinesVisibility="Horizontal" IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding ShortFileName}" Header="File" />
