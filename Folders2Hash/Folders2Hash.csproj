@@ -81,9 +81,9 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="ControlzEx" Version="3.0.2.4" />
-    <PackageReference Include="EvilBaschdi.Core" Version="2018.2.12.1" />
-    <PackageReference Include="EvilBaschdi.CoreExtended" Version="2018.216.10.5" />
-    <PackageReference Include="MahApps.Metro" Version="1.6.1" />
+    <PackageReference Include="EvilBaschdi.Core" Version="2018.416.22.11" />
+    <PackageReference Include="EvilBaschdi.CoreExtended" Version="2018.424.21.15" />
+    <PackageReference Include="MahApps.Metro" Version="1.6.4" />
     <PackageReference Include="MahApps.Metro.IconPacks" Version="2.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
@@ -234,8 +234,10 @@
   <ItemGroup>
     <PublishFile Include="Windows">
       <Visible>False</Visible>
-      <Group></Group>
-      <TargetPath></TargetPath>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
       <PublishState>Exclude</PublishState>
       <IncludeHash>True</IncludeHash>
       <FileType>Assembly</FileType>
@@ -249,7 +251,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent></PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(SolutionDir)\RegisterFileTypes\bin\Release" "$(SolutionDir)\Folders2Hash\bin\Release" /Y /I</PostBuildEvent>
