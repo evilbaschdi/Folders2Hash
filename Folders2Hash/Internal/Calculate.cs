@@ -38,7 +38,7 @@ namespace Folders2Hash.Internal
         }
 
         /// <inheritdoc />
-        public List<KeyValuePair<string, string>> Hashes(string filename, Dictionary<string, string> hashAlgorithmTypes)
+        public IEnumerable<KeyValuePair<string, string>> Hashes(string filename, Dictionary<string, string> hashAlgorithmTypes)
         {
             if (filename == null)
             {

@@ -41,11 +41,11 @@ namespace Folders2Hash
 
         /// <summary>
         /// </summary>
-        public string HashFile { get; set; }
+        public string HashFile { private get; set; }
 
         /// <summary>
         /// </summary>
-        public string HashType { get; set; }
+        public string HashType { private get; set; }
 
         /// <inheritdoc />
         /// <summary>

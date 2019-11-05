@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Linq;
 using System.Windows;
+using EvilBaschdi.CoreExtended.Metro;
 using Folders2Hash.Core;
 using Folders2Hash.Internal;
 
@@ -10,7 +11,8 @@ namespace Folders2Hash
     /// <summary>
     ///     Interaction logic for App.xaml
     /// </summary>
-    public partial class App
+    // ReSharper disable once RedundantExtendsListEntry
+    public partial class App : Application
         // ReSharper restore RedundantExtendsListEntry
     {
         private MainWindow _mainWindow;
@@ -22,6 +24,8 @@ namespace Folders2Hash
         /// </exception>
         protected override void OnStartup(StartupEventArgs e)
         {
+            var themeManagerHelper = new ThemeManagerHelper();
+            themeManagerHelper.RegisterSystemColorTheme();
             _mainWindow = new MainWindow();
 
             ISilentConfigurationPath silentConfigurationPath = new SilentConfigurationPath();
@@ -40,17 +44,19 @@ namespace Folders2Hash
                 {
                     foreach (var dictionaryValue in hashAlgorithmDictionary.Value.Values)
                     {
-                        if (firstArg.EndsWith(dictionaryValue))
+                        if (!firstArg.EndsWith(dictionaryValue))
                         {
-                            var hashEvaluationDialog = new HashEvaluationDialog
-                                                       {
-                                                           HashFile = firstArg,
-                                                           HashType = dictionaryValue
-                                                       };
-                            hashEvaluationDialog.Closing += HashEvaluationDialogClosing;
-                            hashEvaluationDialog.Show();
-                            break;
+                            continue;
                         }
+
+                        var hashEvaluationDialog = new HashEvaluationDialog
+                                                   {
+                                                       HashFile = firstArg,
+                                                       HashType = dictionaryValue
+                                                   };
+                        hashEvaluationDialog.Closing += HashEvaluationDialogClosing;
+                        hashEvaluationDialog.Show();
+                        break;
                     }
                 }
             }
@@ -59,6 +65,8 @@ namespace Folders2Hash
                 _mainWindow.ShowInTaskbar = true;
                 _mainWindow.Visibility = Visibility.Visible;
             }
+
+            base.OnStartup(e);
         }
 
         private void HashEvaluationDialogClosing(object sender, CancelEventArgs e)

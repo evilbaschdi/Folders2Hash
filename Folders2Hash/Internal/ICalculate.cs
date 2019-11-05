@@ -20,6 +20,6 @@ namespace Folders2Hash.Internal
         /// <param name="filename"></param>
         /// <param name="hashAlgorithmTypes"></param>
         /// <returns></returns>
-        List<KeyValuePair<string, string>> Hashes(string filename, Dictionary<string, string> hashAlgorithmTypes);
+        IEnumerable<KeyValuePair<string, string>> Hashes(string filename, Dictionary<string, string> hashAlgorithmTypes);
     }
 }

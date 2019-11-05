@@ -5,7 +5,7 @@
                       xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                       ShowIconOnTitleBar="False" TitleCharacterCasing="Normal"
                       Title="Folders2Hash" Width="800" Height="600" Icon="md5.ico" ShowInTaskbar="False"
-                      Visibility="Hidden" GlowBrush="{DynamicResource AccentColorBrush}">
+                      Visibility="Hidden" GlowBrush="{DynamicResource MahApps.Brushes.AccentBase}">
     <!--  RightWindowCommands  -->
     <controls:MetroWindow.RightWindowCommands>
         <controls:WindowCommands>
@@ -14,6 +14,12 @@
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconMaterial Kind="Settings" Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center" />
                     <TextBlock Margin="5 0 0 0" VerticalAlignment="Center" Text="settings" />
+                </StackPanel>
+            </Button>
+            <Button Click="AboutWindowClick">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconMaterial Kind="Information" Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <TextBlock Margin="5 0 0 0" VerticalAlignment="Center" Text="about" />
                 </StackPanel>
             </Button>
         </controls:WindowCommands>
@@ -46,7 +52,7 @@
             </StackPanel>
         </Button>
         <DataGrid x:Name="ResultGrid" Margin="10,45,10,10" AutoGenerateColumns="False" CanUserAddRows="False"
-                  CanUserDeleteRows="False" ColumnWidth="*" SelectionUnit="FullRow" Style="{DynamicResource AzureDataGrid}"
+                  CanUserDeleteRows="False" ColumnWidth="*" SelectionUnit="FullRow" Style="{DynamicResource MahApps.Styles.DataGrid.Azure}"
                   GridLinesVisibility="Horizontal" IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding ShortFileName}" Header="File" />
@@ -72,8 +78,8 @@
                         <controls:ToggleSwitch Name="KeepFileExtension" Margin="5,1,0,0" ContentDirection="RightToLeft"
                                                HorizontalAlignment="Left" VerticalAlignment="Top"
                                                FontSize="12" IsCheckedChanged="FileExtension"
-                                               OnSwitchBrush="{DynamicResource AccentColorBrush}" OnLabel="Keep file extension (filename.ext.md5)"
-                                               OffSwitchBrush="{DynamicResource AccentColorBrush}" OffLabel="Remove file extension (filename.md5)" />
+                                               OnSwitchBrush="{DynamicResource MahApps.Brushes.AccentBase}" OnLabel="Keep file extension (filename.ext.md5)"
+                                               OffSwitchBrush="{DynamicResource MahApps.Brushes.AccentBase}" OffLabel="Remove file extension (filename.md5)" />
 
                     </StackPanel>
                     <!-- Hash Algorithms -->
@@ -96,7 +102,7 @@
                     </StackPanel>
                     <!-- Separator -->
                     <StackPanel Margin="15,10,15,0" Orientation="Vertical">
-                        <Separator Background="{DynamicResource AccentColorBrush}" />
+                        <Separator Background="{DynamicResource MahApps.Brushes.AccentBase}" />
                     </StackPanel>
                     <StackPanel>
                         <!-- Logging -->
@@ -118,49 +124,6 @@
                                 </StackPanel>
                             </Button>
                         </StackPanel>
-                    </StackPanel>
-                    <!-- Separator -->
-                    <StackPanel Margin="15,10,15,0" Orientation="Vertical">
-                        <Separator Background="{DynamicResource AccentColorBrush}" />
-                    </StackPanel>
-                    <!--Application Style-->
-                    <StackPanel>
-                        <!-- Theme -->
-                        <StackPanel Margin="10,5,0,0" Orientation="Horizontal">
-                            <Label Width="60" Margin="0,5,0,0" HorizontalAlignment="Left"
-                                   VerticalAlignment="Top" Content="Theme" />
-                            <controls:ToggleSwitch Name="ThemeSwitch" Margin="5,1,0,0" ContentDirection="RightToLeft"
-                                                   HorizontalAlignment="Left" VerticalAlignment="Top"
-                                                   FontSize="12" IsCheckedChanged="Theme"
-                                                   OnSwitchBrush="{DynamicResource AccentColorBrush}" OnLabel="Dark"
-                                                   OffSwitchBrush="{DynamicResource AccentColorBrush}" OffLabel="Light" />
-                        </StackPanel>
-                        <!-- Accent -->
-                        <StackPanel Margin="10,5,0,0" Orientation="Horizontal">
-                            <Label Width="60" Margin="0,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"
-                                   Content="Accent" />
-                            <ComboBox Name="Accent" Width="505" Margin="10,5,0,0" HorizontalAlignment="Left"
-                                      VerticalAlignment="Top"
-                                      SelectionChanged="AccentOnSelectionChanged" />
-                        </StackPanel>
-                        <!-- Save Style -->
-                        <StackPanel Margin="10,5,0,0" Orientation="Horizontal">
-                            <Button Name="SaveStyle" Width="505" Margin="70,5,0,0" Click="SaveStyleClick">
-                                <StackPanel Orientation="Horizontal">
-                                    <iconPacks:PackIconMaterial Kind="ContentSaveSettings" Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                    <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" Text="save style" />
-                                </StackPanel>
-                            </Button>
-                        </StackPanel>
-                    </StackPanel>
-                    <!-- Separator -->
-                    <StackPanel Margin="15,10,15,0" Orientation="Vertical">
-                        <Separator Background="{DynamicResource AccentColorBrush}" />
-                    </StackPanel>
-                    <!-- Build / Linker Time -->
-                    <StackPanel Orientation="Horizontal">
-                        <Label Width="50" Margin="10,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Build" />
-                        <Label Width="310" Margin="15,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Name="LinkerTime" />
                     </StackPanel>
                 </StackPanel>
             </controls:Flyout>

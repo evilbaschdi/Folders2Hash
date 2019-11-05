@@ -10,8 +10,10 @@ namespace Folders2Hash.Core
         private readonly IFolderBrowser _folderBrowser;
 
         /// <summary>
-        ///     Initialisiert eine neue Instanz der <see cref="T:System.Object" />-Klasse.
+        ///     Constructor
         /// </summary>
+        /// <param name="folderBrowser"></param>
+        /// <param name="applicationSettings"></param>
         public ApplicationBasics(IFolderBrowser folderBrowser, IApplicationSettings applicationSettings)
         {
             _folderBrowser = folderBrowser ?? throw new ArgumentNullException(nameof(folderBrowser));

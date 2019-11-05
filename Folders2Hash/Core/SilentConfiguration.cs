@@ -1,15 +1,17 @@
 ﻿using System;
 using System.IO;
+using EvilBaschdi.Core;
 using Folders2Hash.Models;
 using Newtonsoft.Json;
 
 namespace Folders2Hash.Core
 {
-    /// <inheritdoc />
-    public class SilentConfiguration : ISilentConfiguration
+    /// <inheritdoc cref="ISilentConfiguration" />
+    /// <inheritdoc cref="CachedValue{T}" />
+    public class SilentConfiguration : CachedValue<Configuration>, ISilentConfiguration
     {
         private readonly ISilentConfigurationPath _silentConfigurationPath;
-        private Configuration _configuration;
+        private Configuration _configuration = new Configuration();
 
         /// <summary>
         ///     Constructor of the class
@@ -21,25 +23,18 @@ namespace Folders2Hash.Core
             _silentConfigurationPath = silentConfigurationPath ?? throw new ArgumentNullException(nameof(silentConfigurationPath));
         }
 
-        /// <inheritdoc />
-        public Configuration Value
+        protected override Configuration NonCachedValue
         {
             get
             {
-                if (_configuration == null)
+                if (!File.Exists(_silentConfigurationPath.Value))
                 {
-                    if (File.Exists(_silentConfigurationPath.Value))
-                    {
-                        var config = File.ReadAllText(_silentConfigurationPath.Value);
-                        _configuration = JsonConvert.DeserializeObject<Configuration>(config);
-                        _configuration.CloseHiddenInstancesOnFinish = true;
-                    }
-                    else
-                    {
-                        _configuration = null;
-                    }
+                    return _configuration;
                 }
 
+                var config = File.ReadAllText(_silentConfigurationPath.Value);
+                _configuration = JsonConvert.DeserializeObject<Configuration>(config);
+                _configuration.CloseHiddenInstancesOnFinish = true;
                 return _configuration;
             }
         }

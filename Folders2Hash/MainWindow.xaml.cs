@@ -2,22 +2,22 @@
 using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Shell;
-using EvilBaschdi.Core.Extensions;
 using EvilBaschdi.Core.Internal;
 using EvilBaschdi.Core.Logging;
 using EvilBaschdi.CoreExtended;
 using EvilBaschdi.CoreExtended.AppHelpers;
 using EvilBaschdi.CoreExtended.Browsers;
 using EvilBaschdi.CoreExtended.Metro;
+using EvilBaschdi.CoreExtended.Mvvm;
+using EvilBaschdi.CoreExtended.Mvvm.View;
+using EvilBaschdi.CoreExtended.Mvvm.ViewModel;
 using Folders2Hash.Core;
 using Folders2Hash.Internal;
 using Folders2Hash.Models;
@@ -39,7 +39,8 @@ namespace Folders2Hash
         private readonly IApplicationBasics _basics;
         private readonly IDialogService _dialogService;
         private readonly IHashAlgorithmDictionary _hashAlgorithmDictionary;
-        private readonly IApplicationStyle _style;
+        private readonly IThemeManagerHelper _themeManagerHelper;
+
         private Configuration _configuration;
         private ObservableCollection<LogEntry> _logEntries;
         private ObservableCollection<SelectableObject<HashAlgorithmModel>> _observableCollection;
@@ -50,7 +51,6 @@ namespace Folders2Hash
         private readonly ConcurrentDictionary<string, bool> _pathsToScan = new ConcurrentDictionary<string, bool>();
 
         private string _loggingPath;
-        private int _overrideProtection;
 
         /// <inheritdoc />
         public MainWindow()
@@ -63,14 +63,9 @@ namespace Folders2Hash
             _basics = new ApplicationBasics(folderBrowser, _applicationSettings);
             _dialogService = new DialogService(this);
             TaskbarItemInfo = new TaskbarItemInfo();
-            IThemeManagerHelper themeManagerHelper = new ThemeManagerHelper();
-            IApplicationStyleSettings coreSettings = new ApplicationStyleSettings(extendedSettings);
-            _style = new ApplicationStyle(this, Accent, ThemeSwitch, coreSettings, themeManagerHelper);
-
-            _style.Load(true);
-
-            var linkerTime = Assembly.GetExecutingAssembly().GetLinkerTime();
-            LinkerTime.Content = linkerTime.ToString(CultureInfo.InvariantCulture);
+            _themeManagerHelper = new ThemeManagerHelper();
+            var applicationStyle = new ApplicationStyle(_themeManagerHelper);
+            applicationStyle.Load(true);
             Load();
         }
 
@@ -87,10 +82,20 @@ namespace Folders2Hash
                 ? _applicationSettings.LoggingPath
                 : _applicationSettings.InitialDirectory;
             LoggingPath.Text = _loggingPath;
-
-            _overrideProtection = 1;
         }
 
+        private void AboutWindowClick(object sender, RoutedEventArgs e)
+        {
+            var assembly = typeof(MainWindow).Assembly;
+            IAboutWindowContent aboutWindowContent = new AboutWindowContent(assembly, $@"{AppDomain.CurrentDomain.BaseDirectory}\hash512.png");
+
+            var aboutWindow = new AboutWindow
+                              {
+                                  DataContext = new AboutViewModel(aboutWindowContent, _themeManagerHelper)
+                              };
+
+            aboutWindow.ShowDialog();
+        }
 
         // ReSharper restore PrivateFieldCanBeConvertedToLocalVariable
 
@@ -142,7 +147,7 @@ namespace Folders2Hash
         private void ControllerClosed(object sender, EventArgs e)
         {
             ResultGrid.ItemsSource = _logEntries;
-            var message = $"Checksums were generated. {Environment.NewLine}You can find the logging file at '{_loggingPath}'.";
+            var message = $"Check Sums were generated. {Environment.NewLine}You can find the logging file at '{_loggingPath}'.";
             _dialogService.ShowMessage("Completed", message);
             TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
             TaskbarItemInfo.ProgressValue = 1;
@@ -281,20 +286,22 @@ namespace Folders2Hash
                         var isDirectory = (fileAttributes & FileAttributes.Directory) == FileAttributes.Directory;
                         if (isDirectory)
                         {
-                            if (!Directory.Exists(droppedElement))
+                            if (Directory.Exists(droppedElement))
                             {
-                                isCorrect = false;
-                                break;
+                                continue;
                             }
+
+                            isCorrect = false;
+                            break;
                         }
-                        else
+
+                        if (File.Exists(droppedElement))
                         {
-                            if (!File.Exists(droppedElement))
-                            {
-                                isCorrect = false;
-                                break;
-                            }
+                            continue;
                         }
+
+                        isCorrect = false;
+                        break;
                     }
                 }
             }
@@ -411,39 +418,5 @@ namespace Folders2Hash
         }
 
         #endregion Fly-out
-
-        #region MetroStyle
-
-        private void SaveStyleClick(object sender, RoutedEventArgs e)
-        {
-            if (_overrideProtection == 0)
-            {
-                return;
-            }
-
-            _style.SaveStyle();
-        }
-
-        private void Theme(object sender, EventArgs e)
-        {
-            if (_overrideProtection == 0)
-            {
-                return;
-            }
-
-            _style.SetTheme(sender);
-        }
-
-        private void AccentOnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (_overrideProtection == 0)
-            {
-                return;
-            }
-
-            _style.SetAccent(sender, e);
-        }
-
-        #endregion MetroStyle
     }
 }
