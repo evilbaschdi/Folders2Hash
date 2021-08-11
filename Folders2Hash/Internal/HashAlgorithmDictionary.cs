@@ -9,7 +9,7 @@ namespace Folders2Hash.Internal
         /// <summary>
         ///     todo: please also extend RegisterFileTypes\Program.cs
         /// </summary>
-        public Dictionary<string, string> Value => new Dictionary<string, string>
+        public Dictionary<string, string> Value => new()
                                                    {
                                                        { "MD5", "md5" },
                                                        { "SHA-1", "sha1" },

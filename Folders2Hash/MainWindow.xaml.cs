@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,16 +11,11 @@ using System.Windows.Shell;
 using EvilBaschdi.Core.Internal;
 using EvilBaschdi.Core.Logging;
 using EvilBaschdi.CoreExtended;
-using EvilBaschdi.CoreExtended.AppHelpers;
 using EvilBaschdi.CoreExtended.Browsers;
-using EvilBaschdi.CoreExtended.Metro;
-using EvilBaschdi.CoreExtended.Mvvm;
-using EvilBaschdi.CoreExtended.Mvvm.View;
-using EvilBaschdi.CoreExtended.Mvvm.ViewModel;
+using EvilBaschdi.CoreExtended.Controls.About;
 using Folders2Hash.Core;
 using Folders2Hash.Internal;
 using Folders2Hash.Models;
-using Folders2Hash.Properties;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 
@@ -35,11 +29,8 @@ namespace Folders2Hash
         /// </summary>
         public MainWindow CurrentHiddenInstance { private get; set; }
 
-        private readonly IApplicationSettings _applicationSettings;
         private readonly IApplicationBasics _basics;
-        private readonly IDialogService _dialogService;
         private readonly IHashAlgorithmDictionary _hashAlgorithmDictionary;
-        private readonly IThemeManagerHelper _themeManagerHelper;
 
         private Configuration _configuration;
         private ObservableCollection<LogEntry> _logEntries;
@@ -48,9 +39,10 @@ namespace Folders2Hash
         private ProgressDialogController _controller;
 
         //true == directory, false == file
-        private readonly ConcurrentDictionary<string, bool> _pathsToScan = new ConcurrentDictionary<string, bool>();
+        private readonly ConcurrentDictionary<string, bool> _pathsToScan = new();
 
         private string _loggingPath;
+        private readonly IWritableConfiguration _writableConfiguration;
 
         /// <inheritdoc />
         public MainWindow()
@@ -58,13 +50,13 @@ namespace Folders2Hash
             InitializeComponent();
             _hashAlgorithmDictionary = new HashAlgorithmDictionary();
             IFolderBrowser folderBrowser = new ExplorerFolderBrowser();
-            IAppSettingsBase extendedSettings = new AppSettingsBase(Settings.Default);
-            _applicationSettings = new ApplicationSettings(extendedSettings);
-            _basics = new ApplicationBasics(folderBrowser, _applicationSettings);
-            _dialogService = new DialogService(this);
-            TaskbarItemInfo = new TaskbarItemInfo();
-            _themeManagerHelper = new ThemeManagerHelper();
-            var applicationStyle = new ApplicationStyle(_themeManagerHelper);
+            IConfigurationPath configurationPath = new ConfigurationPath();
+            _writableConfiguration = new WritableConfiguration(configurationPath);
+            _basics = new ApplicationBasics(folderBrowser, _writableConfiguration);
+            _configuration = _writableConfiguration.Value;
+            TaskbarItemInfo = new();
+
+            var applicationStyle = new ApplicationStyle();
             applicationStyle.Load(true);
             Load();
         }
@@ -73,25 +65,25 @@ namespace Folders2Hash
         {
             GetHashAlgorithms();
             HashAlgorithms.ItemsSource = _observableCollection;
-            Generate.IsEnabled = !string.IsNullOrWhiteSpace(_applicationSettings.InitialDirectory) && Directory.Exists(_applicationSettings.InitialDirectory);
+            Generate.IsEnabled = !string.IsNullOrWhiteSpace(_configuration.PathsToScan.FirstOrDefault().Key) && Directory.Exists(_configuration.PathsToScan.FirstOrDefault().Key);
 
-            KeepFileExtension.IsChecked = _applicationSettings.KeepFileExtension;
-            InitialDirectory.Text = _applicationSettings.InitialDirectory;
+            KeepFileExtension.IsOn = _configuration.KeepFileExtension;
+            InitialDirectory.Text = _configuration.PathsToScan.FirstOrDefault().Key ?? string.Empty;
 
-            _loggingPath = !string.IsNullOrWhiteSpace(_applicationSettings.LoggingPath)
-                ? _applicationSettings.LoggingPath
-                : _applicationSettings.InitialDirectory;
-            LoggingPath.Text = _loggingPath;
+            _loggingPath = !string.IsNullOrWhiteSpace(_configuration.LoggingPath)
+                ? _configuration.LoggingPath
+                : _configuration.PathsToScan.FirstOrDefault().Key;
+            LoggingPath.Text = _loggingPath ?? string.Empty;
         }
 
         private void AboutWindowClick(object sender, RoutedEventArgs e)
         {
             var assembly = typeof(MainWindow).Assembly;
-            IAboutWindowContent aboutWindowContent = new AboutWindowContent(assembly, $@"{AppDomain.CurrentDomain.BaseDirectory}\hash512.png");
+            IAboutContent aboutWindowContent = new AboutContent(assembly, $@"{AppDomain.CurrentDomain.BaseDirectory}\hash512.png");
 
             var aboutWindow = new AboutWindow
                               {
-                                  DataContext = new AboutViewModel(aboutWindowContent, _themeManagerHelper)
+                                  DataContext = new AboutViewModel(aboutWindowContent)
                               };
 
             aboutWindow.ShowDialog();
@@ -103,7 +95,6 @@ namespace Folders2Hash
 
         private async void GenerateHashesOnClick(object sender, RoutedEventArgs e)
         {
-            _pathsToScan.TryAdd(_applicationSettings.InitialDirectory, true);
             await ConfigureController();
         }
 
@@ -113,16 +104,8 @@ namespace Folders2Hash
         private async Task ConfigureController()
         {
             TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
-
-            var configuration = new Configuration
-                                {
-                                    PathsToScan = _pathsToScan,
-                                    HashTypes = _applicationSettings.CurrentHashAlgorithms.Cast<string>().ToList(),
-                                    LoggingPath = _loggingPath,
-                                    KeepFileExtension = _applicationSettings.KeepFileExtension
-                                };
             Cursor = Cursors.Wait;
-            _configuration = configuration;
+
             var options = new MetroDialogSettings
                           {
                               ColorScheme = MetroDialogColorScheme.Accented
@@ -148,7 +131,7 @@ namespace Folders2Hash
         {
             ResultGrid.ItemsSource = _logEntries;
             var message = $"Check Sums were generated. {Environment.NewLine}You can find the logging file at '{_loggingPath}'.";
-            _dialogService.ShowMessage("Completed", message);
+            this.ShowMessageAsync("Completed", message);
             TaskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
             TaskbarItemInfo.ProgressValue = 1;
             Cursor = Cursors.Arrow;
@@ -177,8 +160,7 @@ namespace Folders2Hash
         {
             IHashAlgorithmByName hashAlgorithmByName = new HashAlgorithmByName();
             ICalculate calculate = new Calculate(hashAlgorithmByName);
-            IMultiThreading multiThreadingHelper = new MultiThreading();
-            IFileListFromPath filePath = new FileListFromPath(multiThreadingHelper);
+            IFileListFromPath filePath = new FileListFromPath();
             IAppendAllTextWithHeadline appendAllTextWithHeadline = new AppendAllTextWithHeadline();
             ILogging logging = new Logging(appendAllTextWithHeadline);
             IFileListCalculationProcessor fileListCalculationProcessor = new FileListCalculationProcessor(calculate, filePath, logging);
@@ -187,7 +169,7 @@ namespace Folders2Hash
 
             if (_configuration.CloseHiddenInstancesOnFinish)
             {
-                CurrentHiddenInstance.Close();
+                CurrentHiddenInstance?.Close();
             }
 
             return result;
@@ -197,24 +179,24 @@ namespace Folders2Hash
 
         #region GenerationSettings
 
-        private void FileExtension(object sender, EventArgs e)
+        private void FileExtension(object sender, RoutedEventArgs e)
         {
-            HandleFileExtension(sender as ToggleSwitch);
+            var keepFileExtension = false;
+            if (sender is ToggleSwitch toggleSwitch)
+            {
+                keepFileExtension = toggleSwitch.IsOn;
+            }
+
+            _configuration.KeepFileExtension = keepFileExtension;
+            _writableConfiguration.Value = _configuration;
         }
 
-        private void HandleFileExtension(ToggleSwitch toggleSwitch)
-        {
-            if (toggleSwitch.IsChecked != null)
-            {
-                _applicationSettings.KeepFileExtension = toggleSwitch.IsChecked.Value;
-            }
-        }
 
         private void BrowseLoggingPathClick(object sender, RoutedEventArgs e)
         {
             _basics.BrowseLoggingFolder();
-            LoggingPath.Text = _applicationSettings.LoggingPath;
-            _loggingPath = _applicationSettings.LoggingPath;
+            LoggingPath.Text = _configuration.LoggingPath;
+            _loggingPath = _configuration.LoggingPath;
             Load();
         }
 
@@ -222,8 +204,9 @@ namespace Folders2Hash
         {
             if (Directory.Exists(LoggingPath.Text))
             {
-                _applicationSettings.LoggingPath = LoggingPath.Text;
-                _loggingPath = _applicationSettings.LoggingPath;
+                _configuration.LoggingPath = LoggingPath.Text;
+                _loggingPath = _configuration.LoggingPath;
+                _writableConfiguration.Value = _configuration;
             }
 
             Load();
@@ -322,38 +305,29 @@ namespace Folders2Hash
 
         private void HashAlgorithmsOnCheckBoxChecked(object sender, RoutedEventArgs e)
         {
-            var currentHashAlgorithms = new StringCollection();
+            var currentHashAlgorithms = (from SelectableObject<HashAlgorithmModel> hashType in HashAlgorithms.Items where hashType.IsSelected select hashType.ObjectData.Extension)
+                .ToList();
 
-            foreach (SelectableObject<HashAlgorithmModel> hashType in HashAlgorithms.Items)
-            {
-                if (hashType.IsSelected)
-                {
-                    currentHashAlgorithms.Add(hashType.ObjectData.Extension);
-                }
-            }
-
-            _applicationSettings.CurrentHashAlgorithms = currentHashAlgorithms;
+            _configuration.HashTypes = currentHashAlgorithms;
+            _writableConfiguration.Value = _configuration;
             SetHashAlgorithmsWatermark();
         }
 
         private void GetHashAlgorithms()
         {
-            _observableCollection = new ObservableCollection<SelectableObject<HashAlgorithmModel>>();
+            _observableCollection = new();
 
             var hashAlgorithmDictionary = _hashAlgorithmDictionary.Value;
 
-            foreach (var item in hashAlgorithmDictionary)
+            foreach (var selectableObject in hashAlgorithmDictionary
+                                             .Select(item
+                                                         => new HashAlgorithmModel(item.Value,item.Key,_configuration.HashTypes.Contains(item.Value))
+                                             ).Select(hashAlgorithmModel
+                                                          => new SelectableObject<HashAlgorithmModel>(hashAlgorithmModel)
+                                                             {
+                                                                 IsSelected = hashAlgorithmModel.IsSelected
+                                                             }))
             {
-                var hashAlgorithmModel = new HashAlgorithmModel
-                                         {
-                                             Extension = item.Value,
-                                             DisplayName = item.Key,
-                                             IsSelected = _applicationSettings.CurrentHashAlgorithms.Contains(item.Value)
-                                         };
-                var selectableObject = new SelectableObject<HashAlgorithmModel>(hashAlgorithmModel)
-                                       {
-                                           IsSelected = hashAlgorithmModel.IsSelected
-                                       };
                 _observableCollection.Add(selectableObject);
             }
 
@@ -363,7 +337,7 @@ namespace Folders2Hash
         private void SetHashAlgorithmsWatermark()
         {
             var hashAlgorithmDictionary = _hashAlgorithmDictionary.Value;
-            var currentHashAlgorithms = _applicationSettings.CurrentHashAlgorithms.Cast<string>().ToList();
+            var currentHashAlgorithms = _configuration.HashTypes.ToList();
             TextBoxHelper.SetWatermark(HashAlgorithms,
                 string.Join(", ", (from item in hashAlgorithmDictionary where currentHashAlgorithms.Contains(item.Value) select item.Key).ToList()));
         }
@@ -375,7 +349,7 @@ namespace Folders2Hash
         private void BrowseClick(object sender, RoutedEventArgs e)
         {
             _basics.BrowseFolder();
-            InitialDirectory.Text = _applicationSettings.InitialDirectory;
+            InitialDirectory.Text = _configuration.PathsToScan.FirstOrDefault().Key;
             Load();
         }
 
@@ -383,7 +357,10 @@ namespace Folders2Hash
         {
             if (Directory.Exists(InitialDirectory.Text))
             {
-                _applicationSettings.InitialDirectory = InitialDirectory.Text;
+                var dic = new ConcurrentDictionary<string, bool>();
+                dic.TryAdd(InitialDirectory.Text, true);
+                _configuration.PathsToScan = dic;
+                _writableConfiguration.Value = _configuration;
             }
 
             Load();

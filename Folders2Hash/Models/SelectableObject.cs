@@ -25,7 +25,7 @@
 
         /// <summary>
         /// </summary>
-        public bool IsSelected { get; set; }
+        public bool IsSelected { get; init; }
 
         /// <summary>
         /// </summary>

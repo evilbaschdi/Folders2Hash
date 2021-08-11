@@ -61,18 +61,19 @@ namespace Folders2Hash.Internal
             Parallel.ForEach(configuration.PathsToScan,
                 item =>
                 {
-                    if (item.Value)
+                    var (key, value) = item;
+                    if (value)
                     {
                         var filter = new FileListFromPathFilter
                                      {
                                          FilterExtensionsNotToEqual = excludeExtensionList,
                                          FilterFileNamesNotToEqual = excludeFileNameList
                                      };
-                        fileList.AddRange(_filePath.ValueFor(item.Key, filter).Distinct());
+                        fileList.AddRange(_filePath.ValueFor(key, filter).Distinct());
                     }
                     else
                     {
-                        fileList.Add(item.Key);
+                        fileList.Add(key);
                     }
                 }
             );
@@ -106,16 +107,7 @@ namespace Folders2Hash.Internal
                         }
                         else
                         {
-                            var logEntry = new LogEntry
-                                           {
-                                               FileName = file,
-                                               ShortFileName = fileInfo.Name,
-                                               HashFileName = hashFileName,
-                                               Type = type.ToUpper(),
-                                               TimeStamp = DateTime.Now,
-                                               HashSum = File.ReadAllText(hashFileName).Trim(),
-                                               AlreadyExisting = true
-                                           };
+                            var logEntry = new LogEntry(file, fileInfo.Name, hashFileName, type.ToUpper(), DateTime.Now, File.ReadAllText(hashFileName).Trim(), true);
                             hashLogEntries.Add(logEntry);
                         }
                     }
@@ -123,21 +115,11 @@ namespace Folders2Hash.Internal
 
                     var calculatedHashes = _calculate.Hashes(file, localHashTypesToCalculate);
 
-                    foreach (var calculatedHash in calculatedHashes)
+                    foreach (var (type, hashSum) in calculatedHashes)
                     {
-                        var type = calculatedHash.Key;
-                        var hashSum = calculatedHash.Value;
                         var hashFileName = localHashTypesToCalculate.First(name => name.Key.Equals(type)).Value;
-                        var logEntry = new LogEntry
-                                       {
-                                           FileName = file,
-                                           ShortFileName = fileInfo.Name,
-                                           HashFileName = hashFileName,
-                                           Type = type.ToUpper(),
-                                           TimeStamp = DateTime.Now,
-                                           HashSum = hashSum,
-                                           AlreadyExisting = false
-                                       };
+                        var logEntry = new LogEntry(file, fileInfo.Name, hashFileName, type.ToUpper(), DateTime.Now, hashSum, false);
+
                         File.AppendAllText(hashFileName, hashSum);
                         hashLogEntries.Add(logEntry);
                     }
@@ -155,9 +137,9 @@ namespace Folders2Hash.Internal
             }
 
             {
-                if (hashLogEntries.Any(item => item != null && item.AlreadyExisting == false))
+                if (hashLogEntries.Any(item => item is { AlreadyExisting: false }))
                 {
-                    result = new ObservableCollection<LogEntry>(hashLogEntries.Where(item => item != null && item.AlreadyExisting == false));
+                    result = new(hashLogEntries.Where(item => item is { AlreadyExisting: false }));
                 }
 
                 _logging.RunFor(hashLogEntries, configuration);

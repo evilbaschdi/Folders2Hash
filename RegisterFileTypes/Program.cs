@@ -7,12 +7,14 @@ namespace RegisterFileTypes
 {
     internal static class Program
     {
+        // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
         private static void Main(string[] args)
         {
             if (args == null)
             {
                 throw new ArgumentNullException(nameof(args));
             }
+
             var fileExtensions = new Dictionary<string, string>
                                  {
                                      { "MD5", ".md5" },
@@ -27,6 +29,7 @@ namespace RegisterFileTypes
                 CreateFileAssociation(exe, fileExtension);
                 Console.WriteLine(fileExtension.Value);
             }
+
             Console.WriteLine("...");
             Console.ReadLine();
         }

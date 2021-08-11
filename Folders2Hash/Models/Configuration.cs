@@ -17,12 +17,12 @@ namespace Folders2Hash.Models
         /// <summary>
         /// </summary>
         [DataMember]
-        public bool KeepFileExtension { get; set; }
+        public List<string> HashTypes { get; set; }
 
         /// <summary>
         /// </summary>
         [DataMember]
-        public ConcurrentDictionary<string, bool> PathsToScan { get; set; }
+        public bool KeepFileExtension { get; set; }
 
         /// <summary>
         /// </summary>
@@ -32,6 +32,6 @@ namespace Folders2Hash.Models
         /// <summary>
         /// </summary>
         [DataMember]
-        public List<string> HashTypes { get; set; }
+        public ConcurrentDictionary<string, bool> PathsToScan { get; set; }
     }
 }

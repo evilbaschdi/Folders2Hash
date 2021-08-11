@@ -2,19 +2,7 @@
 {
     /// <summary>
     /// </summary>
-    public class HashAlgorithmModel
+    public record HashAlgorithmModel(string DisplayName, string Extension, bool IsSelected)
     {
-        /// <summary>
-        /// </summary>
-        public string Extension { get; set; }
-
-        /// <summary>
-        /// </summary>
-        // ReSharper disable once UnusedAutoPropertyAccessor.Global
-        public string DisplayName { get; set; }
-
-        /// <summary>
-        /// </summary>
-        public bool IsSelected { get; set; }
     }
 }

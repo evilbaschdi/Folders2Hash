@@ -1,78 +1,66 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Folders2Hash</RootNamespace>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
-    <Version>$([System.DateTime]::UtcNow.ToString(yyyy.M.d.Hmm))-develop</Version>
+    <Version>$([System.DateTime]::UtcNow.ToString(yyyy.M.d.Hmm))</Version>
     <Authors>Sebastian Walter</Authors>
-     <Company>evilbaschdi (Sebastian Walter)</Company>
+    <Company>evilbaschdi (Sebastian Walter)</Company>
     <Copyright>Copyright © 2015 - $([System.DateTime]::UtcNow.ToString(yyyy)) evilbaschdi</Copyright>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Folders2Hash.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup>
     <ApplicationIcon>md5.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ControlzEx" Version="4.1.1" />
-    <PackageReference Include="EvilBaschdi.Core" Version="2019.10.10.1115-develop" />
-    <PackageReference Include="EvilBaschdi.CoreExtended" Version="2019.10.21.1930-develop" />
-    <PackageReference Include="MahApps.Metro" Version="2.0.0-alpha0531" />
-    <PackageReference Include="MahApps.Metro.IconPacks" Version="3.0.0-alpha0258" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3-beta2" />
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0-preview.2" PrivateAssets="All" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <AppDesigner Include="Properties\" />
+    <PackageReference Include="ControlzEx" Version="5.0.1" />
+    <PackageReference Include="EvilBaschdi.Core" Version="2021.7.12.1538-develop" />
+    <PackageReference Include="EvilBaschdi.CoreExtended" Version="2021.6.7.1723-develop" />
+    <PackageReference Include="MahApps.Metro" Version="2.4.7" />
+    <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="4.8.0" />
+    <PackageReference Include="MahApps.Metro.IconPacks.MaterialDesign" Version="4.8.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="md5.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Folders2Hash.VisualElementsManifest.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    
-  <Content Include="hash512.png">
+    <Content Include="hash512.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>    
-    
+    </Content>
     <Content Include="hash150.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="hash70.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Configuration.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SilentConfiguration.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\RegisterFileTypes\RegisterFileTypes.csproj" />
   </ItemGroup>
-
   <ItemGroup>
+    <AppDesigner Include="Properties\" />
     <Compile Update="Properties\Settings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PostBuildEvent>xcopy "$(SolutionDir)\RegisterFileTypes\bin\$(Configuration)" "$(SolutionDir)\Folders2Hash\bin\$(Configuration)\$(TargetFramework)" /Y /I</PostBuildEvent>
-  </PropertyGroup>
+
+
 </Project>

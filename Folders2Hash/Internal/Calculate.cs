@@ -67,14 +67,14 @@ namespace Folders2Hash.Internal
                         sb.Append(t.ToString("X2"));
                     }
 
-                    list.Add(new KeyValuePair<string, string>(hashAlgorithmType, sb.ToString()));
+                    list.Add(new(hashAlgorithmType, sb.ToString()));
                 }
 
                 fileStream.Close();
             }
             catch (Exception exception)
             {
-                list.Add(new KeyValuePair<string, string>("", exception.Message));
+                list.Add(new("", exception.Message));
             }
 
             return list;

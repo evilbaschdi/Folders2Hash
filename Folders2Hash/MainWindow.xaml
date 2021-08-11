@@ -12,7 +12,7 @@
             <!--  Settings  -->
             <Button Click="ToggleSettingsFlyoutClick">
                 <StackPanel Orientation="Horizontal">
-                    <iconPacks:PackIconMaterial Kind="Settings" Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <iconPacks:PackIconMaterialDesign Kind="Settings" Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center" />
                     <TextBlock Margin="5 0 0 0" VerticalAlignment="Center" Text="settings" />
                 </StackPanel>
             </Button>
@@ -77,9 +77,9 @@
 
                         <controls:ToggleSwitch Name="KeepFileExtension" Margin="5,1,0,0" ContentDirection="RightToLeft"
                                                HorizontalAlignment="Left" VerticalAlignment="Top"
-                                               FontSize="12" IsCheckedChanged="FileExtension"
-                                               OnSwitchBrush="{DynamicResource MahApps.Brushes.AccentBase}" OnLabel="Keep file extension (filename.ext.md5)"
-                                               OffSwitchBrush="{DynamicResource MahApps.Brushes.AccentBase}" OffLabel="Remove file extension (filename.md5)" />
+                                               FontSize="12" Toggled="FileExtension"
+                                               OnContent="Keep file extension (filename.ext.md5)"
+                                               OffContent="Remove file extension (filename.md5)" />
 
                     </StackPanel>
                     <!-- Hash Algorithms -->
@@ -91,8 +91,8 @@
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
                                         <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
-                                        <CheckBox IsChecked="{Binding IsSelected}" Width="20" VerticalAlignment="Center" Checked="HashAlgorithmsOnCheckBoxChecked"
-                                                  Unchecked="HashAlgorithmsOnCheckBoxChecked" />
+                                        <CheckBox IsChecked="{Binding IsSelected}" VerticalAlignment="Center" Checked="HashAlgorithmsOnCheckBoxChecked"
+                                                  Unchecked="HashAlgorithmsOnCheckBoxChecked" Style="{DynamicResource MahApps.Styles.CheckBox.Win10}" />
                                         <!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
                                         <TextBlock Text="{Binding ObjectData.DisplayName}" VerticalAlignment="Center" />
                                     </StackPanel>

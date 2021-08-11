@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shell;
+using EvilBaschdi.CoreExtended;
 using Folders2Hash.Internal;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
@@ -37,15 +38,19 @@ namespace Folders2Hash
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
             InitializeComponent();
+
+
+            var applicationStyle = new ApplicationStyle();
+            applicationStyle.Load(true);
         }
 
         /// <summary>
         /// </summary>
-        public string HashFile { private get; set; }
+        public string HashFile { private get; init; }
 
         /// <summary>
         /// </summary>
-        public string HashType { private get; set; }
+        public string HashType { private get; init; }
 
         /// <inheritdoc />
         /// <summary>
@@ -92,8 +97,13 @@ namespace Folders2Hash
 
         private bool IsHashValid()
         {
-            _sourceFileName = HashFile.Substring(0, HashFile.Length - (HashType.Length + 1));
-            _hashFileContent = File.ReadAllText(HashFile);
+            if(HashFile.StartsWith("checksums"))
+            {
+                return false;
+            }
+
+            _sourceFileName = HashFile.Substring(0, HashFile.Length - (HashType.Length + 1));            
+            _hashFileContent = File.ReadAllLines(HashFile).FirstOrDefault(l => !l.StartsWith("#"))?.Split(" *").FirstOrDefault();
 
             if (!File.Exists(_sourceFileName))
             {
@@ -106,7 +116,7 @@ namespace Folders2Hash
                       };
             var sourceFileHashes = _calculate.Hashes(_sourceFileName, dic);
             _sourceFileHash = sourceFileHashes.First(x => x.Key.Equals(HashType, StringComparison.CurrentCultureIgnoreCase)).Value;
-            return _sourceFileHash.Trim().Equals(_hashFileContent.Trim(), StringComparison.InvariantCultureIgnoreCase);
+            return _sourceFileHash.Trim().Equals(_hashFileContent?.Trim(), StringComparison.InvariantCultureIgnoreCase);
         }
 
         private void TaskCompleted()

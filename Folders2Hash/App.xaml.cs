@@ -1,9 +1,13 @@
 ﻿using System.ComponentModel;
 using System.Linq;
 using System.Windows;
-using EvilBaschdi.CoreExtended.Metro;
 using Folders2Hash.Core;
 using Folders2Hash.Internal;
+
+#if (!DEBUG)
+using ControlzEx.Theming;
+
+#endif
 
 namespace Folders2Hash
 {
@@ -24,42 +28,43 @@ namespace Folders2Hash
         /// </exception>
         protected override void OnStartup(StartupEventArgs e)
         {
-            var themeManagerHelper = new ThemeManagerHelper();
-            themeManagerHelper.RegisterSystemColorTheme();
-            _mainWindow = new MainWindow();
+#if (!DEBUG)
+            ThemeManager.Current.SyncTheme(ThemeSyncMode.SyncAll);
+#endif
+            _mainWindow = new();
 
-            ISilentConfigurationPath silentConfigurationPath = new SilentConfigurationPath();
-            ISilentConfiguration silentConfiguration = new SilentConfiguration(silentConfigurationPath);
-            IHashAlgorithmDictionary hashAlgorithmDictionary = new HashAlgorithmDictionary();
+            IConfigurationPath configurationPath = new SilentConfigurationPath();
+            IWritableConfiguration writableConfiguration = new WritableConfiguration(configurationPath);
+
 
             if (e?.Args != null && e.Args.Any())
             {
                 var firstArg = e.Args.First().ToLower();
-                if (firstArg.Equals("-silent") && silentConfiguration.Value != null)
+                //hidden
+                if (firstArg.Equals("-silent") && writableConfiguration.Value != null)
                 {
                     _mainWindow.CurrentHiddenInstance = _mainWindow;
-                    _mainWindow.RunPreconfiguredHashCalculation(silentConfiguration.Value);
+                    _mainWindow.RunPreconfiguredHashCalculation(writableConfiguration.Value);
                 }
+                //HashEvaluationDialog
                 else
                 {
-                    foreach (var dictionaryValue in hashAlgorithmDictionary.Value.Values)
+                    IHashAlgorithmDictionary hashAlgorithmDictionary = new HashAlgorithmDictionary();
+                    foreach (var hashEvaluationDialog in from dictionaryValue in hashAlgorithmDictionary.Value.Values
+                                                         where firstArg.EndsWith(dictionaryValue)
+                                                         select new HashEvaluationDialog
+                                                                {
+                                                                    HashFile = firstArg,
+                                                                    HashType = dictionaryValue
+                                                                })
                     {
-                        if (!firstArg.EndsWith(dictionaryValue))
-                        {
-                            continue;
-                        }
-
-                        var hashEvaluationDialog = new HashEvaluationDialog
-                                                   {
-                                                       HashFile = firstArg,
-                                                       HashType = dictionaryValue
-                                                   };
                         hashEvaluationDialog.Closing += HashEvaluationDialogClosing;
                         hashEvaluationDialog.Show();
                         break;
                     }
                 }
             }
+            //Default
             else
             {
                 _mainWindow.ShowInTaskbar = true;
@@ -71,7 +76,7 @@ namespace Folders2Hash
 
         private void HashEvaluationDialogClosing(object sender, CancelEventArgs e)
         {
-            _mainWindow.Close();
+            _mainWindow?.Close();
         }
     }
 }
