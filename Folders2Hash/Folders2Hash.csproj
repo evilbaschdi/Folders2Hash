@@ -1,27 +1,29 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Folders2Hash</RootNamespace>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <Version>$([System.DateTime]::UtcNow.ToString(yyyy.M.d.Hmm))</Version>
     <Authors>Sebastian Walter</Authors>
     <Company>evilbaschdi (Sebastian Walter)</Company>
     <Copyright>Copyright © 2015 - $([System.DateTime]::UtcNow.ToString(yyyy)) evilbaschdi</Copyright>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Folders2Hash.xml</DocumentationFile>
+      <!-- ReSharper disable once UnknownProperty -->
+      <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Folders2Hash.xml</DocumentationFile>
     <ApplicationIcon>md5.ico</ApplicationIcon>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="ControlzEx" Version="5.0.1" />
-    <PackageReference Include="EvilBaschdi.Core" Version="2021.7.12.1538-develop" />
-    <PackageReference Include="EvilBaschdi.CoreExtended" Version="2021.6.7.1723-develop" />
+    <PackageReference Include="EvilBaschdi.Core" Version="2021.10.11.609-develop" />
+    <PackageReference Include="EvilBaschdi.CoreExtended" Version="2021.9.28.1631-develop" />
     <PackageReference Include="MahApps.Metro" Version="2.4.7" />
-    <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="4.8.0" />
-    <PackageReference Include="MahApps.Metro.IconPacks.MaterialDesign" Version="4.8.0" />
+    <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="4.10.0" />
+    <PackageReference Include="MahApps.Metro.IconPacks.MaterialDesign" Version="4.10.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="All" />
   </ItemGroup>

@@ -55,6 +55,7 @@ namespace Folders2Hash.Internal
             {
                 var fileInfo = new FileInfo(filename);
                 var fileStream = fileInfo.Open(FileMode.Open);
+                
                 foreach (var hashAlgorithmType in hashAlgorithmTypes.Keys)
                 {
                     fileStream.Position = 0;

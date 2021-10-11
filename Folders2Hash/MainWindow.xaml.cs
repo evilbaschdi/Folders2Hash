@@ -43,6 +43,7 @@ namespace Folders2Hash
 
         private string _loggingPath;
         private readonly IWritableConfiguration _writableConfiguration;
+        private readonly IRoundCorners _roundCorners;
 
         /// <inheritdoc />
         public MainWindow()
@@ -56,8 +57,9 @@ namespace Folders2Hash
             _configuration = _writableConfiguration.Value;
             TaskbarItemInfo = new();
 
-            var applicationStyle = new ApplicationStyle();
-            applicationStyle.Load(true);
+            _roundCorners = new RoundCorners();
+            IApplicationStyle style = new ApplicationStyle(_roundCorners, true);
+            style.Run();
             Load();
         }
 
@@ -83,7 +85,7 @@ namespace Folders2Hash
 
             var aboutWindow = new AboutWindow
                               {
-                                  DataContext = new AboutViewModel(aboutWindowContent)
+                                  DataContext = new AboutViewModel(aboutWindowContent, _roundCorners)
                               };
 
             aboutWindow.ShowDialog();
@@ -220,7 +222,7 @@ namespace Folders2Hash
         {
             if (null != e.Data && e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                var droppedElements = (string[]) e.Data.GetData(DataFormats.FileDrop, true);
+                var droppedElements = (string[])e.Data.GetData(DataFormats.FileDrop, true);
                 if (droppedElements != null)
                 {
                     foreach (var droppedElement in droppedElements)
@@ -260,7 +262,7 @@ namespace Folders2Hash
 
             if (e.Data.GetDataPresent(DataFormats.FileDrop, true))
             {
-                var droppedElements = (string[]) e.Data.GetData(DataFormats.FileDrop, true);
+                var droppedElements = (string[])e.Data.GetData(DataFormats.FileDrop, true);
                 if (droppedElements != null)
                 {
                     foreach (var droppedElement in droppedElements)
@@ -299,7 +301,7 @@ namespace Folders2Hash
 
         private void HashAlgorithmsOnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var comboBox = (ComboBox) sender;
+            var comboBox = (ComboBox)sender;
             comboBox.SelectedItem = null;
         }
 
@@ -321,7 +323,7 @@ namespace Folders2Hash
 
             foreach (var selectableObject in hashAlgorithmDictionary
                                              .Select(item
-                                                         => new HashAlgorithmModel(item.Value,item.Key,_configuration.HashTypes.Contains(item.Value))
+                                                         => new HashAlgorithmModel(item.Value, item.Key, _configuration.HashTypes.Contains(item.Value))
                                              ).Select(hashAlgorithmModel
                                                           => new SelectableObject<HashAlgorithmModel>(hashAlgorithmModel)
                                                              {
@@ -377,7 +379,7 @@ namespace Folders2Hash
 
         private void ToggleFlyout(int index, bool stayOpen = false)
         {
-            var activeFlyout = (Flyout) Flyouts.Items[index];
+            var activeFlyout = (Flyout)Flyouts.Items[index];
             if (activeFlyout == null)
             {
                 return;

@@ -40,8 +40,9 @@ namespace Folders2Hash
             InitializeComponent();
 
 
-            var applicationStyle = new ApplicationStyle();
-            applicationStyle.Load(true);
+            IRoundCorners roundCorners = new RoundCorners();
+            IApplicationStyle style = new ApplicationStyle(roundCorners, true);
+            style.Run();
         }
 
         /// <summary>
@@ -97,12 +98,12 @@ namespace Folders2Hash
 
         private bool IsHashValid()
         {
-            if(HashFile.StartsWith("checksums"))
+            if (HashFile.StartsWith("checksums"))
             {
                 return false;
             }
 
-            _sourceFileName = HashFile.Substring(0, HashFile.Length - (HashType.Length + 1));            
+            _sourceFileName = HashFile.Substring(0, HashFile.Length - (HashType.Length + 1));
             _hashFileContent = File.ReadAllLines(HashFile).FirstOrDefault(l => !l.StartsWith("#"))?.Split(" *").FirstOrDefault();
 
             if (!File.Exists(_sourceFileName))

@@ -2,7 +2,5 @@
 {
     /// <summary>
     /// </summary>
-    public record HashAlgorithmModel(string DisplayName, string Extension, bool IsSelected)
-    {
-    }
+    public record HashAlgorithmModel(string DisplayName, string Extension, bool IsSelected);
 }
