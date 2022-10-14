@@ -228,7 +228,7 @@ public partial class MainWindow
 
     private async void GridOnDrop(object sender, DragEventArgs e)
     {
-        if (null != e.Data && e.Data.GetDataPresent(DataFormats.FileDrop))
+        if (e.Data?.GetDataPresent(DataFormats.FileDrop) == true)
         {
             var droppedElements = (string[])e.Data.GetData(DataFormats.FileDrop, true);
             if (droppedElements != null)
