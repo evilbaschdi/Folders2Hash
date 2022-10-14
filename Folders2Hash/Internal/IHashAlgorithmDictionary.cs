@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using EvilBaschdi.Core;
+﻿using EvilBaschdi.Core;
 
-namespace Folders2Hash.Internal
+namespace Folders2Hash.Internal;
+
+/// <inheritdoc />
+public interface IHashAlgorithmDictionary : IValue<Dictionary<string, string>>
 {
-    /// <inheritdoc />
-    public interface IHashAlgorithmDictionary : IValue<Dictionary<string, string>>
-    {
-    }
 }

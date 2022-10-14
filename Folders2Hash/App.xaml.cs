@@ -1,9 +1,7 @@
 ﻿using System.ComponentModel;
-using System.Linq;
 using System.Windows;
 using Folders2Hash.Core;
 using Folders2Hash.Internal;
-
 #if (!DEBUG)
 using ControlzEx.Theming;
 
@@ -36,7 +34,6 @@ namespace Folders2Hash
             IConfigurationPath configurationPath = new SilentConfigurationPath();
             IWritableConfiguration writableConfiguration = new WritableConfiguration(configurationPath);
 
-
             if (e?.Args != null && e.Args.Any())
             {
                 var firstArg = e.Args.First().ToLower();
@@ -67,8 +64,8 @@ namespace Folders2Hash
             //Default
             else
             {
-                _mainWindow.ShowInTaskbar = true;
-                _mainWindow.Visibility = Visibility.Visible;
+                _mainWindow.SetCurrentValue(Window.ShowInTaskbarProperty, true);
+                _mainWindow.SetCurrentValue(UIElement.VisibilityProperty, Visibility.Visible);
             }
 
             base.OnStartup(e);

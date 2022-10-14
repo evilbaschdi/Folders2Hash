@@ -1,15 +1,14 @@
-namespace Folders2Hash.Core
+namespace Folders2Hash.Core;
+
+/// <summary>
+/// </summary>
+public interface IApplicationBasics
 {
     /// <summary>
     /// </summary>
-    public interface IApplicationBasics
-    {
-        /// <summary>
-        /// </summary>
-        void BrowseFolder();
+    void BrowseFolder();
 
-        /// <summary>
-        /// </summary>
-        void BrowseLoggingFolder();
-    }
+    /// <summary>
+    /// </summary>
+    void BrowseLoggingFolder();
 }

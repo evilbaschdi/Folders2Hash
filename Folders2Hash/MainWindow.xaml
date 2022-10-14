@@ -5,7 +5,7 @@
                       xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                       ShowIconOnTitleBar="False" TitleCharacterCasing="Normal"
                       Title="Folders2Hash" Width="800" Height="600" Icon="md5.ico" ShowInTaskbar="False"
-                      Visibility="Hidden" GlowBrush="{DynamicResource MahApps.Brushes.AccentBase}">
+                      Visibility="Hidden">
     <!--  RightWindowCommands  -->
     <controls:MetroWindow.RightWindowCommands>
         <controls:WindowCommands>
@@ -68,7 +68,7 @@
             <!--  Settings Fly-out  -->
             <!-- ReSharper disable once UnusedMember.Global -->
             <controls:Flyout Name="SettingsFlyout" Width="600" AnimateOnPositionChange="True" AnimateOpacity="True"
-                             Header="Settings" Position="Right" Theme="Accent">
+                             Header="Settings" Position="Right" Theme="Adapt">
                 <StackPanel>
                     <!-- Filename -->
                     <StackPanel Margin="10,5,0,0" Orientation="Horizontal">

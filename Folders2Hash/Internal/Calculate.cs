@@ -1,84 +1,81 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 
-namespace Folders2Hash.Internal
+namespace Folders2Hash.Internal;
+
+/// <inheritdoc />
+public class Calculate : ICalculate
 {
-    /// <inheritdoc />
-    public class Calculate : ICalculate
+    private readonly IHashAlgorithmByName _hashAlgorithmByName;
+
+    /// <summary>
+    ///     Constructor of the class
+    /// </summary>
+    /// <param name="hashAlgorithmByName"></param>
+    public Calculate(IHashAlgorithmByName hashAlgorithmByName)
     {
-        private readonly IHashAlgorithmByName _hashAlgorithmByName;
+        _hashAlgorithmByName = hashAlgorithmByName ?? throw new ArgumentNullException(nameof(hashAlgorithmByName));
+    }
 
-        /// <summary>
-        ///     Constructor of the class
-        /// </summary>
-        /// <param name="hashAlgorithmByName"></param>
-        public Calculate(IHashAlgorithmByName hashAlgorithmByName)
+    /// <inheritdoc />
+    public string HashFileName(string file, string type, bool keepFileExtension)
+    {
+        if (file == null)
         {
-            _hashAlgorithmByName = hashAlgorithmByName ?? throw new ArgumentNullException(nameof(hashAlgorithmByName));
+            throw new ArgumentNullException(nameof(file));
         }
 
-        /// <inheritdoc />
-        public string HashFileName(string file, string type, bool keepFileExtension)
+        if (type == null)
         {
-            if (file == null)
-            {
-                throw new ArgumentNullException(nameof(file));
-            }
-
-            if (type == null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
-
-            return keepFileExtension
-                ? $@"{Path.GetDirectoryName(file)}\{Path.GetFileName(file)}.{type}"
-                : $@"{Path.GetDirectoryName(file)}\{Path.GetFileNameWithoutExtension(file)}.{type}";
+            throw new ArgumentNullException(nameof(type));
         }
 
-        /// <inheritdoc />
-        public IEnumerable<KeyValuePair<string, string>> Hashes(string filename, Dictionary<string, string> hashAlgorithmTypes)
+        return keepFileExtension
+            ? $@"{Path.GetDirectoryName(file)}\{Path.GetFileName(file)}.{type}"
+            : $@"{Path.GetDirectoryName(file)}\{Path.GetFileNameWithoutExtension(file)}.{type}";
+    }
+
+    /// <inheritdoc />
+    public IEnumerable<KeyValuePair<string, string>> Hashes(string filename, Dictionary<string, string> hashAlgorithmTypes)
+    {
+        if (filename == null)
         {
-            if (filename == null)
-            {
-                throw new ArgumentNullException(nameof(filename));
-            }
+            throw new ArgumentNullException(nameof(filename));
+        }
 
-            if (hashAlgorithmTypes == null)
-            {
-                throw new ArgumentNullException(nameof(hashAlgorithmTypes));
-            }
+        if (hashAlgorithmTypes == null)
+        {
+            throw new ArgumentNullException(nameof(hashAlgorithmTypes));
+        }
 
-            var list = new List<KeyValuePair<string, string>>();
-            try
+        var list = new List<KeyValuePair<string, string>>();
+        try
+        {
+            var fileInfo = new FileInfo(filename);
+            var fileStream = fileInfo.Open(FileMode.Open);
+
+            foreach (var hashAlgorithmType in hashAlgorithmTypes.Keys)
             {
-                var fileInfo = new FileInfo(filename);
-                var fileStream = fileInfo.Open(FileMode.Open);
-                
-                foreach (var hashAlgorithmType in hashAlgorithmTypes.Keys)
+                fileStream.Position = 0;
+                var hashAlgorithm = _hashAlgorithmByName.ValueFor(hashAlgorithmType);
+                var hash = hashAlgorithm.ComputeHash(fileStream);
+
+                var sb = new StringBuilder();
+                foreach (var t in hash)
                 {
-                    fileStream.Position = 0;
-                    var hashAlgorithm = _hashAlgorithmByName.ValueFor(hashAlgorithmType);
-                    var hash = hashAlgorithm.ComputeHash(fileStream);
-
-                    var sb = new StringBuilder();
-                    foreach (var t in hash)
-                    {
-                        sb.Append(t.ToString("X2"));
-                    }
-
-                    list.Add(new(hashAlgorithmType, sb.ToString()));
+                    sb.Append(t.ToString("X2"));
                 }
 
-                fileStream.Close();
-            }
-            catch (Exception exception)
-            {
-                list.Add(new("", exception.Message));
+                list.Add(new(hashAlgorithmType, sb.ToString()));
             }
 
-            return list;
+            fileStream.Close();
         }
+        catch (Exception exception)
+        {
+            list.Add(new("", exception.Message));
+        }
+
+        return list;
     }
 }

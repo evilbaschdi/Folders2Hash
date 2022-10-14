@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+
 
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
@@ -15,24 +15,34 @@
       <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Folders2Hash.xml</DocumentationFile>
     <ApplicationIcon>md5.ico</ApplicationIcon>
     <LangVersion>preview</LangVersion>
+      <EnableNETAnalyzers>true</EnableNETAnalyzers>
+      <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ControlzEx" Version="5.0.1" />
-    <PackageReference Include="EvilBaschdi.Core" Version="2021.10.11.609-develop" />
-    <PackageReference Include="EvilBaschdi.CoreExtended" Version="2021.9.28.1631-develop" />
-    <PackageReference Include="MahApps.Metro" Version="2.4.7" />
-    <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="4.10.0" />
-    <PackageReference Include="MahApps.Metro.IconPacks.MaterialDesign" Version="4.10.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="All" />
+    <PackageReference Include="EvilBaschdi.CoreExtended" Version="2022.10.9.631-develop" />
+    <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="4.11.0" />
+    <PackageReference Include="MahApps.Metro.IconPacks.MaterialDesign" Version="4.11.0" />
+    <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="1.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2-beta2" />
+    <PackageReference Include="WpfAnalyzers" Version="4.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="md5.ico" />
     <Content Include="Folders2Hash.VisualElementsManifest.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="hash512.png">
+    <Content Include="about.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="hash150.png">
