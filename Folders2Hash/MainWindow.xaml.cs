@@ -5,11 +5,14 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Shell;
+using EvilBaschdi.About.Core;
+using EvilBaschdi.About.Core.Models;
+using EvilBaschdi.About.Wpf;
+using EvilBaschdi.Core;
 using EvilBaschdi.Core.Internal;
 using EvilBaschdi.Core.Logging;
 using EvilBaschdi.CoreExtended;
 using EvilBaschdi.CoreExtended.Browsers;
-using EvilBaschdi.CoreExtended.Controls.About;
 using EvilBaschdi.CoreExtended.FlyOut;
 using Folders2Hash.Core;
 using Folders2Hash.Internal;
@@ -43,7 +46,6 @@ public partial class MainWindow
     private string _loggingPath;
     private readonly IWritableConfiguration _writableConfiguration;
     private readonly ICurrentFlyOuts _currentFlyOuts;
-    private readonly IApplicationStyle _style;
 
     /// <inheritdoc />
     public MainWindow()
@@ -57,8 +59,8 @@ public partial class MainWindow
         _configuration = _writableConfiguration.Value;
         TaskbarItemInfo = new();
 
-        _style = new ApplicationStyle(true);
-        _style.Run();
+        IApplicationStyle applicationStyle = new ApplicationStyle(true);
+        applicationStyle.Run();
         _currentFlyOuts = new CurrentFlyOuts();
         _toggleFlyOut = new ToggleFlyOut();
         Load();
@@ -84,7 +86,7 @@ public partial class MainWindow
     {
         ICurrentAssembly currentAssembly = new CurrentAssembly();
         IAboutContent aboutContent = new AboutContent(currentAssembly);
-        IAboutModel aboutModel = new AboutViewModel(aboutContent, _style);
+        IAboutModel aboutModel = new AboutViewModel(aboutContent);
         var aboutWindow = new AboutWindow(aboutModel);
 
         aboutWindow.ShowDialog();
