@@ -4,7 +4,7 @@
 		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 		<OutputType>WinExe</OutputType>
 		<RootNamespace>Folders2Hash</RootNamespace>
-		<TargetFramework>net6.0-windows</TargetFramework>
+		<TargetFramework>net7.0-windows</TargetFramework>
 		<UseWPF>true</UseWPF>
 		<Version>$([System.DateTime]::UtcNow.ToString(yyyy.M.d.Hmm))</Version>
 		<Authors>Sebastian Walter</Authors>
@@ -16,10 +16,13 @@
 		<LangVersion>preview</LangVersion>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<ImplicitUsings>enable</ImplicitUsings>
+		<ValidateExecutableReferencesMatchSelfContained>false</ValidateExecutableReferencesMatchSelfContained>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="EvilBaschdi.CoreExtended" Version="2023.2.1.1955-develop" />
+		<PackageReference Include="EvilBaschdi.Core.Wpf" Version="2023.2.20.2127-develop" />
+		<PackageReference Include="EvilBaschdi.About.Wpf" Version="2023.2.19.836-develop" />
+		<PackageReference Include="EvilBaschdi.Settings" Version="2023.2.21.1756" />
 		<PackageReference Include="MahApps.Metro.IconPacks.Material" Version="4.11.0" />
 		<PackageReference Include="MahApps.Metro.IconPacks.MaterialDesign" Version="4.11.0" />
 		<PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="1.1.1">
@@ -30,7 +33,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3-beta1" />
 		<PackageReference Include="WpfAnalyzers" Version="4.1.1">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -51,9 +54,6 @@
 		<Content Include="hash70.png">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
-		<Content Include="Configuration.json">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
 		<Content Include="SilentConfiguration.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
@@ -65,15 +65,14 @@
 
 	<ItemGroup>
 		<AppDesigner Include="Properties\" />
-		<Compile Update="Properties\Settings.Designer.cs">
-			<DesignTimeSharedInput>True</DesignTimeSharedInput>
-			<AutoGen>True</AutoGen>
-			<DependentUpon>Settings.settings</DependentUpon>
-		</Compile>
-		<None Update="Properties\Settings.settings">
-			<Generator>SettingsSingleFileGenerator</Generator>
-			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="Settings\App.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
+
+	<ProjectExtensions><VisualStudio><UserProperties settings_4app_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>

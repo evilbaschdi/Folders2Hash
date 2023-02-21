@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shell;
-using EvilBaschdi.CoreExtended;
+using EvilBaschdi.Core.Wpf;
 using Folders2Hash.Internal;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;

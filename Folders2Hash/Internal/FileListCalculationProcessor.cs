@@ -57,20 +57,12 @@ public class FileListCalculationProcessor : IFileListCalculationProcessor
         Parallel.ForEach(configuration.PathsToScan,
             item =>
             {
-                var (key, value) = item;
-                if (value)
-                {
-                    var filter = new FileListFromPathFilter
-                                 {
-                                     FilterExtensionsNotToEqual = excludeExtensionList,
-                                     FilterFileNamesNotToEqual = excludeFileNameList
-                                 };
-                    fileList.AddRange(_filePath.ValueFor(key, filter).Distinct());
-                }
-                else
-                {
-                    fileList.Add(key);
-                }
+                var filter = new FileListFromPathFilter
+                             {
+                                 FilterExtensionsNotToEqual = excludeExtensionList,
+                                 FilterFileNamesNotToEqual = excludeFileNameList
+                             };
+                fileList.AddRange(_filePath.ValueFor(item, filter).Distinct());
             }
         );
 

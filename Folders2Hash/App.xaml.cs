@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Windows;
-using Folders2Hash.Core;
+using EvilBaschdi.Settings.ByMachineAndUser;
 using Folders2Hash.Internal;
+using Folders2Hash.Settings;
 #if (!DEBUG)
 using ControlzEx.Theming;
 
@@ -30,9 +31,10 @@ namespace Folders2Hash
             ThemeManager.Current.SyncTheme(ThemeSyncMode.SyncAll);
 #endif
             _mainWindow = new();
-
-            IConfigurationPath configurationPath = new SilentConfigurationPath();
-            IWritableConfiguration writableConfiguration = new WritableConfiguration(configurationPath);
+            IAppSettingsFromJsonFile appSettingsFromJsonFile = new AppSettingsFromJsonFile();
+            IAppSettingsFromJsonFileByMachineAndUser silentAppSettingsFromJsonFileByMachineAndUser = new SilentAppSettingsFromJsonFileByMachineAndUser();
+            IAppSettingByKey silentApSettingByKey = new AppSettingByKey(appSettingsFromJsonFile, silentAppSettingsFromJsonFileByMachineAndUser);
+            IWritableConfiguration writableConfiguration = new WritableConfiguration(silentApSettingByKey);
 
             if (e?.Args != null && e.Args.Any())
             {

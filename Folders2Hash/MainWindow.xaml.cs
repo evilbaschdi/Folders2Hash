@@ -11,12 +11,14 @@ using EvilBaschdi.About.Wpf;
 using EvilBaschdi.Core;
 using EvilBaschdi.Core.Internal;
 using EvilBaschdi.Core.Logging;
-using EvilBaschdi.CoreExtended;
-using EvilBaschdi.CoreExtended.Browsers;
-using EvilBaschdi.CoreExtended.FlyOut;
+using EvilBaschdi.Core.Wpf;
+using EvilBaschdi.Core.Wpf.Browsers;
+using EvilBaschdi.Core.Wpf.FlyOut;
+using EvilBaschdi.Settings.ByMachineAndUser;
 using Folders2Hash.Core;
 using Folders2Hash.Internal;
 using Folders2Hash.Models;
+using Folders2Hash.Settings;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 
@@ -53,8 +55,12 @@ public partial class MainWindow
         InitializeComponent();
         _hashAlgorithmDictionary = new HashAlgorithmDictionary();
         IFolderBrowser folderBrowser = new ExplorerFolderBrowser();
-        IConfigurationPath configurationPath = new ConfigurationPath();
-        _writableConfiguration = new WritableConfiguration(configurationPath);
+
+        IAppSettingsFromJsonFile appSettingsFromJsonFile = new AppSettingsFromJsonFile();
+        IAppSettingsFromJsonFileByMachineAndUser appSettingsFromJsonFileByMachineAndUser = new AppSettingsFromJsonFileByMachineAndUser();
+        IAppSettingByKey appSettingByKey = new AppSettingByKey(appSettingsFromJsonFile, appSettingsFromJsonFileByMachineAndUser);
+
+        _writableConfiguration = new WritableConfiguration(appSettingByKey);
         _basics = new ApplicationBasics(folderBrowser, _writableConfiguration);
         _configuration = _writableConfiguration.Value;
         TaskbarItemInfo = new();
@@ -71,14 +77,14 @@ public partial class MainWindow
         GetHashAlgorithms();
         HashAlgorithms.SetCurrentValue(ItemsControl.ItemsSourceProperty, _observableCollection);
         Generate.SetCurrentValue(IsEnabledProperty,
-            !string.IsNullOrWhiteSpace(_configuration.PathsToScan.FirstOrDefault().Key) && Directory.Exists(_configuration.PathsToScan.FirstOrDefault().Key));
+            !string.IsNullOrWhiteSpace(_configuration.PathsToScan.FirstOrDefault()) && Directory.Exists(_configuration.PathsToScan.FirstOrDefault()));
 
         KeepFileExtension.SetCurrentValue(ToggleSwitch.IsOnProperty, _configuration.KeepFileExtension);
-        InitialDirectory.SetCurrentValue(TextBox.TextProperty, _configuration.PathsToScan.FirstOrDefault().Key ?? string.Empty);
+        InitialDirectory.SetCurrentValue(TextBox.TextProperty, _configuration.PathsToScan.FirstOrDefault() ?? string.Empty);
 
         _loggingPath = !string.IsNullOrWhiteSpace(_configuration.LoggingPath)
             ? _configuration.LoggingPath
-            : _configuration.PathsToScan.FirstOrDefault().Key;
+            : _configuration.PathsToScan.FirstOrDefault();
         LoggingPath.SetCurrentValue(TextBox.TextProperty, _loggingPath ?? string.Empty);
     }
 
@@ -86,8 +92,9 @@ public partial class MainWindow
     {
         ICurrentAssembly currentAssembly = new CurrentAssembly();
         IAboutContent aboutContent = new AboutContent(currentAssembly);
-        IAboutModel aboutModel = new AboutViewModel(aboutContent);
-        var aboutWindow = new AboutWindow(aboutModel);
+        IAboutViewModel aboutModel = new AboutViewModel(aboutContent);
+        IApplyMicaBrush applyMicaBrush = new ApplyMicaBrush();
+        var aboutWindow = new AboutWindow(aboutModel, applyMicaBrush);
 
         aboutWindow.ShowDialog();
     }
@@ -361,7 +368,7 @@ public partial class MainWindow
     private void BrowseClick(object sender, RoutedEventArgs e)
     {
         _basics.BrowseFolder();
-        InitialDirectory.SetCurrentValue(TextBox.TextProperty, _configuration.PathsToScan.FirstOrDefault().Key);
+        InitialDirectory.SetCurrentValue(TextBox.TextProperty, _configuration.PathsToScan.FirstOrDefault());
         Load();
     }
 
@@ -369,8 +376,10 @@ public partial class MainWindow
     {
         if (Directory.Exists(InitialDirectory.Text))
         {
-            var dic = new ConcurrentDictionary<string, bool>();
-            dic.TryAdd(InitialDirectory.Text, true);
+            var dic = new List<string>
+                      {
+                          InitialDirectory.Text
+                      };
             _configuration.PathsToScan = dic;
             _writableConfiguration.Value = _configuration;
         }

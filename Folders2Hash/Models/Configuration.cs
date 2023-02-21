@@ -1,5 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace Folders2Hash.Models;
 
@@ -31,5 +30,5 @@ public class Configuration
     /// <summary>
     /// </summary>
     [DataMember]
-    public ConcurrentDictionary<string, bool> PathsToScan { get; set; }
+    public List<string> PathsToScan { get; set; }
 }
