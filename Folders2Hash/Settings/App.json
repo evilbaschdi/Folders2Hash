@@ -1,12 +1,12 @@
 {
-  "KeepFileExtension": true,
-  "PathsToScan": [
-    "E:\\Setup"
-  ],
-  "LoggingPath": "E:\\Setup\\_hashLog",
-  "HashTypes": [
-    "md5",
-    "sha1",
-    "sha256"
-  ]
-}
+    "KeepFileExtension": true,
+    "PathsToScan": [
+        "E:\\Setup"
+      ],
+    "LoggingPath": "E:\\Setup\\_hashLog",
+    "HashTypes": [
+        "md5",
+        "sha1",
+        "sha256"
+      ]
+  }

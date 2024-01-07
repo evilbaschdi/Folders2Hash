@@ -34,8 +34,10 @@ public partial class HashEvaluationDialog : MetroWindow
 
         InitializeComponent();
 
-        IApplicationStyle style = new ApplicationStyle(true);
-        style.Run();
+        IApplicationStyle applicationStyle = new ApplicationStyle();
+        IApplicationLayout applicationLayout = new ApplicationLayout();
+        applicationStyle.Run();
+        applicationLayout.RunFor((true, false));
     }
 
     /// <summary>
