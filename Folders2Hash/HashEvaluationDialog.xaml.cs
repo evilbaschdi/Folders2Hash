@@ -99,7 +99,7 @@ public partial class HashEvaluationDialog : MetroWindow
         }
 
         _sourceFileName = HashFile[..^(HashType.Length + 1)];
-        _hashFileContent = File.ReadAllLines(HashFile).FirstOrDefault(l => !l.StartsWith("#"))?.Split(" *").FirstOrDefault();
+        _hashFileContent = File.ReadAllLines(HashFile).FirstOrDefault(l => !l.StartsWith('#'))?.Split(" *").FirstOrDefault();
 
         if (!File.Exists(_sourceFileName))
         {

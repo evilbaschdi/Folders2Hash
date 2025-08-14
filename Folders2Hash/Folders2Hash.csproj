@@ -4,9 +4,9 @@
 		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 		<OutputType>WinExe</OutputType>
 		<RootNamespace>Folders2Hash</RootNamespace>
-		<TargetFramework>net8.0-windows</TargetFramework>
+		<TargetFramework>net9.0-windows</TargetFramework>
 		<UseWPF>true</UseWPF>
-		<Version>$([System.DateTime]::UtcNow.ToString(yyyy.M.d.Hmm))</Version>
+		<Version>$([System.DateTime]::UtcNow.ToString(yyyy.M.d.H))</Version>
 		<Authors>Sebastian Walter</Authors>
 		<Company>evilbaschdi (Sebastian Walter)</Company>
 		<Copyright>Copyright © 2015 - $([System.DateTime]::UtcNow.ToString(yyyy)) evilbaschdi</Copyright>
@@ -21,23 +21,21 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="EvilBaschdi.Core" />
 		<PackageReference Include="EvilBaschdi.Core.Wpf" />
 		<PackageReference Include="EvilBaschdi.About.Wpf" />
-		<PackageReference Include="EvilBaschdi.Settings" />
+		<PackageReference Include="EvilBaschdi.Core.Settings" />
 		<PackageReference Include="MahApps.Metro.IconPacks.Material" />
 		<PackageReference Include="MahApps.Metro.IconPacks.MaterialDesign" />
 		<PackageReference Include="Newtonsoft.Json" />
 		<PackageReference Include="WpfAnalyzers">
 			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 		</PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>
 		<Resource Include="md5.ico" />
-		<Content Include="Folders2Hash.VisualElementsManifest.xml">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
 		<Content Include="about.png">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>

@@ -1,5 +1,5 @@
-﻿using EvilBaschdi.Settings.ByMachineAndUser;
-using EvilBaschdi.Settings.Writable;
+﻿using EvilBaschdi.Core.Settings.ByMachineAndUser;
+using EvilBaschdi.Core.Settings.Writable;
 
 namespace Folders2Hash.Settings;
 

@@ -7,10 +7,7 @@ internal static class Program
     // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
     private static void Main(string[] args)
     {
-        if (args == null)
-        {
-            throw new ArgumentNullException(nameof(args));
-        }
+        ArgumentNullException.ThrowIfNull(args);
 
         var fileExtensions = new Dictionary<string, string>
                              {
@@ -33,10 +30,7 @@ internal static class Program
 
     private static void CreateFileAssociation(string executable, KeyValuePair<string, string> extension)
     {
-        if (executable == null)
-        {
-            throw new ArgumentNullException(nameof(executable));
-        }
+        ArgumentNullException.ThrowIfNull(executable);
 
         var registryKey = Registry.ClassesRoot.CreateSubKey(extension.Value);
         registryKey?.SetValue("", extension.Key);

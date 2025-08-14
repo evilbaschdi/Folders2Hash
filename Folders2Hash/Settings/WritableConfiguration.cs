@@ -1,5 +1,5 @@
 ﻿using EvilBaschdi.Core;
-using EvilBaschdi.Settings.ByMachineAndUser;
+using EvilBaschdi.Core.Settings.ByMachineAndUser;
 using Folders2Hash.Models;
 using JetBrains.Annotations;
 
@@ -41,10 +41,7 @@ public class WritableConfiguration : CachedWritableValue<Configuration>, IWritab
     /// <inheritdoc />
     protected override void SaveValue(Configuration configuration)
     {
-        if (configuration == null)
-        {
-            throw new ArgumentNullException(nameof(configuration));
-        }
+        ArgumentNullException.ThrowIfNull(configuration);
 
         _appSettingByKey.RunFor("HashTypes", configuration.HashTypes);
         _appSettingByKey.RunFor("KeepFileExtension", configuration.KeepFileExtension);

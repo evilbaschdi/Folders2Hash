@@ -7,6 +7,4 @@ namespace Folders2Hash.Settings;
 /// <summary>
 ///     Provides the configuration for silent run
 /// </summary>
-public interface IWritableConfiguration : IWritableValue<Configuration>
-{
-}
+public interface IWritableConfiguration : IWritableValue<Configuration>;

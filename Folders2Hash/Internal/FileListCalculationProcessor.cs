@@ -31,10 +31,7 @@ public class FileListCalculationProcessor : IFileListCalculationProcessor
     /// <inheritdoc />
     public ObservableCollection<LogEntry> ValueFor(Configuration configuration)
     {
-        if (configuration == null)
-        {
-            throw new ArgumentNullException(nameof(configuration));
-        }
+        ArgumentNullException.ThrowIfNull(configuration);
 
         var hashLogEntries = new ConcurrentBag<LogEntry>();
         var result = new ObservableCollection<LogEntry>();
@@ -116,19 +113,17 @@ public class FileListCalculationProcessor : IFileListCalculationProcessor
             }
         }
 
-        if (!hashLogEntries.Any())
+        if (hashLogEntries.IsEmpty)
         {
             return result;
         }
 
+        if (hashLogEntries.Any(item => item is { AlreadyExisting: false }))
         {
-            if (hashLogEntries.Any(item => item is { AlreadyExisting: false }))
-            {
-                result = new(hashLogEntries.Where(item => item is { AlreadyExisting: false }));
-            }
-
-            _logging.RunFor(hashLogEntries, configuration);
+            result = new(hashLogEntries.Where(item => item is { AlreadyExisting: false }));
         }
+
+        _logging.RunFor(hashLogEntries, configuration);
 
         return result;
     }

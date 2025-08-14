@@ -8,6 +8,4 @@ namespace Folders2Hash.Internal;
 /// <summary>
 ///     Processes file calculation by file path
 /// </summary>
-public interface IFileListCalculationProcessor : IValueFor<Configuration, ObservableCollection<LogEntry>>
-{
-}
+public interface IFileListCalculationProcessor : IValueFor<Configuration, ObservableCollection<LogEntry>>;

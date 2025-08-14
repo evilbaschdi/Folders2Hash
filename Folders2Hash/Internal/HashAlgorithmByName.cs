@@ -10,10 +10,7 @@ public class HashAlgorithmByName : IHashAlgorithmByName
     /// <returns></returns>
     public HashAlgorithm ValueFor(string type)
     {
-        if (type == null)
-        {
-            throw new ArgumentNullException(nameof(type));
-        }
+        ArgumentNullException.ThrowIfNull(type);
 
         switch (type.ToLower())
         {

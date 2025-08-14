@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Windows;
-using EvilBaschdi.Settings.ByMachineAndUser;
+using EvilBaschdi.Core.Settings.ByMachineAndUser;
 using Folders2Hash.Internal;
 using Folders2Hash.Settings;
 #if (!DEBUG)
@@ -8,74 +8,73 @@ using ControlzEx.Theming;
 
 #endif
 
-namespace Folders2Hash
-{
-    /// <inheritdoc />
-    /// <summary>
-    ///     Interaction logic for App.xaml
-    /// </summary>
-    // ReSharper disable once RedundantExtendsListEntry
-    public partial class App : Application
-        // ReSharper restore RedundantExtendsListEntry
-    {
-        private MainWindow _mainWindow;
+namespace Folders2Hash;
 
-        /// <inheritdoc />
-        /// <exception cref="T:System.OverflowException">
-        ///     The dictionary already contains the maximum number of elements (
-        ///     <see cref="F:System.Int32.MaxValue" />).
-        /// </exception>
-        protected override void OnStartup(StartupEventArgs e)
-        {
+/// <inheritdoc />
+/// <summary>
+///     Interaction logic for App.xaml
+/// </summary>
+// ReSharper disable once RedundantExtendsListEntry
+public partial class App : Application
+// ReSharper restore RedundantExtendsListEntry
+{
+    private MainWindow _mainWindow;
+
+    /// <inheritdoc />
+    /// <exception cref="T:System.OverflowException">
+    ///     The dictionary already contains the maximum number of elements (
+    ///     <see cref="F:System.Int32.MaxValue" />).
+    /// </exception>
+    protected override void OnStartup(StartupEventArgs e)
+    {
 #if (!DEBUG)
             ThemeManager.Current.SyncTheme(ThemeSyncMode.SyncAll);
 #endif
-            _mainWindow = new();
-            IAppSettingsFromJsonFile appSettingsFromJsonFile = new AppSettingsFromJsonFile();
-            IAppSettingsFromJsonFileByMachineAndUser silentAppSettingsFromJsonFileByMachineAndUser = new SilentAppSettingsFromJsonFileByMachineAndUser();
-            IAppSettingByKey silentApSettingByKey = new AppSettingByKey(appSettingsFromJsonFile, silentAppSettingsFromJsonFileByMachineAndUser);
-            IWritableConfiguration writableConfiguration = new WritableConfiguration(silentApSettingByKey);
+        _mainWindow = new();
+        IAppSettingsFromJsonFile appSettingsFromJsonFile = new AppSettingsFromJsonFile();
+        IAppSettingsFromJsonFileByMachineAndUser silentAppSettingsFromJsonFileByMachineAndUser = new SilentAppSettingsFromJsonFileByMachineAndUser();
+        IAppSettingByKey silentApSettingByKey = new AppSettingByKey(appSettingsFromJsonFile, silentAppSettingsFromJsonFileByMachineAndUser);
+        IWritableConfiguration writableConfiguration = new WritableConfiguration(silentApSettingByKey);
 
-            if (e?.Args != null && e.Args.Any())
+        if (e?.Args != null && e.Args.Any())
+        {
+            var firstArg = e.Args.First().ToLower();
+            //hidden
+            if (firstArg.Equals("-silent") && writableConfiguration.Value != null)
             {
-                var firstArg = e.Args.First().ToLower();
-                //hidden
-                if (firstArg.Equals("-silent") && writableConfiguration.Value != null)
-                {
-                    _mainWindow.CurrentHiddenInstance = _mainWindow;
-                    _mainWindow.RunPreconfiguredHashCalculation(writableConfiguration.Value);
-                }
-                //HashEvaluationDialog
-                else
-                {
-                    IHashAlgorithmDictionary hashAlgorithmDictionary = new HashAlgorithmDictionary();
-                    foreach (var hashEvaluationDialog in from dictionaryValue in hashAlgorithmDictionary.Value.Values
-                                                         where firstArg.EndsWith(dictionaryValue)
-                                                         select new HashEvaluationDialog
-                                                                {
-                                                                    HashFile = firstArg,
-                                                                    HashType = dictionaryValue
-                                                                })
-                    {
-                        hashEvaluationDialog.Closing += HashEvaluationDialogClosing;
-                        hashEvaluationDialog.Show();
-                        break;
-                    }
-                }
+                _mainWindow.CurrentHiddenInstance = _mainWindow;
+                _mainWindow.RunPreconfiguredHashCalculation(writableConfiguration.Value);
             }
-            //Default
+            //HashEvaluationDialog
             else
             {
-                _mainWindow.SetCurrentValue(Window.ShowInTaskbarProperty, true);
-                _mainWindow.SetCurrentValue(UIElement.VisibilityProperty, Visibility.Visible);
+                IHashAlgorithmDictionary hashAlgorithmDictionary = new HashAlgorithmDictionary();
+                foreach (var hashEvaluationDialog in from dictionaryValue in hashAlgorithmDictionary.Value.Values
+                                                     where firstArg.EndsWith(dictionaryValue)
+                                                     select new HashEvaluationDialog
+                                                            {
+                                                                HashFile = firstArg,
+                                                                HashType = dictionaryValue
+                                                            })
+                {
+                    hashEvaluationDialog.Closing += HashEvaluationDialogClosing;
+                    hashEvaluationDialog.Show();
+                    break;
+                }
             }
-
-            base.OnStartup(e);
         }
-
-        private void HashEvaluationDialogClosing(object sender, CancelEventArgs e)
+        //Default
+        else
         {
-            _mainWindow?.Close();
+            _mainWindow.SetCurrentValue(Window.ShowInTaskbarProperty, true);
+            _mainWindow.SetCurrentValue(UIElement.VisibilityProperty, Visibility.Visible);
         }
+
+        base.OnStartup(e);
+    }
+
+    private void HashEvaluationDialogClosing(object sender, CancelEventArgs e)
+    {
+        _mainWindow?.Close();
     }
 }

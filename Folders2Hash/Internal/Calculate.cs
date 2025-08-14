@@ -20,15 +20,9 @@ public class Calculate : ICalculate
     /// <inheritdoc />
     public string HashFileName(string file, string type, bool keepFileExtension)
     {
-        if (file == null)
-        {
-            throw new ArgumentNullException(nameof(file));
-        }
+        ArgumentNullException.ThrowIfNull(file);
 
-        if (type == null)
-        {
-            throw new ArgumentNullException(nameof(type));
-        }
+        ArgumentNullException.ThrowIfNull(type);
 
         return keepFileExtension
             ? $@"{Path.GetDirectoryName(file)}\{Path.GetFileName(file)}.{type}"
@@ -38,15 +32,9 @@ public class Calculate : ICalculate
     /// <inheritdoc />
     public IEnumerable<KeyValuePair<string, string>> Hashes(string filename, Dictionary<string, string> hashAlgorithmTypes)
     {
-        if (filename == null)
-        {
-            throw new ArgumentNullException(nameof(filename));
-        }
+        ArgumentNullException.ThrowIfNull(filename);
 
-        if (hashAlgorithmTypes == null)
-        {
-            throw new ArgumentNullException(nameof(hashAlgorithmTypes));
-        }
+        ArgumentNullException.ThrowIfNull(hashAlgorithmTypes);
 
         var list = new List<KeyValuePair<string, string>>();
         try

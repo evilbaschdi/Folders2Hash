@@ -22,15 +22,9 @@ public class Logging : ILogging
     /// <inheritdoc />
     public void RunFor(ConcurrentBag<LogEntry> logEntries, Configuration configuration)
     {
-        if (logEntries == null)
-        {
-            throw new ArgumentNullException(nameof(logEntries));
-        }
+        ArgumentNullException.ThrowIfNull(logEntries);
 
-        if (configuration == null)
-        {
-            throw new ArgumentNullException(nameof(configuration));
-        }
+        ArgumentNullException.ThrowIfNull(configuration);
 
         var stringBuilder = new StringBuilder();
 

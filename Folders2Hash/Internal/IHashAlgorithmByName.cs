@@ -4,6 +4,4 @@ using EvilBaschdi.Core;
 namespace Folders2Hash.Internal;
 
 /// <inheritdoc />
-public interface IHashAlgorithmByName : IValueFor<string, HashAlgorithm>
-{
-}
+public interface IHashAlgorithmByName : IValueFor<string, HashAlgorithm>;
