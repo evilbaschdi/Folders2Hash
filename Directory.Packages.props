@@ -4,13 +4,13 @@
     <CentralPackageTransitivePinningEnabled>false</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="EvilBaschdi.About.Wpf" Version="2025.8.5.19" />
-    <PackageVersion Include="EvilBaschdi.Core" Version="2025.7.22.17" />
-    <PackageVersion Include="EvilBaschdi.Core.Wpf" Version="2025.8.10.13" />
-    <PackageVersion Include="EvilBaschdi.Core.Settings" Version="2025.8.5.17" />
+    <PackageVersion Include="EvilBaschdi.About.Wpf" Version="2025.10.13.16" />
+    <PackageVersion Include="EvilBaschdi.Core" Version="2025.9.16.16" />
+    <PackageVersion Include="EvilBaschdi.Core.Wpf" Version="2025.10.16.16" />
+    <PackageVersion Include="EvilBaschdi.Core.Settings" Version="2025.10.15.5" />
     <PackageVersion Include="MahApps.Metro.IconPacks.Material" Version="6.1.0" />
     <PackageVersion Include="MahApps.Metro.IconPacks.MaterialDesign" Version="6.1.0" />
-    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="WpfAnalyzers" Version="4.1.1" />
   </ItemGroup>
 </Project>
