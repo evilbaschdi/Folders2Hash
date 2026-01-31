@@ -4,7 +4,7 @@
 		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 		<OutputType>WinExe</OutputType>
 		<RootNamespace>Folders2Hash</RootNamespace>
-		<TargetFramework>net9.0-windows</TargetFramework>
+		<TargetFramework>net10.0-windows</TargetFramework>
 		<UseWPF>true</UseWPF>
 		<Version>$([System.DateTime]::UtcNow.ToString(yyyy.M.d.H))</Version>
 		<Authors>Sebastian Walter</Authors>

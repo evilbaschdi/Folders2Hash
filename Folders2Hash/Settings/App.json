@@ -1,9 +1,9 @@
 {
     "KeepFileExtension": true,
     "PathsToScan": [
-        "E:\\Setup"
+        "\\\\X-DS418PLAY\\share\\setup"
       ],
-    "LoggingPath": "E:\\Setup\\_hashLog",
+    "LoggingPath": "\\\\X-DS418PLAY\\share\\setup\\\\_hashLog",
     "HashTypes": [
         "md5",
         "sha1",

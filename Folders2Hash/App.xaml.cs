@@ -36,7 +36,7 @@ public partial class App : Application
         IAppSettingByKey silentApSettingByKey = new AppSettingByKey(appSettingsFromJsonFile, silentAppSettingsFromJsonFileByMachineAndUser);
         IWritableConfiguration writableConfiguration = new WritableConfiguration(silentApSettingByKey);
 
-        if (e?.Args != null && e.Args.Any())
+        if (e?.Args != null && e.Args.Length != 0)
         {
             var firstArg = e.Args.First().ToLower();
             //hidden
