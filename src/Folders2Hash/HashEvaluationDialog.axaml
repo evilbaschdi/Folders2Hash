@@ -1,0 +1,38 @@
+<!-- ReSharper disable once Xaml.PathError -->
+<windowing:FAAppWindow xmlns="https://github.com/avaloniaui"
+                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                       xmlns:windowing="clr-namespace:FluentAvalonia.UI.Windowing;assembly=FluentAvalonia"
+                       xmlns:evilBaschdi="clr-namespace:EvilBaschdi.Core.Avalonia.Controls;assembly=EvilBaschdi.Core.Avalonia"
+                       x:Class="Folders2Hash.HashEvaluationDialog"
+                       mc:Ignorable="d"
+                       d:DesignWidth="1000"
+                       d:DesignHeight="320"
+                       Width="1000"
+                       Height="320"
+                       ShowAsDialog="True"
+                       CanResize="False"
+                       Title="Hash Evaluation"
+                       WindowStartupLocation="CenterOwner">
+    <Panel Name="RootPanel">
+        <!-- ReSharper disable once Xaml.PathError -->
+        <evilBaschdi:TitleBarControl Icon="/md5.ico" Name="TitleBarControl" />
+
+        <Panel Name="MainPanel" Margin="0,30,0,0">
+            <Panel Name="ContentPanel" Margin="10">
+                <StackPanel Spacing="10">
+                    <TextBlock x:Name="HashFileNameText" TextWrapping="Wrap" />
+                    <TextBlock Text="Hash Sum" />
+                    <TextBox x:Name="HashFileContent" IsReadOnly="True" />
+
+                    <TextBlock x:Name="SourceFileNameText" Margin="0,6,0,0" TextWrapping="Wrap" />
+                    <TextBlock Text="Hash Sum" />
+                    <TextBox x:Name="SourceFileHash"
+                             IsReadOnly="True"
+                             PlaceholderText="hash sum evaluation is only supported for hash files containing the original file extension (filename.ext.md5)" />
+                </StackPanel>
+            </Panel>
+        </Panel>
+    </Panel>
+</windowing:FAAppWindow>

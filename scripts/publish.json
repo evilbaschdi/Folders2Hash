@@ -1,0 +1,15 @@
+{
+    "pipelineName": "Folders2Hash",
+    "profiles": [
+        {
+            "project": "Folders2Hash",
+            "runtimes": [
+                "win-x64",
+                "win-arm64"
+            ],
+            "targetFramework": "net10.0",
+            "selfContained": false,
+            "withAppLauncher": true
+        }
+    ]
+}

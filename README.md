@@ -1,14 +1,13 @@
-# Folders2Hash
+# Folders2Hash
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Join the chat at https://gitter.im/evilbaschdi/Folders2Hash](https://badges.gitter.im/evilbaschdi/Folders2Hash.svg)](https://gitter.im/evilbaschdi/Folders2Hash?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Tool to calculate hashsums for all files of a folder and its subfolders by a given folder or by drag and drop a file / folder to ui.
 It's also possible to trigger this tool through command line / scheduled task to generate the checksums in an interval to provide them for ftp downloads for example.
 
 ## Silentmode (command line) configuration ##
-
 ### Configuration of "SilentConfiguration.json"
-
 - KeepFileExtension (true/false): keep or remove file extensions for generated hash files (myfile.md5 / myfile.exe.md5)
 - PathsToScan: list of paths to scan. "true" at the moment marks a path to be a directory, "false" would be a single file
 - LoggingPath: directory where the result of a single calculation run will be stored as a "csv" file
@@ -33,6 +32,5 @@ Example:
 > 'Folders2Hash.exe -silent'
 
 ## Requirements ##
-
 ! https://github.com/evilbaschdi/EvilBaschdi.Core is required for this project !
 This package will be provided adding a myget.org path by nuget.config

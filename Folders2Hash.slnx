@@ -1,4 +1,4 @@
-<Solution>
+﻿<Solution>
   <Folder Name="/Solution Items/">
     <File Path=".gitignore" />
     <File Path="Directory.Packages.props" />
@@ -6,6 +6,8 @@
     <File Path="NuGet.config" />
     <File Path="README.md" />
   </Folder>
-  <Project Path="Folders2Hash/Folders2Hash.csproj" />
-  <Project Path="RegisterFileTypes/RegisterFileTypes.csproj" />
+  <Folder Name="/src/">
+    <Project Path="src/Folders2Hash/Folders2Hash.csproj" />
+    <Project Path="src/RegisterFileTypes/RegisterFileTypes.csproj" />
+  </Folder>
 </Solution>
