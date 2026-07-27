@@ -6,46 +6,47 @@ using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using EvilBaschdi.About.Avalonia;
 using EvilBaschdi.Core.Avalonia.DependencyInjection;
-using EvilBaschdi.Core.Internal;
-using EvilBaschdi.Core.Logging;
-using EvilBaschdi.Core.Settings.ByMachineAndUser;
+using EvilBaschdi.Core.Avalonia.Themes;
 using FluentAvalonia.UI.Controls;
+using FluentAvalonia.UI.Windowing;
 using Folders2Hash.Internal;
 using Folders2Hash.Models;
 using Folders2Hash.Settings;
 
 namespace Folders2Hash;
 
-internal partial class MainWindow : Window
+internal partial class MainWindow : FAAppWindow
 {
     private readonly IHashAlgorithmDictionary _hashAlgorithmDictionary;
+    private readonly IWritableConfiguration _writableConfiguration;
+    private readonly IFileListCalculationProcessor _fileListCalculationProcessor;
     private Configuration _configuration;
     private ObservableCollection<LogEntry> _logEntries;
     private ObservableCollection<SelectableObject<HashAlgorithmModel>> _observableCollection;
+
+    // ReSharper disable once CollectionNeverUpdated.Local
     private readonly ConcurrentDictionary<string, bool> _pathsToScan = new();
     private string _loggingPath;
-    private readonly IWritableConfiguration _writableConfiguration;
 
-    public MainWindow()
+    public MainWindow(IHashAlgorithmDictionary hashAlgorithmDictionary,
+                      IWritableConfiguration writableConfiguration,
+                      IFileListCalculationProcessor fileListCalculationProcessor)
     {
+        _hashAlgorithmDictionary = hashAlgorithmDictionary ?? throw new ArgumentNullException(nameof(hashAlgorithmDictionary));
+        _writableConfiguration = writableConfiguration ?? throw new ArgumentNullException(nameof(writableConfiguration));
+        _fileListCalculationProcessor = fileListCalculationProcessor ?? throw new ArgumentNullException(nameof(fileListCalculationProcessor));
         InitializeComponent();
-        _hashAlgorithmDictionary = new HashAlgorithmDictionary();
-        IAppSettingsFromJsonFile appSettingsFromJsonFile = new AppSettingsFromJsonFile();
-        IAppSettingsFromJsonFileByMachineAndUser appSettingsFromJsonFileByMachineAndUser = new AppSettingsFromJsonFileByMachineAndUser();
-        IAppSettingByKey appSettingByKey = new AppSettingByKey(appSettingsFromJsonFile, appSettingsFromJsonFileByMachineAndUser);
-        _writableConfiguration = new WritableConfiguration(appSettingByKey);
+        ThemeEngine.ApplyThemeToWindow(this, true);
         _configuration = _writableConfiguration.Value;
         _logEntries = [];
         _observableCollection = [];
         _loggingPath = string.Empty;
-        EnsureConfigurationDefaults();
         Load();
     }
 
     public void RunPreconfiguredHashCalculation(Configuration configuration)
     {
         _configuration = configuration;
-        EnsureConfigurationDefaults();
         RunHashCalculation();
     }
 
@@ -90,13 +91,6 @@ internal partial class MainWindow : Window
 
     private ObservableCollection<LogEntry> RunHashCalculation()
     {
-        IHashAlgorithmByName hashAlgorithmByName = new HashAlgorithmByName();
-        ICalculate calculate = new Calculate(hashAlgorithmByName);
-        IFileListFromPath filePath = new FileListFromPath();
-        ILogFilePathWithInterval logFilePathWithInterval = new LogFilePathWithInterval();
-        ILogging logging = new Logging(logFilePathWithInterval);
-        IFileListCalculationProcessor fileListCalculationProcessor = new FileListCalculationProcessor(calculate, filePath, logging);
-
         var calculationConfiguration = _configuration;
         if (_pathsToScan.Count != 0)
         {
@@ -110,7 +104,7 @@ internal partial class MainWindow : Window
                                        };
         }
 
-        return fileListCalculationProcessor.ValueFor(calculationConfiguration);
+        return _fileListCalculationProcessor.ValueFor(calculationConfiguration);
     }
 
     private void FileExtension(object? sender, RoutedEventArgs e)
@@ -144,7 +138,7 @@ internal partial class MainWindow : Window
         Load();
     }
 
-    private async void GridOnDrop(object? sender, DragEventArgs e)
+    public async void GridOnDrop(object? sender, DragEventArgs e)
     {
         var droppedElements = e.DataTransfer.TryGetFiles();
         if (droppedElements is not null)
@@ -175,7 +169,7 @@ internal partial class MainWindow : Window
         e.Handled = true;
     }
 
-    private void GridOnDragOver(object? sender, DragEventArgs e)
+    public void GridOnDragOver(object? sender, DragEventArgs e)
     {
         var isCorrect = true;
         var droppedElements = e.DataTransfer.TryGetFiles();
@@ -297,12 +291,5 @@ internal partial class MainWindow : Window
                              XamlRoot = this
                          };
         await taskDialog.ShowAsync();
-    }
-
-    private void EnsureConfigurationDefaults()
-    {
-        _configuration.HashTypes ??= [];
-        _configuration.PathsToScan ??= [];
-        _configuration.LoggingPath ??= string.Empty;
     }
 }

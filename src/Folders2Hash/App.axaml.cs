@@ -13,7 +13,7 @@ internal class App : ApplicationWithSplash
 {
     public override void Initialize() => AvaloniaXamlLoader.Load(this);
 
-    protected override bool ResizeWithBorder400 => true;
+    protected override bool ResizeWithBorder400 => false;
 
     protected override void PreMainWindowCreation()
     {
@@ -30,7 +30,7 @@ internal class App : ApplicationWithSplash
                 var writableConfiguration = CreateWritableConfiguration();
                 if (writableConfiguration.Value is { } configuration)
                 {
-                    var mainWindow = new MainWindow();
+                    var mainWindow = ApplicationServices.GetRequiredService<MainWindow>();
                     mainWindow.RunPreconfiguredHashCalculation(configuration);
                 }
 
@@ -44,7 +44,7 @@ internal class App : ApplicationWithSplash
 
     protected override Window CreateMainWindow()
     {
-        var mainWindow = new MainWindow();
+        var mainWindow = ApplicationServices.GetRequiredService<MainWindow>();
         if (ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
         {
             return mainWindow;
@@ -57,16 +57,18 @@ internal class App : ApplicationWithSplash
         }
 
         var lowerArg = firstArg.ToLowerInvariant();
-        IHashAlgorithmDictionary hashAlgorithmDictionary = new HashAlgorithmDictionary();
+        var hashAlgorithmDictionary = ApplicationServices.GetRequiredService<IHashAlgorithmDictionary>();
         var hashType = hashAlgorithmDictionary.Value.Values.FirstOrDefault(dictionaryValue
                                                                                => lowerArg.EndsWith(dictionaryValue, StringComparison.OrdinalIgnoreCase));
-        return !string.IsNullOrWhiteSpace(hashType)
-            ? new HashEvaluationDialog
-              {
-                  HashFile = firstArg,
-                  HashType = hashType
-              }
-            : mainWindow;
+        if (string.IsNullOrWhiteSpace(hashType))
+        {
+            return mainWindow;
+        }
+
+        var hashEvaluationDialog = ApplicationServices.GetRequiredService<HashEvaluationDialog>();
+        hashEvaluationDialog.HashFile = firstArg;
+        hashEvaluationDialog.HashType = hashType;
+        return hashEvaluationDialog;
     }
 
     private static IWritableConfiguration CreateWritableConfiguration()

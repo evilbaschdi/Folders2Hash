@@ -7,12 +7,11 @@
                        xmlns:evilBaschdi="clr-namespace:EvilBaschdi.Core.Avalonia.Controls;assembly=EvilBaschdi.Core.Avalonia"
                        x:Class="Folders2Hash.HashEvaluationDialog"
                        mc:Ignorable="d"
-                       d:DesignWidth="1000"
+                       d:DesignWidth="600"
                        d:DesignHeight="320"
-                       Width="1000"
+                       Width="600"
                        Height="320"
                        ShowAsDialog="True"
-                       CanResize="False"
                        Title="Hash Evaluation"
                        WindowStartupLocation="CenterOwner">
     <Panel Name="RootPanel">

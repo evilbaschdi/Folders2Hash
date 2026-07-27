@@ -9,6 +9,12 @@ internal static class Program
     {
         ArgumentNullException.ThrowIfNull(args);
 
+        if (!OperatingSystem.IsWindows())
+        {
+            Console.WriteLine("This application only works on Windows.");
+            return;
+        }
+
         var fileExtensions = new Dictionary<string, string>
                              {
                                  { "MD5", ".md5" },
@@ -31,6 +37,12 @@ internal static class Program
     private static void CreateFileAssociation(string executable, KeyValuePair<string, string> extension)
     {
         ArgumentNullException.ThrowIfNull(executable);
+
+        if (!OperatingSystem.IsWindows())
+        {
+            Console.WriteLine("This application only works on Windows.");
+            return;
+        }
 
         var registryKey = Registry.ClassesRoot.CreateSubKey(extension.Value);
         registryKey?.SetValue("", extension.Key);

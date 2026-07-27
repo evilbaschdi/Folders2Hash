@@ -13,10 +13,9 @@ internal partial class HashEvaluationDialog : FAAppWindow
     private string _sourceFileName;
     private bool _windowShown;
 
-    public HashEvaluationDialog()
+    public HashEvaluationDialog(ICalculate calculate)
     {
-        IHashAlgorithmByName hashAlgorithmByName = new HashAlgorithmByName();
-        _calculate = new Calculate(hashAlgorithmByName);
+        _calculate = calculate ?? throw new ArgumentNullException(nameof(calculate));
         _hashFileContent = string.Empty;
         _sourceFileHash = string.Empty;
         _sourceFileName = string.Empty;
@@ -25,9 +24,9 @@ internal partial class HashEvaluationDialog : FAAppWindow
         Opened += OnOpened;
     }
 
-    public string HashFile { private get; init; } = string.Empty;
+    public string HashFile { private get; set; } = string.Empty;
 
-    public string HashType { private get; init; } = string.Empty;
+    public string HashType { private get; set; } = string.Empty;
 
     private async void OnOpened(object? sender, EventArgs e)
     {

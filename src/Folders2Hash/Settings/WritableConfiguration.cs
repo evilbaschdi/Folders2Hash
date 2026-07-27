@@ -1,7 +1,6 @@
 using EvilBaschdi.Core;
 using EvilBaschdi.Core.Settings.ByMachineAndUser;
 using Folders2Hash.Models;
-using JetBrains.Annotations;
 
 namespace Folders2Hash.Settings;
 
@@ -15,7 +14,7 @@ public class WritableConfiguration : CachedWritableValue<Configuration>, IWritab
     ///     Constructor of the class
     /// </summary>
     /// <param name="appSettingByKey"></param>
-    public WritableConfiguration([NotNull] IAppSettingByKey appSettingByKey)
+    public WritableConfiguration(IAppSettingByKey appSettingByKey)
     {
         _appSettingByKey = appSettingByKey ?? throw new ArgumentNullException(nameof(appSettingByKey));
     }
