@@ -92,7 +92,7 @@ internal partial class MainWindow : FAAppWindow
     private ObservableCollection<LogEntry> RunHashCalculation()
     {
         var calculationConfiguration = _configuration;
-        if (_pathsToScan.Count != 0)
+        if (!_pathsToScan.IsEmpty)
         {
             calculationConfiguration = new Configuration
                                        {
@@ -160,7 +160,7 @@ internal partial class MainWindow : FAAppWindow
                 _pathsToScan.TryAdd(droppedPath, isDirectory);
             }
 
-            if (_pathsToScan.Count != 0)
+            if (!_pathsToScan.IsEmpty)
             {
                 await ConfigureCalculationAndRunAsync();
             }
