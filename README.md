@@ -1,9 +1,6 @@
 # Folders2Hash
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
-![Commit Activity](https://img.shields.io/github/commit-activity/m/evilbaschdi/Folders2Hash?style=for-the-badge&)
-![Last Commit](https://img.shields.io/github/last-commit/evilbaschdi/Folders2Hash?style=for-the-badge&)
-[![CodeFactor](https://www.codefactor.io/repository/github/evilbaschdi/Folders2Hash/badge/main?style=for-the-badge)](https://www.codefactor.io/repository/github/evilbaschdi/Folders2Hash/overview/main)
 
 Tool to calculate hashsums for all files of a folder and its subfolders by a given folder or by drag and drop a file / folder to ui.
 It's also possible to trigger this tool through command line / scheduled task to generate the checksums in an interval to provide them for ftp downloads for example.
@@ -35,12 +32,31 @@ It's also possible to trigger this tool through command line / scheduled task to
 
 ## Package Feeds
 
-Default by NuGet.config is myget.org
+Default by `NuGet.config` is myget.org
 
-|                                | Feed Url                                                         |
+| Feed                           | Feed Url                                                         |
 | :----------------------------- | :--------------------------------------------------------------- |
 | ![myget.org][myGetBadge]       | <https://www.myget.org/F/evilbaschdi/api/v3/index.json>          |
 | ![codeberg.org][codebergBadge] | <https://codeberg.org/api/packages/evilbaschdi/nuget/index.json> |
 
+## Quality & Activity
+
+| Branch                          | Status & Activity                                                                                                                                      |
+| :------------------------------ | :----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ![Main Branch][mainBranchBadge] | [![CodeFactor][codeFactorMainBadge]][codeFactorMainOverview] ![Commit Activity Main][commitActivityMainBadge] ![Last Commit Main][lastCommitMainBadge] |
+
 [myGetBadge]: https://img.shields.io/badge/MyGet.org-gray?style=for-the-badge&logo=myget
 [codebergBadge]: https://img.shields.io/badge/Codeberg-gray?style=for-the-badge&logo=codeberg
+
+[mainBranchBadge]: https://img.shields.io/badge/branch-main-brightgreen?style=for-the-badge&logo=git&logoColor=white&color=c9ff00
+[developBranchBadge]: https://img.shields.io/badge/branch-develop-blue?style=for-the-badge&logo=git&logoColor=white&color=0080ff
+
+[codeFactorMainBadge]: https://www.codefactor.io/repository/github/evilbaschdi/Folders2Hash/badge/main?style=for-the-badge
+[codeFactorMainOverview]: https://www.codefactor.io/repository/github/evilbaschdi/Folders2Hash/overview/main
+[commitActivityMainBadge]: https://img.shields.io/github/commit-activity/m/evilbaschdi/Folders2Hash/main?style=for-the-badge
+[lastCommitMainBadge]: https://img.shields.io/github/last-commit/evilbaschdi/Folders2Hash/main?style=for-the-badge
+
+[codeFactorDevelopBadge]: https://www.codefactor.io/repository/github/evilbaschdi/Folders2Hash/badge/develop?style=for-the-badge
+[codeFactorDevelopOverview]: https://www.codefactor.io/repository/github/evilbaschdi/Folders2Hash/overview/develop
+[commitActivityDevelopBadge]: https://img.shields.io/github/commit-activity/m/evilbaschdi/Folders2Hash/develop?style=for-the-badge
+[lastCommitDevelopBadge]: https://img.shields.io/github/last-commit/evilbaschdi/Folders2Hash/develop?style=for-the-badge
